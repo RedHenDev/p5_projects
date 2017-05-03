@@ -1,0 +1,71 @@
+
+
+
+
+// Video desc 1
+In this video I show you how to make a javaScript game (or animation! or simulation!) from scratch.
+
+First video in short series of...maybe 3?
+
+Tutorial 2: https://youtu.be/3QiqjfCmmag
+Tutorial 3: https://youtu.be/gDcgdly1nnc
+
+Here's the code used in this tutorial: http://codepen.io/RedHenDev/pen/WjxrdR
+
+Here's how to start coding in javaScript, using the p5 library: https://www.youtube.com/watch?v=8j0UDiN7my4&list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA
+
+Thanks for watching!
+
+B x
+
+Other links that may be useful: -
+
+CodingTrain youtube channel with the amazing, lovable, and informative Daniel Shiffman: https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw
+
+P5 javaScript library (fantastic cause, and a website full of fantastically useful examples and well-documented resources): https://p5js.org
+
+
+// video 2
+In this (second) video I show you how to create lots of objects quickly (with arrays), and how to detect collisions between those objects (collision detection). This is coded in javaScript, using the p5 library (see links below for help with p5!).
+
+The code used in this tutorial: http://codepen.io/RedHenDev/pen/VbjbRp
+
+Links to other videos in this series: 
+Tutorial 1: https://youtu.be/0hHAbdvUzu0
+Tutorial 3: https://youtu.be/gDcgdly1nnc
+
+Here's how to start coding in javaScript, using the p5 library: https://www.youtube.com/watch?v=8j0UDiN7my4&list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA
+
+Thanks for watching!
+
+B x
+
+Other links that may be useful: -
+
+CodingTrain youtube channel with the amazing, lovable, and informative Daniel Shiffman: https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw
+
+P5 javaScript library (fantastic cause, and a website full of fantastically useful examples and well-documented resources): https://p5js.org
+
+// video 3
+In this (third) video I show you how to use collisions between objects to have an effect on those objects, such as bouncing off one another, and drawing 'connecting lines' between objects that have collided before. Will this look cool -- or disgusting?!
+
+The code used in this tutorial: http://codepen.io/RedHenDev/pen/XRKepG
+
+Links to other videos in this series: 
+Tutorial 1: https://youtu.be/0hHAbdvUzu0
+Tutorial 2: https://youtu.be/3QiqjfCmmag
+
+Here's how to start coding in javaScript, using the p5 library: https://www.youtube.com/watch?v=8j0UDiN7my4&list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA
+
+Thanks for watching!
+
+B x
+
+Other links that may be useful: -
+
+CodingTrain youtube channel with the amazing, lovable, and informative Daniel Shiffman: https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw
+
+P5 javaScript library (fantastic cause, and a website full of fantastically useful examples and well-documented resources): https://p5js.org
+
+// tags
+javascript,js,tutorial,gamedev,indiedev,how to code games,game coding,game programming,collisions,collision detection,array,arrays,for loop,loops,basic tutorial,simple coding,objects,OOP,object orientated programming,
