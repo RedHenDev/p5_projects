@@ -35,10 +35,12 @@ function setup() {
         //type = Math.floor(Math.random()*3) + 1;
         type = 1;   // Static ball.
         
-       // pA.push(new Pa2D((i*10)+100, 220+noise(i)*32, 10, 10*0.618,type));
+       
         pA.push(new Pa2D((width/2)+(4+i)*Math.cos(i), (height/2)+(4+i)*Math.sin(i), 8,8,type));
     }
-    
+    for (var i = 0; i < 123; i++){
+    pA.push(new Pa2D(165+i*1, i, 32, 32*0.618,3));
+    }
     // Window bounds.
     bottomW = new Ledge(width/2, height, width, 100);
     topW = new Ledge(width/2, 0, width, 100);
