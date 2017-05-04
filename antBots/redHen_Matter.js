@@ -140,6 +140,7 @@ Pa2D.prototype.makeAngle = function(_angle){
 // Rotates body in terms of physics engine (cf. makeAngle())
 // relative to current rotation.
 Pa2D.prototype.makeRotate = function(_deg){
+    _deg *= 0.001/(this.bod.mass/80);
     Matter.Body.rotate(this.bod, _deg);
 }
 
@@ -147,6 +148,22 @@ Pa2D.prototype.makeRotate = function(_deg){
 Pa2D.prototype.makePosition = function(_x, _y){
     let newPos = createVector(_x, _y);
     Matter.Body.setPosition(this.bod, newPos);
+}
+
+// Add rotation force. Just an ordinary applyForce, but
+// off centre, so as to spin body.
+// Turn is either -1 or +1, for left and right.
+Pa2D.prototype.makeSteer = function(_turn){
+    // We find the extremest left or right point from
+    // the body's centre, using ob's radius.
+    
+    // Find forward vector of body...
+//    let turnVec = createVector(0,0);
+//    turnVec.x = Math.sin(radians(this.bod.angle+(_turn*3)));
+//    turnVec.y = -Math.cos(radians(this.bod.angle+(_turn*3)));
+//    turnVec.mult(0.001);
+    let tF = (_turn/2000) * (this.bod.mass);
+    this.bod.torque += tF;
 }
 
 // Applies force from centre of the matter.js body.

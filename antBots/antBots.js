@@ -32,28 +32,24 @@ function setup() {
     noiseSeed(221188);
     // Create 222 physics bodies.
     // Randomly assign as static, dynamic, square or round.
-    for (var i = 0; i < 99; i++){
+    for (var i = 0; i < 22; i++){
         let type = 0;
         //type = Math.floor(Math.random()*3) + 1;
         type = 1;   // Static ball.
         
-       
-        pA.push(new Pa2D((width/2)+(4+i)*Math.cos(i), (height/2)+(4+i)*Math.sin(i), 8,8,type));
-        
+        pA.push(new Pa2D((width/2)+(62+i)*Math.cos(i), (height/2)+(62+i)*Math.sin(i), 16,16,type));
         
     }
-<<<<<<< HEAD
-    for (var i = 0; i < 123; i++){
-    pA.push(new Pa2D(165+i*1, i, 32, 32*0.618,3));
-    }
-=======
+
+ 
+
     
-      for (var i = 0; i < 444; i++){
+      for (var i = 0; i < 222; i++){
           // Dynamic boxes.
-        pA.push(new Pa2D(random(100,width-100), random(64,200), 16,16, 3));
+        pA.push(new Pa2D(random(100,width-100), random(64,200), 12,12, 3));
       }
     
->>>>>>> origin/master
+
     // Window bounds.
     bottomW = new Ledge(width/2, height, width*100, 100);
     topW = new Ledge(width/2, 0, width, 100);
@@ -108,13 +104,13 @@ function keyInput(){
     }
     if (keyIsDown(RIGHT_ARROW)) {
        // setGravity(1,0);
-        //globalMovement(1);
-        antz[0].myBod.makeRotate(0.1);
+        antz[0].myBod.makeRotate(1);
+        antz[0].myBod.makeSteer(1);
     }
     if (keyIsDown(LEFT_ARROW)) {
        // setGravity(-1,0);
-       //globalMovement(-1);
-        antz[0].myBod.makeRotate(-0.1);
+        antz[0].myBod.makeRotate(-1);
+        antz[0].myBod.makeSteer(-1);
     }
     
     // Space-bar to...go to space (no gravity).
@@ -125,7 +121,7 @@ function keyInput(){
 
 function globalMovement(_xDir){
         for (var i = 0; i < pA.length; i++){
-            pA[i].makePosition(pA[i].bod.position.x+_xDir, pA[i].bod.position.y);
+            pA[i].makePosition(pA[i].bod.position.x + _xDir, pA[i].bod.position.y);
         }
 }
 
@@ -150,6 +146,13 @@ function keyTyped(){
         antz[0].applyScale();
         antz[0].myBod.makeScale(antz[0].scale/oS);
     }
+    
+    // Global right.
+    if (key==='d')
+    globalMovement(1);
+    // Global left.
+    if (key==='a')
+    globalMovement(-1);
     
 }
    
