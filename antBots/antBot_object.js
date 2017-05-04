@@ -188,10 +188,13 @@ antBot.prototype.checkGround = function(_y){
 }
 
 antBot.prototype.moveForward = function(){
+    let vM = createVector(this.myBod.bod.velocity.x,
+                          this.myBod.bod.velocity.y);
+    if (vM.magSq() > 10) return;
     let hV = createVector(0,0);
     hV.x = Math.sin(this.myBod.bod.angle);
     hV.y = -Math.cos(this.myBod.bod.angle);
-    hV = hV.mult(0.01);
+    hV = hV.mult(0.004);
     this.myBod.addForce(hV);
 }
 
