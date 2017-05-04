@@ -120,6 +120,8 @@ function Pa2D(_x,_y,_r,_rH,_op){
 
 }
 
+
+
 // Makes the body static.
 Pa2D.prototype.makeScale = function(_scale){
     Matter.Body.scale(this.bod, _scale, _scale);
@@ -133,6 +135,12 @@ Pa2D.prototype.makeStatic = function(){
 // Sets a new angle, without affecting forces etc.
 Pa2D.prototype.makeAngle = function(_angle){
     Matter.Body.setAngle(this.bod, _angle);
+}
+
+// Rotates body in terms of physics engine (cf. makeAngle())
+// relative to current rotation.
+Pa2D.prototype.makeRotate = function(_deg){
+    Matter.Body.rotate(this.bod, _deg);
 }
 
 // Sets a new position (without affecting velocity etc.).
@@ -247,7 +255,6 @@ Ledge.prototype.render = function(){
 
 //*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&
 //*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&
-
 
 
 

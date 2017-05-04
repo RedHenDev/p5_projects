@@ -11,6 +11,8 @@ var antz = [];
 var gravity;
 var hopForce;
 
+var globalPos = 0;
+
 function setup() {
   
     canvas = createCanvas(windowWidth,windowHeight);
@@ -37,10 +39,17 @@ function setup() {
         
        // pA.push(new Pa2D((i*10)+100, 220+noise(i)*32, 10, 10*0.618,type));
         pA.push(new Pa2D((width/2)+(4+i)*Math.cos(i), (height/2)+(4+i)*Math.sin(i), 8,8,type));
+        
+        
     }
     
+      for (var i = 0; i < 444; i++){
+          // Dynamic boxes.
+        pA.push(new Pa2D(random(100,width-100), random(64,200), 16,16, 3));
+      }
+    
     // Window bounds.
-    bottomW = new Ledge(width/2, height, width, 100);
+    bottomW = new Ledge(width/2, height, width*100, 100);
     topW = new Ledge(width/2, 0, width, 100);
     leftW = new Ledge(0, height/2, 100, height);
     rightW = new Ledge(width, height/2, 100, height);
@@ -58,9 +67,14 @@ function setup() {
     // A type '2', which means dynamic ball.
     wrecka = new Pa2D(200,height-100,40, 40,2); 
 
+    setupGlobalPos();
+    
    // wVox = setupOscillator();
 }
 
+function setupGlobalPos(){
+    globalPos = createVector(0,0);
+}
 
 // This needs refactoring...
 function PlaceBubl(mX,mY,mS){
@@ -79,15 +93,34 @@ function mouseDragged(){
 
 // Checks for keyIsDown.
 function keyInput(){
-    if (keyIsDown(UP_ARROW)) setGravity(0,-1);
-    if (keyIsDown(DOWN_ARROW)) setGravity(0,1);
-    if (keyIsDown(RIGHT_ARROW)) setGravity(1,0);
-    if (keyIsDown(LEFT_ARROW)) setGravity(-1,0);
+    if (keyIsDown(UP_ARROW)) { 
+        //setGravity(0,-1);
+        antz[0].moveForward();
+    }
+    if (keyIsDown(DOWN_ARROW)){
+        // setGravity(0,1);
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+       // setGravity(1,0);
+        //globalMovement(1);
+        antz[0].myBod.makeRotate(0.1);
+    }
+    if (keyIsDown(LEFT_ARROW)) {
+       // setGravity(-1,0);
+       //globalMovement(-1);
+        antz[0].myBod.makeRotate(-0.1);
+    }
     
     // Space-bar to...go to space (no gravity).
     if (keyIsDown(32)) setGravity(0,0);
     // 'G' for gravity.
     if (keyIsDown(71)) setGravity(0,1);
+}
+
+function globalMovement(_xDir){
+        for (var i = 0; i < pA.length; i++){
+            pA[i].makePosition(pA[i].bod.position.x+_xDir, pA[i].bod.position.y);
+        }
 }
 
 function keyTyped(){
@@ -126,7 +159,7 @@ function draw() {
     
     // Matter.Engine.update(myEngine);
     
-    drawWalls();
+   // drawWalls();
     
     // Render bodies.
     wrecka.render();
@@ -167,7 +200,7 @@ function updateAnts(){
         if (antz[i].hasBod){
             // Go matter.js!
             antz[i].screenTrap();
-            if (Math.random() * 100 > 99) {
+            if (i !== 0 && Math.random() * 100 > 99) {
                 antz[i].moveForward();
                
                 antz[i].myBod.addForce(antz[i].hopForce);
