@@ -6,29 +6,21 @@
 
 // Asteroids! 
 
-
 /*
 
-Tutorial vids descriptions: 
+Links to video tutorials (making this code).
 
-Asteroids in JavaScript: tutorial_3
-
-Code for you here: http://codepen.io/RedHenDev/pen/oWGrgw
-
-In this 'making Asteroids' video (number 3), we add collision detection and the asteroid explode-spawn-four-babies behaviour.
-
-Useful links:
 Asteroids tutorial 1: https://youtu.be/_fqL3-poOT0
 Asteroids tutorial 2: https://youtu.be/tUn_RZcjqTc
 Asteroids tutorial 3: https://youtu.be/2bEp8SukF2s
+Asteroids tutorial 4: https://youtu.be/IeiGi6LiYnQ
 
 p5.js homepage: https://p5js.org
 
-Coded in JavaScript, using the p5.js library (for graphics, input, and a few other things like vector objects).
-
-Thanks for watching!
 
 */
+
+
 
 var stars = [];
 
