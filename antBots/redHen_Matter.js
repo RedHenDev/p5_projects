@@ -42,7 +42,7 @@ function setupMatter(){
             // E.g.
 //             if (Math.abs(bodA.velocity.x *             bodA.velocity.y) > 4){
 //                Matter.Body.setStatic(bodB, true);
-             }
+             //}
         }   // End of forLoop.
     }       // End of collision events function. 
     // Turn on collision events.
