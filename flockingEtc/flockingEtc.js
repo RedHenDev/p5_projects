@@ -4,7 +4,7 @@ var pobs = [];
 
 var mP; // Previous mouse position (in a vector).
 
-var drawVectors = true;
+var drawVectors = false;
 
 var wayPoint;
 
@@ -39,7 +39,7 @@ function draw(){
     
     checkInput();
     
-    background(0, 201, 222);
+    background(0, 201, 222,2);
     
     DrawCourt();
     
@@ -81,7 +81,10 @@ function aiRoutines(){
 
 function mousePressed(){
     // Toggle display of velocity and new vector force. 
-    drawVectors = !drawVectors;
+    //drawVectors = !drawVectors;
+    
+    wayPoint.pos.x = mouseX;
+    wayPoint.pos.y = mouseY;
 }
 
 function touchMoved(){
