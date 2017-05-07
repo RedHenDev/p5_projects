@@ -22,7 +22,35 @@ function setupMatter(){
     myEngine = Matter.Engine.create();
     myWorld = myEngine.world;  
     
-       // Start the engine!
+    // The collision events function.
+    // Collision *events* may need to use the
+    // *indexID* of the body in order to 
+    // reference the wrapper object's variables.
+    // [This is not yet implemented!!!]
+    function collision(event){
+        // Ref to all pairs of bodies colliding.
+        var pairs = event.pairs;
+        // Iterate over the pairs to
+        // find the condition you're
+        // looking for.
+        for (var i = 0; i < pairs.length; i++){
+            // The event's pairs will have a 
+            // bodyA and bodyB object that
+            // we can grab here...
+            var bodA = pairs[i].bodyA;
+            var bodB = pairs[i].bodyB;
+            // E.g.
+//             if (Math.abs(bodA.velocity.x *             bodA.velocity.y) > 4){
+//                Matter.Body.setStatic(bodB, true);
+             }
+        }   // End of forLoop.
+    }       // End of collision events function. 
+    // Turn on collision events.
+    // The third parameter 'collision' is a 
+    // call back to the function above.
+    Matter.Events.on(myEngine, 'collisionStart', collision);
+    
+    // Start the engine!
     Matter.Engine.run(myEngine);
     
 }
