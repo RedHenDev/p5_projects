@@ -162,7 +162,7 @@ Pa2D.prototype.makeSteer = function(_turn){
 //    turnVec.x = Math.sin(radians(this.bod.angle+(_turn*3)));
 //    turnVec.y = -Math.cos(radians(this.bod.angle+(_turn*3)));
 //    turnVec.mult(0.001);
-    let tF = (_turn/2000) * (this.bod.mass);
+    let tF = (_turn) * (this.bod.mass * this.bod.mass * 10);
     this.bod.torque += tF;
 }
 

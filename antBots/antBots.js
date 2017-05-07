@@ -105,12 +105,12 @@ function keyInput(){
     if (keyIsDown(RIGHT_ARROW)) {
        // setGravity(1,0);
         antz[0].myBod.makeRotate(1);
-        antz[0].myBod.makeSteer(1);
+        antz[0].myBod.makeSteer(0.0001);
     }
     if (keyIsDown(LEFT_ARROW)) {
        // setGravity(-1,0);
         antz[0].myBod.makeRotate(-1);
-        antz[0].myBod.makeSteer(-1);
+        antz[0].myBod.makeSteer(-0.0001);
     }
     
     // Space-bar to...go to space (no gravity).
