@@ -128,12 +128,15 @@ function Pa2D(_x,_y,_r,_rH,_op,_vx){
     }
     else if (_op===5)
         var options = {
-        isStatic: false,
-        restitution: 0.4,
+        isStatic: true,
+        restitution: 0.04,
         friction: 0.04
     }
    
     this.type = _op;
+    this.pos = createVector(_x, _y);
+    this.radX = _r;
+    this.radY = _rH;
     
     // Create a 2D Physics Body, an (invisible) rectangle.
     if (_op===0)
@@ -154,13 +157,16 @@ function Pa2D(_x,_y,_r,_rH,_op,_vx){
     
     // Create a 2D Physics Body, a 'vertex body shape'.
     if (_op===5){
-        //this.vx = [];
-        this.vx = _vx;
+        // mV is an array of vertices.
+        // _vx is the number or 'resolution' of
+        // vertices.
+        this.vRes = _vx;
+        this.mV = this.generateVertices(_vx);
         // HACK ALERT!
-        this.width = _r * 1.48;
+        this.width = _r * 1.44;
         this.height = _rH * 2.06;
-    this.bod = 
-    Matter.Bodies.fromVertices(_x,_y,_vx);
+        this.bod = 
+        Matter.Bodies.fromVertices(_x,_y,this.mV, options);
     }
         
     // Add the body to the Physics World.
@@ -168,6 +174,32 @@ function Pa2D(_x,_y,_r,_rH,_op,_vx){
 
 }
 
+
+Pa2D.prototype.generateVertices = function(){
+    var vBSpos = createVector(0,0);
+    var vBSw = this.radX;
+    var vBSh = this.radY;
+    var vBSres = this.vRes;
+    
+    var myVertices = [];
+    for (let i = 0; i < vBSres; i++){
+        let py = 0;
+        let px = 0;
+       if (i < vBSres/2){ 
+           px = (vBSpos.x + (vBSw/2)) - (i*(vBSw/(vBSres/2)));
+            py = vBSpos.y + (vBSh/2);
+        }
+        else {
+            py = vBSpos.y - (vBSh/2);
+            px = (vBSpos.x - (vBSw/2)) + ((i-vBSres/2)*(vBSw/(vBSres/2)));
+        }
+        px += Math.random()*20;
+        py += Math.random()*20;
+        let blo = createVector(px,py);
+        myVertices.push(blo);
+    }
+    return myVertices;
+}
 
 
 // Makes the body static.
@@ -228,8 +260,8 @@ Pa2D.prototype.render = function(){
     // Static ball.
     if (this.type===1){
         stroke(0);
-        strokeWeight(1);
-        fill(0,101,0);
+        strokeWeight(2);
+        fill(200,100,42);
         ellipse(this.bod.position.x,
                 this.bod.position.y,
                 this.dia,
@@ -247,8 +279,8 @@ Pa2D.prototype.render = function(){
         fill(0,0,theColour,255);
         ellipse(this.bod.position.x,
             this.bod.position.y,
-            this.bod.circleRadius*2,
-            this.bod.circleRadius*2);
+            this.dia,
+            this.dia);
         return;
     }
     
@@ -288,17 +320,18 @@ Pa2D.prototype.render = function(){
     
     if (this.type===5){
         push();
-        translate(this.bod.position.x, this.bod.position.y);
+        translate(0, 0);
         rotate(this.bod.angle);
         
         stroke(255);
         strokeWeight(4);
-        fill(100,100,42);
+        fill(200,100,42);
         
         beginShape();
-        for (let i = 0; i < this.vx.length; i++){
-            vertex(this.vx[i].x-this.width, this.vx[i].y-this.height);  
+        for (let i = 0; i < this.mV.length; i++){
+            vertex(this.bod.position.x+this.mV[i].x, this.bod.position.y+this.mV[i].y);  
         }
+        
         endShape(CLOSE);
         
         pop();

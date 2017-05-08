@@ -46,7 +46,7 @@ function setup() {
     
       for (var i = 0; i < 222; i++){
           // Dynamic boxes.
-        pA.push(new Pa2D(random(100,width-100), random(64,200), 12,12, 3));
+        pA.push(new Pa2D(random(100,width-100), random(400,800), 22,22, 3));
       }
     
 
@@ -57,31 +57,13 @@ function setup() {
     rightW = new Ledge(width, height/2, 100, height);
     
     // Hello vertex body shape!
-    
-    var vBSpos = createVector(width/2, 200);
-    var vBSw = 400;
-    var vBSh = 100;
-    var vBSres = 20;
-    
-    var myVertices = [];
-    for (let i = 0; i < vBSres; i++){
-        let py = 0;
-        let px = 0;
-       if (i < vBSres/2){ 
-           px = (vBSpos.x - (vBSw/2)) + (i*(vBSw/(vBSres/2)));
-            py = vBSpos.y + (vBSh/2);
-        }
-        else {
-            py = vBSpos.y - (vBSh/2);
-            px = (vBSpos.x + (vBSw/2)) - ((i-vBSres/2)*(vBSw/(vBSres/2)));
-        }
-        px += Math.random()*20;
-        py += Math.random()*20;
-        let blo = createVector(px,py);
-        myVertices.push(blo);
-    }
-    pA.push(new Pa2D(vBSpos.x,vBSpos.y,vBSw,vBSh,5,myVertices));
-
+    // Final argument gives how many vertices.
+    pA.push(new Pa2D(width/2,height/2,400,50,5,101));
+    pA[pA.length-1].makePosition(width/2,200);
+     pA.push(new Pa2D(width/2,100,400,50,5,25));
+    pA[pA.length-1].makePosition(width-300,400);
+    pA.push(new Pa2D(width/2,100,400,50,5,25));
+    pA[pA.length-1].makePosition(300,400);
 
     // Begin with 22 blinkies.
     for (let i = 0; i < 22; i++){
