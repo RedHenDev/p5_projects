@@ -55,6 +55,32 @@ function setup() {
     topW = new Ledge(width/2, 0, width, 100);
     leftW = new Ledge(0, height/2, 100, height);
     rightW = new Ledge(width, height/2, 100, height);
+    
+    // Hello vertex body shape!
+    
+    var vBSpos = createVector(width/2, 200);
+    var vBSw = 400;
+    var vBSh = 100;
+    var vBSres = 20;
+    
+    var myVertices = [];
+    for (let i = 0; i < vBSres; i++){
+        let py = 0;
+        let px = 0;
+       if (i < vBSres/2){ 
+           px = (vBSpos.x - (vBSw/2)) + (i*(vBSw/(vBSres/2)));
+            py = vBSpos.y + (vBSh/2);
+        }
+        else {
+            py = vBSpos.y - (vBSh/2);
+            px = (vBSpos.x + (vBSw/2)) - ((i-vBSres/2)*(vBSw/(vBSres/2)));
+        }
+        px += Math.random()*20;
+        py += Math.random()*20;
+        let blo = createVector(px,py);
+        myVertices.push(blo);
+    }
+    pA.push(new Pa2D(vBSpos.x,vBSpos.y,vBSw,vBSh,5,myVertices));
 
 
     // Begin with 22 blinkies.

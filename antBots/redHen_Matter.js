@@ -22,6 +22,7 @@ function setupMatter(){
     myEngine = Matter.Engine.create();
     myWorld = myEngine.world;  
     
+    /*
     // The collision events function.
     // Collision *events* may need to use the
     // *indexID* of the body in order to 
@@ -40,15 +41,16 @@ function setupMatter(){
             var bodA = pairs[i].bodyA;
             var bodB = pairs[i].bodyB;
             // E.g.
-//             if (Math.abs(bodA.velocity.x *             bodA.velocity.y) > 4){
-//                Matter.Body.setStatic(bodB, true);
-             //}
+             if (Math.abs(bodA.velocity.x *             bodA.velocity.y) > 4){
+                Matter.Body.setStatic(bodB, true);
+             }
         }   // End of forLoop.
     }       // End of collision events function. 
     // Turn on collision events.
     // The third parameter 'collision' is a 
     // call back to the function above.
     Matter.Events.on(myEngine, 'collisionStart', collision);
+    */
     
     // Start the engine!
     Matter.Engine.run(myEngine);
@@ -88,9 +90,10 @@ function renderMouseConstraint(){
 
 
 
-// Particle Object. op: 0=invisible;1=vis_static;2=vis_dynm.
+// Particle Object.
 // A wrapper object.
-function Pa2D(_x,_y,_r,_rH,_op){
+// x pos, y pos, radius x, radius y, type, array of vertices (vectors).
+function Pa2D(_x,_y,_r,_rH,_op,_vx){
     
     // Options for matter.js physics body.
     if (_op===0)
@@ -123,6 +126,12 @@ function Pa2D(_x,_y,_r,_rH,_op){
         restitution: 0.4,
         friction: 0.04
     }
+    else if (_op===5)
+        var options = {
+        isStatic: false,
+        restitution: 0.4,
+        friction: 0.04
+    }
    
     this.type = _op;
     
@@ -143,6 +152,17 @@ function Pa2D(_x,_y,_r,_rH,_op){
         this.height = _rH;
     }
     
+    // Create a 2D Physics Body, a 'vertex body shape'.
+    if (_op===5){
+        //this.vx = [];
+        this.vx = _vx;
+        // HACK ALERT!
+        this.width = _r * 1.48;
+        this.height = _rH * 2.06;
+    this.bod = 
+    Matter.Bodies.fromVertices(_x,_y,_vx);
+    }
+        
     // Add the body to the Physics World.
     Matter.World.add(myWorld, this.bod);
 
@@ -262,6 +282,25 @@ Pa2D.prototype.render = function(){
         rect(0, 0,
             this.width,
             this.height);
+        pop();
+        return;
+    }
+    
+    if (this.type===5){
+        push();
+        translate(this.bod.position.x, this.bod.position.y);
+        rotate(this.bod.angle);
+        
+        stroke(255);
+        strokeWeight(4);
+        fill(100,100,42);
+        
+        beginShape();
+        for (let i = 0; i < this.vx.length; i++){
+            vertex(this.vx[i].x-this.width, this.vx[i].y-this.height);  
+        }
+        endShape(CLOSE);
+        
         pop();
         return;
     }
