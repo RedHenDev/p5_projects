@@ -129,7 +129,7 @@ function Pa2D(_x,_y,_r,_rH,_op,_vx){
     else if (_op===5)
         var options = {
         isStatic: true,
-        restitution: 0.04,
+        restitution: 0.8,
         friction: 0.04
     }
    

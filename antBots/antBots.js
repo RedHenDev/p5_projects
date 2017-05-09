@@ -58,12 +58,12 @@ function setup() {
     
     // Hello vertex body shape!
     // Final argument gives how many vertices.
-    pA.push(new Pa2D(width/2,height/2,400,50,5,101));
-    pA[pA.length-1].makePosition(width/2,200);
-     pA.push(new Pa2D(width/2,100,400,50,5,25));
-    pA[pA.length-1].makePosition(width-300,400);
-    pA.push(new Pa2D(width/2,100,400,50,5,25));
-    pA[pA.length-1].makePosition(300,400);
+    pA.push(new Pa2D(width/2,height/2,300,50,5,12));
+    pA[pA.length-1].makePosition(width/2,height/4);
+    pA.push(new Pa2D(width/2,height/2,100,50,5,12));
+    pA[pA.length-1].makePosition(width-200,height-200);
+    pA.push(new Pa2D(width/2,height/2,100,50,5,12));
+    pA[pA.length-1].makePosition(200,height-200);
 
     // Begin with 22 blinkies.
     for (let i = 0; i < 22; i++){
