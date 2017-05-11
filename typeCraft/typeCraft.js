@@ -57,7 +57,7 @@ function renderText(_txt){
     strokeWeight(4);
     stroke(255);
     textSize(64);
-    text(_txt, width/5, height/5, 100, 100);
+    text(_txt, width/5, height/5);
     
 }
 
