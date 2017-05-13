@@ -117,11 +117,7 @@ function setup(){
 }
 
 
-function draw(){
-    
-    
-    
-}
+function draw(){  }
 
 function mousePressed(){
     
@@ -133,9 +129,3 @@ function mousePressed(){
     fibly.iterate();
     fibly.render();
 }
-
-
-
-
-
-
