@@ -1,3 +1,23 @@
+/*
+
+Fibonacci Spiral in JavaScript (ES6 class !): tutorial
+
+How to code the Fibonacci Spiral (golden ratio) in javaScript, using the p5.js library. I also show you how to create objects (classes) using the ES6/2015 syntax.
+
+The code: http://codepen.io/RedHenDev/details/MmGGXW/
+
+How to get started in javaScript (and if interested in p5): https://www.youtube.com/watch?v=oQ-kRq-z_EA
+
+And I hugely recommend Daniel Shiffman's 'Coding Train' youtube channel: https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw
+
+Thanks for watching!
+
+Ps.  On watching this back: I said 'golden TRIANGLE' at one point without noticing -- what IS the golden triangle?! Weird. 
+
+fibonacci spiral,golden ratio,beautiful math,maths,mathematics,js,javascript,ES6,classes,objects,OOP,tutorial,how to code,beginner programming,beginner coding,p5js,05,p5.js
+
+*/
+
 class Fbox {
     
     constructor(_x, _y, _w){
@@ -83,11 +103,17 @@ var fibs = [];
 
 var globalTheta = 0;
 
+// Our particles...
+var p = [];
+var mouseMagnet;    // ...And attractor!
+
 function setup(){
     
     createCanvas(windowWidth, windowHeight);
     
     background(0,51,111);
+    
+    setupParticles();
     
     rectMode(CENTER);
     
@@ -116,8 +142,39 @@ function setup(){
   
 }
 
+function setupParticles(){
+    
+    var colour = color(255,255,255);
+    var numP = 99;
+    
+    for (let i = 0; i < numP; i++){
+        p.push(new particle(Math.random()*width, Math.random()*height, 1,1,colour));
+        p[i].velocity = p5.Vector.random2D();
+    }
+    
+    // Now create our single attractor,
+    // which will be trained on mouse pos.
+    mouseMagnet = new attractor(mouseX, mouseY, 6);
+    
+    // Maks sure mouse pos isn't (0,0).
+    mouseX = width/2;
+    mouseY = height/2;
+}
 
-function draw(){  }
+
+function draw(){ 
+    
+    // MouseMagnet trained to mouse pos.
+    mouseMagnet.pos.x = mouseX;
+    mouseMagnet.pos.y = mouseY;
+    
+    // Update particles.
+    for (let i = 0; i < p.length; i++){
+        mouseMagnet.attract(p[i]);
+        p[i].update();
+        p[i].render(6); // Num = alpha.
+    }
+}
 
 function mousePressed(){
     
