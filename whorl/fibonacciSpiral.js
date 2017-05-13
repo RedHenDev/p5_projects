@@ -2,6 +2,10 @@
 
 var fibly;
 
+var fibs = [];
+
+var globalTheta = 0;
+
 function setup(){
     
     createCanvas(windowWidth, windowHeight);
@@ -12,10 +16,27 @@ function setup(){
     
     var wid = (height)*0.618;
     
-    fibly = new Fbox((width/2)+(wid*0.618)/2, height/2, wid);
+    fibly = new Fbox((width/2)-(wid*0.618)/2, height/2, wid);
+    fibly.strokeD = true;
+    
+    var miniPosX = fibly.pos.x - fibly.wid/2;
+    var miniWid = miniPosX/3;
+    miniPosX = (miniPosX/2) - (miniWid/2) + ((miniWid*0.618)/2);
+    
+    for (let i = 0; i < floor(height/(miniWid+20)); i++){
+        
+        fibs.push(new Fbox(miniPosX, miniWid+(i*(miniWid+20)), miniWid));
+        
+        fibs[i].render();
+    }
     
     fibly.render();
     
+  noStroke();
+  fill(255);
+  textSize(20);
+  text("Click or tap to iterate. Or, you know, go re-read Nietzsche or something.", miniWid * 3, fibly.pos.y-(fibly.wid/1.618));
+  
 }
 
 
@@ -27,9 +48,16 @@ function draw(){
 
 function mousePressed(){
     
+    for (let i = 0; i < fibs.length; i++){
+        fibs[i].iterate();
+        fibs[i].render();
+    }
+    
     fibly.iterate();
     fibly.render();
 }
+
+
 
 
 function Fbox(_x, _y, _w){
@@ -41,11 +69,16 @@ function Fbox(_x, _y, _w){
     
     this.wid = _w;
     
+    // Stroke delta.
+    // Yellow curve will decrease in thickness if true.
+    this.strokeD = false;
+    
     this.render = function(){
         
         fill(255,61);
-        noFill();
-        
+        //noFill();
+        strokeWeight(2);
+        stroke(255);
         
         push();
         
@@ -56,14 +89,15 @@ function Fbox(_x, _y, _w){
         
         rect(0, 0, this.wid, this.wid);
         
-        noFill();
-//        ellipse(this.wid/2, this.wid/2, this.wid*2, this.wid*2);
-        strokeWeight(1);
+        // Yellow curve.
+        if (this.strokeD)
+        strokeWeight(22-(this.n*1.618));
+        else
+        strokeWeight(2-this.n);
         stroke(255,255,0);
         beginShape(POINTS);
-//            vertex(-this.wid/2, this.wid/2);
-//            vertex(this.wid/2, -this.wid/2);
-            for (var i = 90; i < 180; i+=0.1){
+
+            for (var i = 90; i < 180; i+= 0.33){
                 vertex((this.wid/2)+this.wid * Math.cos(radians(i)), (this.wid/2)-this.wid * Math.sin(radians(i)));
             }
         endShape();
@@ -99,11 +133,4 @@ function Fbox(_x, _y, _w){
     }
     
 }
-
-
-
-
-
-
-
 
