@@ -19,7 +19,7 @@ class BasicOb {
     }
     
     static setupStuff(){
-        console.log("All set up!");
+        alert("All set up!");
     }
     
 }
