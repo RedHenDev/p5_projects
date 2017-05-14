@@ -47,7 +47,7 @@ function draw(){
 
 function displayAnswer(){
     
-    textSize(48);
+    textSize(42);
     strokeWeight(3);
     stroke(0);
     fill(255);
@@ -74,7 +74,7 @@ function setupIO(){
         
         // Random number. Pick.
         // cAnswer = answers[randomNumber];
-        let i = floor(Math.random()*20);
+        let i = floor(Math.random()*answers.length);
         cAnswer = answers[i];
     }
 }
@@ -98,10 +98,13 @@ function populateAnswers(){
     answers.push("The answer is YES. But why am I trapped on the internet..?");
     answers.push("HELLLLLOOOOOO!  Oh -- Yes.");
     answers.push("The answer is DURIAN.");
-    answers.push("No. Your answers, darling, is NO.");
+    answers.push("No. Your answer, darling, is NO.");
     answers.push("I wasn't listening. But the answer is definitely NO.");
     answers.push("I know the answer. YOU DON'T!!!");
     // 0-19 above.
+    answers.push("No. What kind of question is that?");
+    answers.push("Drink water! Answers later!");
+    answers.push("I'm wearing three pairs of trousers right now. Does THAT answer your question?");
 }
 
 function setupCay(){
