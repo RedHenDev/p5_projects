@@ -73,25 +73,22 @@ class Ball extends Edge {
             _b.pos.add(dist);
             this.pos.sub(dist);
 
-            _b.acc.add(this.vel.mult(0.89));
-            this.acc.sub(this.vel.mult(0.75));
-            
-            this.vel.mult(0.75);
-            
-//            let comV1 = _b.vel;
-//            comV1.add(this.vel);
-//            comV1.mult(1.33);
-//            let comV2 = this.vel;
-//            comV2.add(_b.vel);
+//            _b.acc.add(this.vel.mult(0.89));
+//            this.acc.sub(this.vel.mult(0.75));
 //            
-//            
-//            this.vel.mult(Math.sqrt(this.vel.magnitude));
-//            _b.vel.mult(0.37);
-//            
-//            this.acc.add(comV2);
-//            _b.acc.add(comV1);
+//            this.vel.mult(0.75);
             
-           
+            let _dist = p5.Vector.sub(this.pos, _b.pos);
+            _dist = _dist.normalize();
+            
+            let tN = createVector(-dist.y, dist.x);
+            let _tN = createVector(-_dist.y, _dist.x);
+            this.acc.add(tN.mult(0.24));
+            _b.acc.add(_tN.mult(0.33));
+            
+            //this.vel.mult(0.33);
+            //_b.vel.mult(0.33);
+
         }
         
         
