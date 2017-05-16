@@ -14,6 +14,8 @@ var balls = [];
 var pockets = [];
 
 var cue;
+var cueBsunk = false;   // Is the cueBall sunk?
+                        // If so, allow collision between cue and *all* balls.
 
 function setup(){
     
@@ -54,6 +56,7 @@ function draw(){
     for (let i = balls.length-1; i >= 0; i--){
         
         // Balls colliding with cue?
+        if (balls[i] instanceof CueBall || cueBsunk)
         cue.checkStrike(balls[i]);
         
         // Balls colliding with each other.
@@ -81,6 +84,7 @@ function draw(){
         for (let k = 0; k < pockets.length; k++){
             //pockets[k].render();
             if (pockets[k].checkSink(balls[i])){
+                if (balls[i] instanceof CueBall) cueBallSunk();
                 balls.splice(i, 1);      
                 sunk = true;
             }
@@ -99,6 +103,10 @@ function draw(){
    
 }
 
+function cueBallSunk(){
+    cueBsunk = true;
+}
+
 function setupBalls(){
     // Place balls on table.
     
@@ -111,14 +119,16 @@ function setupBalls(){
     // Triangle.
     let bD = 16;    // Diameter of balls.
     let ori = createVector(width/2, height/2);
-    for (let i = 1; i <= 5; i++){
+    for (let i = 1; i <= 7; i++){
         let posX = ori.x + i * (bD+2);
         for (let j = 1; j <= i; j++){
             let posY = (ori.y + -((bD+2)*j));
-            posY += ((i/2 * (bD+2))) + bD+2;
+            posY += (i/2 * (bD+2)) + (bD/2);
             balls.push(new Ball(posX, posY, bD));
         }
     }
+    
+    balls.push(new CueBall());
     
 }
 

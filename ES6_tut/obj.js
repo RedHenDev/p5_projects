@@ -37,7 +37,7 @@ class Edge {
         rectMode(CENTER);
         
         fill(51,24,12);
-        stroke(0);
+        stroke(101);
         strokeWeight(4);
         
         rect(this.pos.x, this.pos.y, this.wid, this.hid);
@@ -69,13 +69,22 @@ class Ball extends Edge {
         if (nDist < _b.rad + this.rad){
             
             // Pauli exclusion!
-            //dist = dist.mult();
             dist = dist.normalize();
-            _b.pos.add(-4 * dist * _b.rad);
+            _b.pos.add(dist);
+            this.pos.sub(dist);
             
-            let o3 = this.vel;
-            this.vel = _b.vel;
-            _b.vel = o3;
+            let comV1 = _b.vel;
+            comV1.add(this.vel);
+            comV1.mult(0.24);
+            let comV2 = this.vel;
+            comV2.add(_b.vel);
+            comV2.mult(0.49);
+            
+            this.vel.add(comV2);
+            _b.vel.add(comV1);
+            //this.acc.mult(0.9);
+            //_b.acc.mult(0.9);
+            //_b.acc.add(_b.vel.add(this.vel)/30);
         }
         
         
@@ -84,8 +93,8 @@ class Ball extends Edge {
     render(){
         
         fill(147,0,0);
-        stroke(255);
-        strokeWeight(2);
+        stroke(0);
+        strokeWeight(1);
         
         ellipse(this.pos.x, this.pos.y, this.dia, this.dia);
         
@@ -113,7 +122,7 @@ class Pocket extends Edge {
     constructor(_x, _y){
         super (_x, _y);
         
-        this.wid = 42;
+        this.wid = 32;
         
     }
     
@@ -168,6 +177,8 @@ class Cue extends Edge {
         
         if (mDist < _b.rad + (this.wid/2)){
             
+            //dist = dist.normalize();
+            //_b.pos.add(dist);
             _b.acc = dist.mult(0.1);
         }
         
@@ -175,7 +186,25 @@ class Cue extends Edge {
 }
 
 
-
+class CueBall extends Ball {
+    constructor(){
+        super ();
+        this.pos.x = width/2 - 100;
+        this.pos.y = height/2;
+        
+        this.dia = 16;
+        this.rad = this.dia/2;
+    }
+    
+    render(){
+        fill(255);
+        stroke(0);
+        strokeWeight(1);
+        
+        ellipse(this.pos.x, this.pos.y, this.dia, this.dia);
+    }
+    
+}
 
 
 
