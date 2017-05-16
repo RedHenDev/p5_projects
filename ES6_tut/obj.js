@@ -36,7 +36,7 @@ class Edge {
         
         rectMode(CENTER);
         
-        fill(250);
+        fill(51,24,12);
         stroke(0);
         strokeWeight(4);
         
@@ -64,9 +64,15 @@ class Ball extends Edge {
     checkCol(_b){
         
         let dist = p5.Vector.sub(_b.pos, this.pos);
-        dist = dist.mag();
+        let nDist = dist.mag();
         
-        if (dist < _b.rad + this.rad){
+        if (nDist < _b.rad + this.rad){
+            
+            // Pauli exclusion!
+            //dist = dist.mult();
+            dist = dist.normalize();
+            _b.pos.add(-4 * dist * _b.rad);
+            
             let o3 = this.vel;
             this.vel = _b.vel;
             _b.vel = o3;
@@ -90,6 +96,10 @@ class Ball extends Edge {
         
         this.vel.add(this.acc);
         this.pos.add(this.vel);
+        
+        // Deceleration.
+        if (this.vel.mag() > 0)
+        this.vel.mult(0.99);
         
         this.acc.mult(0);
         
@@ -130,6 +140,38 @@ class Pocket extends Edge {
         
     }
     
+}
+
+class Cue extends Edge {
+    constructor(){
+        super(mouseX, mouseY, 32);
+    }
+    
+    update(){
+        this.pos.x = mouseX;
+        this.pos.y = mouseY;
+    }
+    
+    render(){
+        fill(0,0,255,142);
+        stroke(255);
+        strokeWeight(2);
+        
+      
+        ellipse(this.pos.x, this.pos.y, this.wid, this.wid);
+    }
+    
+    checkStrike(_b){
+        
+        let dist = p5.Vector.sub(_b.pos, this.pos);
+        let mDist = dist.mag();
+        
+        if (mDist < _b.rad + (this.wid/2)){
+            
+            _b.acc = dist.mult(0.1);
+        }
+        
+    }
 }
 
 

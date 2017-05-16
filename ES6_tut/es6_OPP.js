@@ -13,6 +13,8 @@ var balls = [];
 
 var pockets = [];
 
+var cue;
+
 function setup(){
     
     createCanvas(640,480);
@@ -30,7 +32,7 @@ function setup(){
     
     setupPockets();
     
-    
+    cue = new Cue();
 } 
 
 
@@ -51,6 +53,8 @@ function draw(){
     
     for (let i = balls.length-1; i >= 0; i--){
         
+        // Balls colliding with cue?
+        cue.checkStrike(balls[i]);
         
         // Balls colliding with each other.
         for (let j = 0; j < balls.length; j++){
@@ -89,6 +93,9 @@ function draw(){
     for (let k = 0; k < pockets.length; k++){
             pockets[k].render();
     }
+    
+    cue.update();
+    cue.render();
    
 }
 
@@ -102,7 +109,7 @@ function setupBalls(){
     
     
     // Triangle.
-    let bD = 22;
+    let bD = 16;    // Diameter of balls.
     let ori = createVector(width/2, height/2);
     for (let i = 1; i <= 5; i++){
         let posX = ori.x + i * (bD+2);
