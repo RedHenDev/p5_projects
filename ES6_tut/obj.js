@@ -54,7 +54,8 @@ class Ball extends Edge {
         this.dia = _dia;
         this.rad = this.dia/2;
         
-        this.vel = createVector(Math.random()*6-3, Math.random()*6-3);
+        //this.vel = createVector(Math.random()*6-3, Math.random()*6-3);
+        this.vel = createVector();
         this.acc = createVector();
         
         
