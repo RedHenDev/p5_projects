@@ -66,25 +66,32 @@ class Ball extends Edge {
         let dist = p5.Vector.sub(_b.pos, this.pos);
         let nDist = dist.mag();
         
-        if (nDist < _b.rad + this.rad){
+        if (nDist <= _b.rad + this.rad){
             
             // Pauli exclusion!
             dist = dist.normalize();
             _b.pos.add(dist);
             this.pos.sub(dist);
+
+            _b.acc.add(this.vel.mult(0.89));
+            this.acc.sub(this.vel.mult(0.75));
             
-            let comV1 = _b.vel;
-            comV1.add(this.vel);
-            comV1.mult(0.24);
-            let comV2 = this.vel;
-            comV2.add(_b.vel);
-            comV2.mult(0.49);
+            this.vel.mult(0.75);
             
-            this.vel.add(comV2);
-            _b.vel.add(comV1);
-            //this.acc.mult(0.9);
-            //_b.acc.mult(0.9);
-            //_b.acc.add(_b.vel.add(this.vel)/30);
+//            let comV1 = _b.vel;
+//            comV1.add(this.vel);
+//            comV1.mult(1.33);
+//            let comV2 = this.vel;
+//            comV2.add(_b.vel);
+//            
+//            
+//            this.vel.mult(Math.sqrt(this.vel.magnitude));
+//            _b.vel.mult(0.37);
+//            
+//            this.acc.add(comV2);
+//            _b.acc.add(comV1);
+            
+           
         }
         
         
