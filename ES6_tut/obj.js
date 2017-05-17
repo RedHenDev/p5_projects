@@ -70,8 +70,8 @@ class Ball extends Edge {
             
             // Pauli exclusion!
             dist = dist.normalize();
-            _b.pos.add(dist);
-            this.pos.sub(dist);
+            _b.pos.add(dist.mult(0.33));
+            this.pos.sub(dist.mult(0.33));
             
               let _dist = p5.Vector.sub(this.pos, _b.pos);
             _dist = _dist.normalize();
@@ -80,10 +80,12 @@ class Ball extends Edge {
             nV.normalize();
             
             let vStore = this.vel.mag();
-            this.vel.mult(0);
-            _b.vel.mult(0);
+            
+            this.vel.mult(0.49);
+            _b.vel.mult(0.49);
+            
             this.acc.add(_dist);
-            _b.acc.add(_dist.mult(vStore*0.33));
+            _b.acc.add(_dist.mult(vStore*0.01));
             
             
             //this.acc.sub(_b.vel);
