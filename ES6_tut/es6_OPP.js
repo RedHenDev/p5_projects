@@ -61,8 +61,9 @@ function draw(){
         
         // Balls colliding with each other.
         for (let j = 0; j < balls.length; j++){
-            if (i !== j)
+            if (i !== j){
             balls[i].checkCol(balls[j]);
+            }
         }
         
         // Balls colliding with edges.
