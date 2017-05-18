@@ -1,9 +1,11 @@
 
 var blocks = [];
 
+var canvas;
+
 function setup(){
     
-    createCanvas(400,400);
+    canvas = createCanvas(windowWidth,windowHeight);
     background(0);
     
     RedHen_2DPhysics.setupMatter();
@@ -12,9 +14,9 @@ function setup(){
     
 }
 
-function touchStarted(){
+function mouseMoved(){
    // if (frameCount % 4 !== 0) return;
-    blocks.push(new Box(Math.floor(mouseX)+22, mouseY, 22));   
+    blocks.push(new Box(mouseX, mouseY, 22));   
 }
 
 function draw(){

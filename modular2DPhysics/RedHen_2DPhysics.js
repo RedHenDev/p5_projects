@@ -13,11 +13,17 @@ var myWorld;
 var myEngine;
 // Mouse contraint.
 var mConstraint;
-//var canvasMouse;
 
 
+// Array of RedHen_2DPhysics bodies.
+// Handled via this wrapper class.
+// However, should build in clear way
+// for main .js file to create own arrays
+// (as is the necessary case at time of writing).
+var matterBods = [];
 
 // Static class for setting up physics and setting gravity etc.
+// Mouse interaction will be ON as default.
 class RedHen_2DPhysics { 
     
     
@@ -33,6 +39,10 @@ class RedHen_2DPhysics {
         // Start the engine!
         Matter.Engine.run(myEngine);
         
+        // Mouse constraint on as default.
+        // NB have to use this. keyword here
+        // to refer to static method of this
+        // class?!
         this.setupMouseConstraint();
         
         // Make sure we are drawing rectangles from their centres.
