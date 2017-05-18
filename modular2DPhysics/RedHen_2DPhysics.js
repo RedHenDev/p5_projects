@@ -53,9 +53,9 @@ class RedHen_2DPhysics {
         
         // Instantiate a box as default!
         this.newObj
-        ("box",width/2,height-9+width/2,width);
+        ("box",width/2,height-9+width/2,width, true);
         bods[0].makeStatic();
-        bods[0].fill = color(255,101);
+        bods[0].fill = color(200);
         
         // Make sure we are drawing rectangles from their centres.
         rectMode(CENTER);
@@ -110,14 +110,16 @@ class RedHen_2DPhysics {
     }
     
    
-    
-    static newObj(_requestedBody, _x, _y, _size, _size2, _other){
+    // Call to make a new 2D_Physics object of any type.
+    static newObj(_requestedBody, _x, _y, _size, _makeDirect, _size2, _other){
         
         // If user enters nonsense, they'll hopefully just get a box. So, not too big a loss :)
         if (_requestedBody == null ||
-            typeof _requestedBody != String || _requestedBody === 'Box' ||
-           _requestedBody == 'box')
-        bods.push(new Box(_x, _y, _size));
+             typeof _requestedBody != "string" || _requestedBody === "Box" ||
+           _requestedBody === "box")
+        bods.push(new Box(_x, _y, _size, _makeDirect));
+         else if (_requestedBody === "circle" || _requestedBody === "Circle")
+        bods.push(new Circle(_x, _y, _size, _makeDirect));
     }
     
     // Renders all objects to canvas. This is managed through an array. Main js file, then, does not have to look after this array -- it's all taken care of by the RedHen_2DPhysics class.
@@ -150,6 +152,8 @@ class RedHen_2DPhysics {
         // Add the mouse contraint to the world.
         mConstraint = Matter.MouseConstraint.create(myEngine, options);
         Matter.World.add(myWorld, mConstraint);
+        //mConstraint.stiffness = 1;
+        //mConstraint.length = 0.1;
     }
     
     // Draw a circle and constraint line from mouse to selected body.
@@ -173,11 +177,11 @@ class RedHen_2DPhysics {
 class Obj { 
     
     // Constructor can accept no or null parameters.
-    constructor(_x, _y, _rad){
+    constructor(_x, _y, _rad, _ImakeObject){
         
         this.pos = createVector(0,0);
         
-        // Some in-built polymorphism.
+        // Place body at screen centre is any funny business.
         if (_x != null) this.pos.x = _x;
         else            this.pos.x = width/2;
         if (_y != null) this.pos.y = _y;
@@ -189,14 +193,14 @@ class Obj {
         // We calculate now for efficiency when rendering.
         this.dia = this.rad * 2;
         
-        
         // Maybe we could set a parameter to control whether this basic contructor makes a body...? Else, extended class will do so...THIS WOULD THEN allow us to use the present class object as the invisible body, which the antBot, for instance, uses.
-        
+        if (_ImakeObject){
         // Instantiate a 2D Physics Body, a circle.
-       // this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.pos.rad,options); 
+       this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.dia,options); 
         
         // Add the body to the Physics World.
-       // Matter.World.add(myWorld, this.bod);
+       Matter.World.add(myWorld, this.bod);
+        }
     }
     
     // Changes the body's scale.
@@ -229,42 +233,45 @@ class Obj {
 
 
 class Box extends Obj {
-    constructor(_x, _y, _diameter){
-        super(_x, _y, 0.5 * _diameter);
+    constructor(_x, _y, _diameter, _ImakeBody){
+        super(_x, _y, 0.5 * _diameter, false);
         
         // Render() returns immediately if set to false.
         this.visible = true;
         
+        // *** default ***
+        // NEEDS UPDATE
         // Randomizes colour.
+        this.alpha = 255;
         let boodles = Math.random();
         if (boodles <= 0.19){
-        this.fill =                                 color(Math.random()*55+200,
-                    Math.random()*55+200,
-                    Math.random()*55+200);
-                            }
+        this.fill =                                 color(Math.random()*100+155,
+                    Math.random()*100+155,
+                    Math.random()*100+155,
+                    this.alpha);
+        }
         else if (boodles < 0.0){
-        this.fill =                                 color(Math.random()*55+200,
+        this.fill =                                 color(Math.random()*100+155,
                     0,
-                    0);
+                    0, this.alpha);
         }
         else if (boodles < 0.0){
         this.fill =                                 color(0,
-                    Math.random()*55+200,
-                    0);   
+                    Math.random()*100+155,
+                    0, this.alpha);   
         }
         else {
         this.fill =                                 color(0,
                     0,
-                    Math.random()*55+200);   
+                    Math.random()*100+155,
+                    this.alpha);   
         }
-        this.alpha          = 25;
         this.stroke         = 255;
-        this.strokeWeight   = 1;
+        this.strokeWeight   = 2;
         
-        
-        
-        // Instantiate a 2D Physics Body, a circle.
+        // Instantiate a 2D Physics Body, a rectangle.
         // Set default poperties of matter.js object.
+        if (_ImakeBody){
         var options = {
             isStatic: false,
             restitution: 0.89,
@@ -274,6 +281,7 @@ class Box extends Obj {
         
         // Add the body to the Physics World.
         Matter.World.add(myWorld, this.bod);
+        }
         
     }
     
@@ -281,7 +289,7 @@ class Box extends Obj {
     
         if (!this.visible) return;
         
-        fill(this.fill, this.alpha);
+        fill(this.fill);
         stroke(this.stroke);
         strokeWeight(this.strokeWeight);
     
@@ -297,6 +305,40 @@ class Box extends Obj {
     
     }
 
+}
+
+class Circle extends Box{
+    constructor(_x, _y, _radius, _ImakeBody){
+        super(_x, _y, _radius * 2, false);
+        
+        // Instantiate a 2D Physics Body, a circle.
+        // Set default poperties of matter.js object.
+        if (_ImakeBody){
+        var options = {
+            isStatic: false,
+            restitution: 0.8,
+            friction: 0.04
+        }
+        this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.rad,options); 
+        
+        // Add the body to the Physics World.
+        Matter.World.add(myWorld, this.bod);
+        }
+        
+    }
+    
+    render(){
+        if (!this.visible) return;
+        
+        fill(this.fill);
+        stroke(this.stroke);
+        strokeWeight(this.strokeWeight);
+        
+        ellipse(this.bod.position.x,
+                this.bod.position.y,
+                this.dia);
+        
+    }
 }
 
 
