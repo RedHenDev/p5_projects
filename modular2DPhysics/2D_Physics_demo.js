@@ -1,30 +1,22 @@
-
-var blocks = [];
-
+// Global canvas element necessary!
+// This is to allow mouse/touch interaction to work.
 var canvas;
 
 function setup(){
-    
+    // Remember to assign value of canvas like this :)
     canvas = createCanvas(windowWidth,windowHeight);
     background(0);
     
-    RedHen_2DPhysics.setupMatter();
-    
-    blocks.push(new Box(200,200,20));
-    
+    RedHen_2DPhysics.setupMatter(); 
 }
 
-function mouseMoved(){
-   // if (frameCount % 4 !== 0) return;
-    blocks.push(new Box(mouseX, mouseY, 22));   
+function mouseDragged(){
+    if (frameCount % 4 !== 0) return;
+    RedHen_2DPhysics.newObj("box", mouseX, mouseY, 28);   
 }
 
-function draw(){
-    
+function draw(){ 
     background(0);
     
-    for (let i = 0; i < blocks.length; i++){
-        blocks[i].render();
-    }
-    
+    RedHen_2DPhysics.updateObjs();   
 }

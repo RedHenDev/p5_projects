@@ -2,6 +2,7 @@
 //*********&&&&&&&&&&&&****************&&&&&&&&&&&&****************
 
 // Modular 'Obj' wrapper classes for use with Liam Brummit's matter.js 
+
 // B 'Red Hen' New 2017.
 
 //*********&&&&&&&&&&&&****************&&&&&&&&&&&&****************
@@ -20,13 +21,15 @@ var mConstraint;
 // However, should build in clear way
 // for main .js file to create own arrays
 // (as is the necessary case at time of writing).
-var matterBods = [];
+var bods = [];
+
+// Off Screen Remove.
+// See updateBods().
+var OSR = true;
 
 // Static class for setting up physics and setting gravity etc.
 // Mouse interaction will be ON as default.
 class RedHen_2DPhysics { 
-    
-    
     
     // Main program calls this to begin using this wrapper class.
     // Sets up mouse contraint by default.
@@ -45,9 +48,93 @@ class RedHen_2DPhysics {
         // class?!
         this.setupMouseConstraint();
         
+        // We have functionality, but not yet implemented for general use.
+        //this.setupCollisions();
+        
+        // Instantiate a box as default!
+        this.newObj
+        ("box",width/2,height-9+width/2,width);
+        bods[0].makeStatic();
+        bods[0].fill = color(255,101);
+        
         // Make sure we are drawing rectangles from their centres.
         rectMode(CENTER);
     
+    }
+    
+    static setupCollisions(){
+        
+    // The collision events function.
+    // Collision *events* may need to use the
+    // *indexID* of the body in order to 
+    // reference the wrapper object's variables.
+    // [This is not yet implemented!!!]
+    function collision(event){
+        // Ref to all pairs of bodies colliding.
+        var pairs = event.pairs;
+        // Iterate over the pairs to
+        // find the condition you're
+        // looking for.
+        for (var i = 0; i < pairs.length;       i++){
+            // The event's pairs will have a 
+            // bodyA and bodyB object that
+            // we can grab here...
+            var bodA = pairs[i].bodyA;
+            var bodB = pairs[i].bodyB;
+            // E.g.
+             if (Math.abs(bodA.velocity.x *             bodA.velocity.y) > 4){
+                Matter.Body.setStatic(bodB, true);}
+            }   // End of forLoop.
+        }       // End of collision events function. 
+    // Turn on collision events.
+    // The third parameter 'collision' is a 
+    // call back to the function above.
+        Matter.Events.on(myEngine, 'collisionStart', collision);
+    
+    }
+    
+    // ON as default. Bodies removed from world and array if having gone off-screen.
+    static offscreenRemove(_trueIfOn){
+        if (typeof _trueIfOn == Boolean)
+             OSR = _trueIfOn;
+        else OSR = true;
+    }
+    
+    static removeObj(_index){
+        
+        // First remove body from matter.js world.
+        Matter.World.remove(myWorld, bods[_index].bod);
+        
+        // Next, remove this object from bods array.
+        bods.splice(_index,1); 
+    }
+    
+   
+    
+    static newObj(_requestedBody, _x, _y, _size, _size2, _other){
+        
+        // If user enters nonsense, they'll hopefully just get a box. So, not too big a loss :)
+        if (_requestedBody == null ||
+            typeof _requestedBody != String || _requestedBody === 'Box' ||
+           _requestedBody == 'box')
+        bods.push(new Box(_x, _y, _size));
+    }
+    
+    // Renders all objects to canvas. This is managed through an array. Main js file, then, does not have to look after this array -- it's all taken care of by the RedHen_2DPhysics class.
+    static updateObjs(){
+        for (let i = bods.length-1; i >= 0; i--){
+            // Render to canvas.
+            bods[i].render();
+            // Off_Screen_Remove ON?
+            // Off screen position?
+            if (OSR && (    
+                    bods[i].bod.position.x + bods[i].dia < -9 ||
+                    bods[i].bod.position.y + bods[i].dia < -9 ||
+                    bods[i].bod.position.x - bods[i].dia > width+9 ||
+                    bods[i].bod.position.y - bods[i].dia > height+9
+                        )
+                ){this.removeObj(i);}
+        }
     }
     
     static setupMouseConstraint(){
@@ -88,23 +175,22 @@ class Obj {
     // Constructor can accept no or null parameters.
     constructor(_x, _y, _rad){
         
-        this.pos = createVector(_x,_y);
-        
-        
+        this.pos = createVector(0,0);
         
         // Some in-built polymorphism.
-        // this.pos.x = _x;
-        //else            this.pos.x = width/2;
-       // this.pos.y = _y;
-       // else            this.pos.y = height/2;
-       // 
-         this.rad = _rad;
-       // else                this.rad = 9;
+        if (_x != null) this.pos.x = _x;
+        else            this.pos.x = width/2;
+        if (_y != null) this.pos.y = _y;
+        else            this.pos.y = height/2;
+       
+        if (_rad != null)   this.rad = _rad;
+        else                this.rad = 9;
         
         // We calculate now for efficiency when rendering.
         this.dia = this.rad * 2;
         
         
+        // Maybe we could set a parameter to control whether this basic contructor makes a body...? Else, extended class will do so...THIS WOULD THEN allow us to use the present class object as the invisible body, which the antBot, for instance, uses.
         
         // Instantiate a 2D Physics Body, a circle.
        // this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.pos.rad,options); 
@@ -146,14 +232,34 @@ class Box extends Obj {
     constructor(_x, _y, _diameter){
         super(_x, _y, 0.5 * _diameter);
         
+        // Render() returns immediately if set to false.
         this.visible = true;
         
-        this.fill = color(Math.random()*255,
-                          Math.random()*255,
-                          Math.random()*255);
-        this.alpha          = 255;
+        // Randomizes colour.
+        let boodles = Math.random();
+        if (boodles <= 0.19){
+        this.fill =                                 color(Math.random()*55+200,
+                    Math.random()*55+200,
+                    Math.random()*55+200);
+                            }
+        else if (boodles < 0.0){
+        this.fill =                                 color(Math.random()*55+200,
+                    0,
+                    0);
+        }
+        else if (boodles < 0.0){
+        this.fill =                                 color(0,
+                    Math.random()*55+200,
+                    0);   
+        }
+        else {
+        this.fill =                                 color(0,
+                    0,
+                    Math.random()*55+200);   
+        }
+        this.alpha          = 25;
         this.stroke         = 255;
-        this.strokeWeight   = 2;
+        this.strokeWeight   = 1;
         
         
         
@@ -161,10 +267,10 @@ class Box extends Obj {
         // Set default poperties of matter.js object.
         var options = {
             isStatic: false,
-            restitution: 0.7,
+            restitution: 0.89,
             friction: 0.04
         }
-        this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.rad,this.rad,options); 
+        this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.dia,this.dia,options); 
         
         // Add the body to the Physics World.
         Matter.World.add(myWorld, this.bod);
@@ -173,7 +279,9 @@ class Box extends Obj {
     
     render(){
     
-        fill(this.fill);
+        if (!this.visible) return;
+        
+        fill(this.fill, this.alpha);
         stroke(this.stroke);
         strokeWeight(this.strokeWeight);
     
