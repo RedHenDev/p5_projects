@@ -99,7 +99,7 @@ function draw(){
             pockets[k].render();
     }
     
-    cue.update();
+    cue.update(cueBsunk);
     cue.render();
    
 }
@@ -117,6 +117,8 @@ function setupBalls(){
 //    }
     
     
+    balls.push(new CueBall());
+    
     // Triangle.
     let bD = 16;    // Diameter of balls.
     let ori = createVector(width/2, height/2);
@@ -129,7 +131,7 @@ function setupBalls(){
         }
     }
     
-    balls.push(new CueBall());
+    
     
 }
 

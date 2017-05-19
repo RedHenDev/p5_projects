@@ -88,18 +88,7 @@ class Ball extends Edge {
             //_b.acc.sub(_dist.mult(0.1));
             
             
-            //this.acc.sub(_b.vel);
-            
-//            let _dist = p5.Vector.sub(this.pos, _b.pos);
-//            _dist = _dist.normalize();
-//            
-//            let tN = createVector(-dist.y, dist.x);
-//            let _tN = createVector(-_dist.y, _dist.x);
-//            this.acc.add(tN);
-//            _b.acc.add(tN);
-//            
-//            this.vel.mult(0.33);
-//            _b.vel.mult(0.33);
+          
 
         }
         
@@ -172,9 +161,49 @@ class Cue extends Edge {
         super(mouseX, mouseY, 32);
     }
     
-    update(){
+    update(_sunk){
         this.pos.x = mouseX;
         this.pos.y = mouseY;
+        
+        this.tip = createVector(0,0);
+        
+        // We want the cue to always
+        // point towards the cue ball.
+        // (remember to think about 'cueIsSunk' condition).
+        // 
+        // So, we need to draw a vector from mouse position to cue ball, and then draw a cue according to that vector. This could be done with a line with some thick strokeWeight? Or, we could rotate a rectangle.
+        
+        // Let's try the line thing first!
+        
+        // Also, we don't want mousePos to be tip of cue, but centre point.
+        
+        if (!_sunk){
+            let toCB = createVector(0,0);
+            let wmbi = createVector(0,0);
+            let wtpi = createVector(0,0);
+            wmbi.x = balls[0].pos.x;
+            wmbi.y = balls[0].pos.y;
+            wtpi.x = mouseX;
+            wtpi.y = mouseY;
+            toCB = p5.Vector.sub(wmbi, wtpi);
+            
+            toCB = toCB.normalize();
+            let backCB = createVector(toCB.x, toCB.y);
+            stroke(200,101,0);
+            strokeWeight(9);
+            let l1 = createVector(wtpi.x, wtpi.y);
+            l1 = l1.add(toCB.mult(100));
+            let l2 = createVector(wtpi.x, wtpi.y); 
+            l2 = l2.sub(backCB.mult(80));
+          
+            line(l1.x,l1.y,l2.x,l2.y);
+            stroke(0,0,147);
+            strokeWeight(9);
+            point(l1.x,l1.y);
+            this.tip.x = l1.x;
+            this.tip.y = l1.y;
+        }
+        
     }
     
     render(){
@@ -188,6 +217,7 @@ class Cue extends Edge {
     
     checkStrike(_b){
         
+        if (cueBsunk){
         let dist = p5.Vector.sub(_b.pos, this.pos);
         let mDist = dist.mag();
         
@@ -196,6 +226,18 @@ class Cue extends Edge {
             //dist = dist.normalize();
             //_b.pos.add(dist);
             _b.acc = dist.mult(0.1);
+        }
+        }
+        else if (!cueBsunk){
+            let dist = p5.Vector.sub(_b.pos, this.tip);
+            let mDist = dist.mag();
+        
+        if (mDist < _b.rad + 8){
+            
+            //dist = dist.normalize();
+            //_b.pos.add(dist);
+            _b.acc = dist.mult(0.1);
+        }
         }
         
     }
