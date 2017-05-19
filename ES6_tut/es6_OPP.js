@@ -13,13 +13,14 @@ var balls = [];
 
 var pockets = [];
 
+var cueActive = false;  // Drag mouse/finger to activate cue-tip.
 var cue;
 var cueBsunk = false;   // Is the cueBall sunk?
                         // If so, allow collision between cue and *all* balls.
 
 function setup(){
     
-    createCanvas(640,480);
+    createCanvas(windowWidth,windowHeight);
     
     background(0,101,202);  
     
@@ -43,9 +44,14 @@ function draw(){
     
     background(0,101,202);
     
+    //stroke(255);
+    noStroke();
+    fill(255);
+    text("Hold button to activate cue tip.", 32,32);
+    
     // Draw green baize.
     fill(0,147,0);
-    noStroke();
+    //noStroke();
     rect(width/2,height/2,topEdge.wid, leftEdge.hid);
     
     topEdge.render();
@@ -56,7 +62,7 @@ function draw(){
     for (let i = balls.length-1; i >= 0; i--){
         
         // Balls colliding with cue?
-        if (balls[i] instanceof CueBall || cueBsunk)
+        if ((cueActive && balls[i] instanceof CueBall) || cueBsunk)
         cue.checkStrike(balls[i]);
         
         // Balls colliding with each other.
@@ -104,6 +110,18 @@ function draw(){
    
 }
 
+function mouseDragged(){
+    cueActive = true;   
+}
+
+function touchStarted(){
+    cueActive = true;
+}
+
+function touchEnded(){
+    cueActive = false;
+}
+
 function cueBallSunk(){
     cueBsunk = true;
 }
@@ -117,17 +135,19 @@ function setupBalls(){
 //    }
     
     
-    balls.push(new CueBall());
+    balls.push(new CueBall(22));
     
     // Triangle.
-    let bD = 16;    // Diameter of balls.
+    let bD = 24;    // Diameter of balls.
     let ori = createVector(width/2, height/2);
     for (let i = 1; i <= 7; i++){
         let posX = ori.x + i * (bD+2);
         for (let j = 1; j <= i; j++){
             let posY = (ori.y + -((bD+2)*j));
             posY += (i/2 * (bD+2)) + (bD/2);
+            if (Math.random() > 0.5)
             balls.push(new Ball(posX, posY, bD));
+            else balls.push(new yellowBall(posX, posY, bD)); 
         }
     }
     
@@ -153,10 +173,3 @@ function setupPockets(){
     pockets[5].pos.x = width/2;
     pockets[5].pos.y = topEdge.pos.y + topEdge.hid * 0.25; 
 }
-
-
-
-
-
-
-

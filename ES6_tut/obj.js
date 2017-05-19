@@ -1,4 +1,3 @@
-
 class Edge {
     
     constructor(_x, _y, _w, _h){
@@ -36,9 +35,9 @@ class Edge {
         
         rectMode(CENTER);
         
-        fill(51,24,12);
-        stroke(101);
-        strokeWeight(4);
+        fill(72,44,22);
+        stroke(200);
+        strokeWeight(3);
         
         rect(this.pos.x, this.pos.y, this.wid, this.hid);
     }
@@ -70,8 +69,8 @@ class Ball extends Edge {
             
             // Pauli exclusion!
             dist = dist.normalize();
-            _b.pos.add(dist.mult(0.89));
-            this.pos.sub(dist.mult(0.89));
+            //_b.pos.add(dist.mult(2));
+            this.pos.sub(dist.mult(0.1));
             
               let _dist = p5.Vector.sub(this.pos, _b.pos);
             _dist = _dist.normalize();
@@ -79,17 +78,13 @@ class Ball extends Edge {
             let nV = createVector(-_dist.y, _dist.x);
             nV.normalize();
             
-            let vStore = this.vel.mag();
+            let vStore = _b.vel.mag();
             
-            this.vel.mult(0.98);
-            _b.vel.mult(0.85);
+            this.vel.mult(0.9);
+            _b.vel.mult(0.75);
             
-            this.acc.add(_dist.mult(0.33));
-            //_b.acc.sub(_dist.mult(0.1));
-            
-            
-          
-
+            this.acc.add(_dist.mult(0.6*vStore));
+        
         }
         
         
@@ -97,9 +92,16 @@ class Ball extends Edge {
     
     render(){
         
-        fill(147,0,0);
-        stroke(0);
+        // Red.
+        //fill(147,0,0);
+        
+        // Black!
+        fill(0);
+        stroke(255,101);
         strokeWeight(1);
+        //stroke(0);
+        //strokeWeight(1);
+        //noStroke();
         
         ellipse(this.pos.x, this.pos.y, this.dia, this.dia);
         
@@ -112,8 +114,9 @@ class Ball extends Edge {
         this.pos.add(this.vel);
         
         // Deceleration.
-        if (this.vel.mag() > 0)
+        if (this.vel.mag() > 0.02)
         this.vel.mult(0.99);
+        else {this.vel.x = 0; this.vel.y = 0;}
         
         this.acc.mult(0);
         
@@ -122,12 +125,31 @@ class Ball extends Edge {
     
 }
 
+class yellowBall extends Ball {
+    constructor(_x, _y, _dia){
+        super(_x, _y, _dia);
+    }
+    
+    render(){
+        // Yellow.
+        //fill(147,147,0);
+        
+        // Pink!
+        fill(255,0,200);
+        //noStroke();
+        stroke(255,101);
+        strokeWeight(1);
+        
+        ellipse(this.pos.x, this.pos.y, this.dia, this.dia);
+    }
+}
+
 class Pocket extends Edge {
     
     constructor(_x, _y){
         super (_x, _y);
         
-        this.wid = 32;
+        this.wid = 28;
         
     }
     
@@ -207,7 +229,10 @@ class Cue extends Edge {
     }
     
     render(){
+        if (cueActive)
         fill(0,0,255,142);
+        else
+        fill(255,101);
         stroke(255);
         strokeWeight(2);
         
@@ -232,11 +257,15 @@ class Cue extends Edge {
             let dist = p5.Vector.sub(_b.pos, this.tip);
             let mDist = dist.mag();
         
-        if (mDist < _b.rad + 8){
+        if (mDist < _b.rad + 9){
+            
+             // Pauli exclusion!
+            dist = dist.normalize();
+            //_b.pos.add(dist);
             
             //dist = dist.normalize();
             //_b.pos.add(dist);
-            _b.acc = dist.mult(0.1);
+            _b.acc = dist.mult(3.14);
         }
         }
         
@@ -245,12 +274,12 @@ class Cue extends Edge {
 
 
 class CueBall extends Ball {
-    constructor(){
+    constructor(_diameter){
         super ();
         this.pos.x = width/2 - 100;
         this.pos.y = height/2;
         
-        this.dia = 16;
+        this.dia = _diameter;
         this.rad = this.dia/2;
     }
     
@@ -263,6 +292,5 @@ class CueBall extends Ball {
     }
     
 }
-
 
 
