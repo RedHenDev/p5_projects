@@ -50,7 +50,7 @@ function draw(){
     text("Hold button to activate cue tip.", 32,32);
     
     // Draw green baize.
-    fill(0,147,0);
+    fill(0,122,0);
     //noStroke();
     rect(width/2,height/2,topEdge.wid, leftEdge.hid);
     
@@ -160,16 +160,16 @@ function setupPockets(){
     for (let i = 0; i < 6; i++){
        pockets.push(new Pocket(0,0));
     }
-    pockets[0].pos.x = topEdge.pos.x - topEdge.wid/2 * 0.95;
-    pockets[0].pos.y = topEdge.pos.y + topEdge.hid * 0.5;
-    pockets[1].pos.x = topEdge.pos.x + topEdge.wid/2 * 0.95;
-    pockets[1].pos.y = topEdge.pos.y + topEdge.hid * 0.5;
-    pockets[2].pos.x = botEdge.pos.x - botEdge.wid/2 * 0.95;
-    pockets[2].pos.y = botEdge.pos.y - botEdge.hid * 0.5;
-    pockets[3].pos.x = botEdge.pos.x + botEdge.wid/2 * 0.95;
-    pockets[3].pos.y = botEdge.pos.y - botEdge.hid * 0.5;
+    pockets[0].pos.x = topEdge.pos.x - topEdge.wid/2 * 0.96;
+    pockets[0].pos.y = topEdge.pos.y + topEdge.hid * 0.2;
+    pockets[1].pos.x = topEdge.pos.x + topEdge.wid/2 * 0.96;
+    pockets[1].pos.y = topEdge.pos.y + topEdge.hid * 0.2;
+    pockets[2].pos.x = botEdge.pos.x - botEdge.wid/2 * 0.96;
+    pockets[2].pos.y = botEdge.pos.y - botEdge.hid * 0.2;
+    pockets[3].pos.x = botEdge.pos.x + botEdge.wid/2 * 0.96;
+    pockets[3].pos.y = botEdge.pos.y - botEdge.hid * 0.2;
     pockets[4].pos.x = width/2;
-    pockets[4].pos.y = botEdge.pos.y - botEdge.hid * 0.25;
+    pockets[4].pos.y = botEdge.pos.y - botEdge.hid * 0;
     pockets[5].pos.x = width/2;
-    pockets[5].pos.y = topEdge.pos.y + topEdge.hid * 0.25; 
+    pockets[5].pos.y = topEdge.pos.y + topEdge.hid * 0; 
 }

@@ -35,9 +35,11 @@ class Edge {
         
         rectMode(CENTER);
         
-        fill(72,44,22);
+        // Brown.
+        //fill(72,44,22);
+        fill(70,70,147); 
         stroke(200);
-        strokeWeight(3);
+        strokeWeight(2);
         
         rect(this.pos.x, this.pos.y, this.wid, this.hid);
     }
@@ -83,7 +85,8 @@ class Ball extends Edge {
             this.vel.mult(0.9);
             _b.vel.mult(0.75);
             
-            this.acc.add(_dist.mult(0.6*vStore));
+            this.acc.add(_dist.mult(0.5*vStore));
+            _b.acc.add(-nV.mult(0.5*vStore));
         
         }
         
@@ -149,16 +152,20 @@ class Pocket extends Edge {
     constructor(_x, _y){
         super (_x, _y);
         
-        this.wid = 28;
+        this.wid = 40;
         
+        this.hue = 0;
     }
     
      render(){
         
-        fill(0);
-//        stroke(0);
-//        strokeWeight(4);
-         noStroke();
+        this.hue += Math.sin(frameCount/255);
+        if (this.hue > 255) this.hue = 255;
+        if (this.hue < 0) this.hue = 0;
+        fill(this.hue);
+        stroke(0,147,0);
+        strokeWeight(1);
+         //noStroke();
         
         ellipse(this.pos.x, this.pos.y, this.wid, this.wid);
     
@@ -216,11 +223,12 @@ class Cue extends Edge {
             let l1 = createVector(wtpi.x, wtpi.y);
             l1 = l1.add(toCB.mult(100));
             let l2 = createVector(wtpi.x, wtpi.y); 
-            l2 = l2.sub(backCB.mult(80));
+            l2 = l2.sub(backCB.mult(280));
           
+            // Paint cue tip.
             line(l1.x,l1.y,l2.x,l2.y);
-            stroke(0,0,147);
-            strokeWeight(9);
+            stroke(200);
+            strokeWeight(11);
             point(l1.x,l1.y);
             this.tip.x = l1.x;
             this.tip.y = l1.y;
