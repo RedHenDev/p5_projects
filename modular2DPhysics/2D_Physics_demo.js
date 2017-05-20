@@ -47,6 +47,46 @@ function setupLedge(){
     }
 }
 
+// Checks for keyIsDown.
+// These should be static methods
+// belonging to an antBots utility class...
+function keyInput(){
+    if (keyIsDown(UP_ARROW)) { 
+        //setGravity(0,-1);
+        ants[0].moveForward(1);
+    }
+    if (keyIsDown(DOWN_ARROW)){
+        // setGravity(0,1);
+        ants[0].moveForward(-1);
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+       // setGravity(1,0);
+        ants[0].steer(1);
+    }
+    if (keyIsDown(LEFT_ARROW)) {
+       // setGravity(-1,0);
+        ants[0].steer(-1);
+    }
+    
+    // Space-bar to...go to space! 
+    // Zero gravity!!!
+    if (keyIsDown(32)) RedHen_2DPhysics.setGravity(0,0);
+    // 'G' for familiar gravity.
+    if (keyIsDown(71)) RedHen_2DPhysics.setGravity(0,1);
+}
+
+// I'd prefer this to be a 
+// control belonging to an antBot utility
+// class.
+function keyTyped(){
+    if (key==='='){
+        ants[0].incScale(0.5);
+    }
+    if (key==='-'){
+        ants[0].incScale(-0.5);
+    }
+}
+
 function mouseDragged(){
     canSpawn = false;
 }
@@ -73,6 +113,9 @@ function waveLedge(){
 
 function draw(){ 
     background(72);
+    
+    // Check for input.
+    keyInput();
     
     waveLedge();
     

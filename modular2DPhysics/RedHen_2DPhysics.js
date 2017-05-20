@@ -70,6 +70,13 @@ class RedHen_2DPhysics {
     
     }
     
+    static setGravity(_xDir, _yDir){
+        // This is a matter.js's
+        // gravity vector.
+        myWorld.gravity.x = _xDir;
+        myWorld.gravity.y = _yDir;
+    }
+    
     static setupCollisions(){
         
     // The collision events function.
@@ -164,6 +171,13 @@ class RedHen_2DPhysics {
         }
     }
     
+    // Moves all bods in dir. passed in.
+    static globalMovement(_xDir, _yDir){
+        for (let i = 0; i < bods.length; i++){
+            bods[i].makePosition( bods[i].bod.position.x+ _xDir, bods[i].bod.position.y+ _yDir);
+            }
+    }
+    
     static setupMouseConstraint(){
        let canvasMouse = Matter.Mouse.create(canvas.elt);
   
@@ -253,6 +267,18 @@ class Obj {
     // Makes the body static.
     makeStatic(){
         Matter.Body.setStatic(this.bod, true);
+    }
+    
+    // Add rotation force using
+    //  matter.js torque.
+    makeSteer(_turn){
+        let tF = _turn * (this.bod.mass * this.bod.mass * 10);
+        this.bod.torque += tF;
+    }
+    
+    makeRotate(_deg){
+        _deg *= (this.bod.mass/8000);
+        Matter.Body.rotate(this.bod, _deg);
     }
 
     // Sets a new angle, without affecting forces etc.

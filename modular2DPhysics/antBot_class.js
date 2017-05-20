@@ -161,6 +161,24 @@ class antBot {
     // Pod dimensions.
     this.podSize = (this.scale * this.dm)/5;
     }
+    
+    // Negative for left, positive right.
+    // NB rotates AND adds force.
+    steer(_amount){
+        this.myBod.makeRotate(_amount);
+        this.myBod.makeSteer(_amount/1000);
+    }
+    
+    incScale(_amount){
+        // Record current scale.
+        let oS = this.scale;
+        // Increment scale.
+        this.scale+=_amount;
+        // Apply scale to appearance.
+        this.applyScale();
+        // Apply scale to matter-bod.
+        this.myBod.makeScale (this.scale/oS);
+    }
 
     // Call if using Euler physics.
     EulerUpdate(){
@@ -248,14 +266,12 @@ class antBot {
             
     }
     
-    // Rel. to antBot's local up direction.
-    moveForward(){
-        //        let vM = createVector(this.myBod.bod.velocity.x,this.myBod.bod.velocity.y);
-    
+    // Rel. to antBot's local up-direction.
+    moveForward(_force){
         let hV = createVector(0,0);
         hV.x = Math.sin(this.myBod.bod.angle);
         hV.y = -Math.cos(this.myBod.bod.angle);
-        hV = hV.mult(0.02*(this.scale/10));
+        hV = hV.mult(0.02*(this.scale/10)*_force);
         this.myBod.addForce(hV);
     }
     
