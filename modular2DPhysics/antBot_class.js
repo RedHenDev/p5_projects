@@ -42,7 +42,7 @@ class RedHen_antBot {
         if (_key==='='){
             RH_ants[controlAnt_index].incScale(0.1);
         }
-        if (_key==='-' && RH_ants[controlAnt_index].scale > 0.1){
+        if (_key==='-' && RH_ants[controlAnt_index].scale >= 1){
             RH_ants[controlAnt_index].incScale(-0.1);
         }
     }
