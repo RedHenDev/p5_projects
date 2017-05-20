@@ -51,7 +51,7 @@ class antBot {
     }
     this.pos = createVector(_x, _y);
     // If attached to matter.js body, request one here!
-    if (_hasMatterBod===true){
+    if (this.hasBod===true){
         // NB This instantiation of
         // a matter-bod works with
         // the RedHen_2DPhysics class.
@@ -61,6 +61,7 @@ class antBot {
         this.bodID = bods.length-1;   
         // *** OR just grab this matter.js body now?!
         this.myBod = bods[this.bodID];
+        console.log("MyBod .=  " + bods[this.bodID]);
         // Apply mass according to scale (don't let matter.js).
         this.myBod.bod.mass = this.scale;
     }else{
@@ -247,10 +248,10 @@ class antBot {
     
     
         if (this.hasBod){
-            translate(this.myBod.bod.position.x, this.myBod.bod.position.y);
+          console.log("bod= " + bods[this.bodID].bod.position.x);  translate(bods[this.bodID].bod.position.x, bods[this.bodID].bod.position.y);
             this.pos.x = 0;
             this.pos.y = 0;
-            rotate(this.myBod.bod.angle);
+            rotate(bods[this.bodID].bod.angle);
         }
     
         strokeWeight(3);

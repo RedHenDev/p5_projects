@@ -226,6 +226,10 @@ class Obj {
         }
     }
     
+    // Just in case this is called by
+    // mistake :)
+    render(){return;}
+    
     // Changes the body's scale.
     // NB mass also scaled up by matter.js
     // (I think according to new area).
@@ -259,7 +263,7 @@ class Obj {
 // A permanently non-rendered rectangle.
 class GhostRectangle extends Obj{
     constructor(_x, _y, _width, _ImakeBody, _height){
-        super(_x, _y, 0.5 * _diameter, false);
+        super(_x, _y, 0.5 * _width, false);
         
         this.width = this.dia;
         this.height = _height;
