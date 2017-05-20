@@ -56,19 +56,26 @@ class antBot {
         // a matter-bod works with
         // the RedHen_2DPhysics class.
         RedHen_2DPhysics.newObj ("GhostRectangle", _x, _y, this.dm*this.scale,this.dm*this.scale*0.618);
+        // Switch off auto remove if
+        // off-screen (OSR), since this can
+        // cause mis-match between 
+        // ants and bods arrays.
+        // Instead, antBot class should
+        // handle event of ant going
+        // off screen.
+        bods[bods.length-1].OSR = false;
         // Get an id so we know which physics body's position
         // to use to draw our antBot!
         this.bodID = bods.length-1;   
         // *** OR just grab this matter.js body now?!
         this.myBod = bods[this.bodID];
-        console.log("MyBod .=  " + bods[this.bodID]);
         // Apply mass according to scale (don't let matter.js).
-        this.myBod.bod.mass = this.scale;
+        //this.myBod.bod.mass = this.scale;
     }else{
-    // Euler antBot.
-    this.vel = createVector();
-    this.acc = createVector();
-    this.dec = 0.7; // Friction/air resistance.
+        // Euler antBot.
+        this.vel = createVector();
+        this.acc = createVector();
+        this.dec = 0.7; // Friction/air resistance.
     }
     
     // Generates a random appearance for
@@ -135,6 +142,7 @@ class antBot {
     // Do the calculations now for e.g. (this.radius * scale) etc.
     // Instead of in the render() function.
     applyScale(){
+        
     // For use with main body and pods.
     let goldenRatio = 0.618;
     
@@ -149,7 +157,7 @@ class antBot {
     this.eyeSizeX = this.scale * ((this.radius)-2) * this.eyeSize;
     this.eyeSizeY = this.eyeSizeX;
     this.pupSizeX = this.eyeSizeX * this.pupilSize;
-    
+        
     // Pod dimensions.
     this.podSize = (this.scale * this.dm)/5;
     }
@@ -176,8 +184,8 @@ class antBot {
         this.vel = createVector(this.vel.x, -this.vel.y/2);
         this.pos.y = _y - (this.radius*this.scale);
         return true;
-    }
-    else return false;
+        }
+        else return false;
     }
     
     // Screenwrap.
@@ -226,10 +234,11 @@ class antBot {
             }
         }
         
-        else if (this.hasBod===false){
+        else {
             if (this.pos.x < 0 || this.pos.x > width || this.pos.y < 0     || this.pos.y > height)
             this.pos = createVector(Math.random ()*width,Math.random()*height);
-            }  
+            }
+            
     }
     
     // Rel. to antBot's local up direction.
@@ -248,10 +257,10 @@ class antBot {
     
     
         if (this.hasBod){
-          console.log("bod= " + bods[this.bodID].bod.position.x);  translate(bods[this.bodID].bod.position.x, bods[this.bodID].bod.position.y);
+            translate(this.myBod.bod.position.x, this.myBod.bod.position.y);
             this.pos.x = 0;
             this.pos.y = 0;
-            rotate(bods[this.bodID].bod.angle);
+            rotate(this.myBod.bod.angle);
         }
     
         strokeWeight(3);

@@ -14,8 +14,8 @@ function setup(){
     RedHen_2DPhysics.setupMatter();
     
     
-    for (let i=0; i<333; i++){
-        ants.push(new antBot(true, Math.random()*width, Math.random()*height));
+    for (let i = 0; i< 33; i++){
+        ants.push(new antBot(true, Math.random()*width, Math.random()*height, Math.floor(Math.random()*4)));
     }
     
 }

@@ -25,6 +25,11 @@ var bods = [];
 
 // Off Screen Remove.
 // See updateBods().
+// Each bod wil also have an individual
+// OSR bool, so that they can opt out.
+// *** WHAT ABOUT OPTING IN WHEN ALL ELSE
+// OUT? I.E. OSR OFF? 
+// *** SO, THIS NEEDS A RE-THINK.
 var OSR = true;
 
 // Static class for setting up physics and setting gravity etc.
@@ -148,12 +153,13 @@ class RedHen_2DPhysics {
             bods[i].render();
             // Off_Screen_Remove ON?
             // Off screen position?
-            if (OSR && (    
+            if (OSR && bods[i].OSR && 
+                    (    
                     bods[i].bod.position.x + bods[i].dia < -9 ||
                     bods[i].bod.position.y + bods[i].dia < -9 ||
                     bods[i].bod.position.x - bods[i].dia > width+9 ||
                     bods[i].bod.position.y - bods[i].dia > height+9
-                        )
+                    )
                 ){this.removeObj(i);}
         }
     }
@@ -198,6 +204,13 @@ class Obj {
     // Constructor can accept no or null parameters.
     constructor(_x, _y, _rad, _ImakeObject){
         
+        // Objects removed if off-screen
+        // by default.
+        this.OSR = true;
+        
+        // Position.
+        // NB! matter-bod will
+        // use the matter.js bod.position.
         this.pos = createVector(0,0);
         
         // Place body at screen centre is any funny business.
@@ -265,17 +278,18 @@ class GhostRectangle extends Obj{
     constructor(_x, _y, _width, _ImakeBody, _height){
         super(_x, _y, 0.5 * _width, false);
         
-        this.width = this.dia;
+        this.width = _width;
         this.height = _height;
         
         if (_ImakeBody){
+            
             var options = {
                 isStatic: false,
                 restitution: 0.89,
                 friction: 0.04
             }
             
-            this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.width,this.height,options); 
+            this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.dia,this.height,options);  
         
             // Add the body to the Physics World.
             Matter.World.add(myWorld, this.bod);
