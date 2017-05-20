@@ -52,6 +52,9 @@ class RedHen_2DPhysics {
         //this.setupCollisions();
         
         // Instantiate a box as default!
+        // NB We position this to make
+        // a floor/ground, and set to
+        // static.
         this.newObj
         ("box",width/2,height-9+width/2,width, true);
         bods[0].makeStatic();
@@ -111,15 +114,31 @@ class RedHen_2DPhysics {
     
    
     // Call to make a new 2D_Physics object of any type.
-    static newObj(_requestedBody, _x, _y, _size, _makeDirect, _size2, _other){
+    static newObj(_requestedBody, _x, _y, _size, _size2, _other){
+        
+        // NB constructors need to know
+        // whether they are responsible
+        // for instantiating a matter-bod,
+        // or else to leave to an extended
+        // subclass's constructor.
+        // Here, we are just calling the
+        // relevant class ourselves, so
+        // will always want that particular
+        // constructor to instantiate the 
+        // matter-bod.
+        let _makeDirect = true;
         
         // If user enters nonsense, they'll hopefully just get a box. So, not too big a loss :)
         if (_requestedBody == null ||
              typeof _requestedBody != "string" || _requestedBody === "Box" ||
            _requestedBody === "box")
         bods.push(new Box(_x, _y, _size, _makeDirect));
+        
          else if (_requestedBody === "circle" || _requestedBody === "Circle")
         bods.push(new Circle(_x, _y, _size, _makeDirect));
+        
+        else if (_requestedBody === "GhostRectangle" || _requestedBody === "ghostRectangle")
+        bods.push(new GhostRectangle(_x, _y, _size, _makeDirect, _size2));
     }
     
     // Renders all objects to canvas. This is managed through an array. Main js file, then, does not have to look after this array -- it's all taken care of by the RedHen_2DPhysics class.
@@ -193,7 +212,11 @@ class Obj {
         // We calculate now for efficiency when rendering.
         this.dia = this.rad * 2;
         
-        // Maybe we could set a parameter to control whether this basic contructor makes a body...? Else, extended class will do so...THIS WOULD THEN allow us to use the present class object as the invisible body, which the antBot, for instance, uses.
+        // The 'ImakeObject' parameter
+        // manages which constructor
+        // has final responsibility for
+        // instantiating the matter-bod in
+        // the inheritance chain.
         if (_ImakeObject){
         // Instantiate a 2D Physics Body, a circle.
        this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.dia,options); 
@@ -204,6 +227,8 @@ class Obj {
     }
     
     // Changes the body's scale.
+    // NB mass also scaled up by matter.js
+    // (I think according to new area).
     makeScale(_scale){
         Matter.Body.scale(this.bod, _scale, _scale);
     }
@@ -231,6 +256,28 @@ class Obj {
 
 }
 
+// A permanently non-rendered rectangle.
+class GhostRectangle extends Obj{
+    constructor(_x, _y, _width, _ImakeBody, _height){
+        super(_x, _y, 0.5 * _diameter, false);
+        
+        this.width = this.dia;
+        this.height = _height;
+        
+        if (_ImakeBody){
+            var options = {
+                isStatic: false,
+                restitution: 0.89,
+                friction: 0.04
+            }
+            
+            this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.width,this.height,options); 
+        
+            // Add the body to the Physics World.
+            Matter.World.add(myWorld, this.bod);
+        }
+    }
+}
 
 class Box extends Obj {
     constructor(_x, _y, _diameter, _ImakeBody){
@@ -244,9 +291,10 @@ class Box extends Obj {
         // Randomizes colour.
         this.alpha = 255;
         let boodles = Math.random();
-        if (boodles <= 0.19){
+        // OK NOW JUST SOME KINDA PINK :)
+        if (boodles <= 1){
         this.fill =                                 color(Math.random()*100+155,
-                    Math.random()*100+155,
+                    0,
                     Math.random()*100+155,
                     this.alpha);
         }
@@ -266,8 +314,8 @@ class Box extends Obj {
                     Math.random()*100+155,
                     this.alpha);   
         }
-        this.stroke         = 255;
-        this.strokeWeight   = 2;
+        this.stroke         = 0;
+        this.strokeWeight   = 1;
         
         // Instantiate a 2D Physics Body, a rectangle.
         // Set default poperties of matter.js object.

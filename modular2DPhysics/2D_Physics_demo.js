@@ -7,9 +7,9 @@ var canSpawn = true;
 function setup(){
     // Remember to assign value of canvas like this :) -- so mouse/touch interaction can work.
     canvas = createCanvas(windowWidth,windowHeight);
-    background(0);
+    background(72);
     
-    RedHen_2DPhysics.setupMatter(); 
+    RedHen_2DPhysics.setupMatter();
 }
 
 function mouseDragged(){
@@ -18,16 +18,16 @@ function mouseDragged(){
 
 function touchEnded(){
     if (canSpawn && mouseX < width/2)
-    RedHen_2DPhysics.newObj("box", mouseX, mouseY, 64, true);
+    RedHen_2DPhysics.newObj("box", mouseX, mouseY, 14);
     
     if (canSpawn && mouseX > width/2)
-    RedHen_2DPhysics.newObj("circle", mouseX, mouseY, 32, true);
+    RedHen_2DPhysics.newObj("circle", mouseX, mouseY, 3);
     
     canSpawn = true;
 }
 
 function draw(){ 
-    background(0);
+    background(72);
     
     RedHen_2DPhysics.updateObjs();   
 }
