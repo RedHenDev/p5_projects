@@ -195,11 +195,10 @@ class antBot {
         // if not using Euler physics.
         if (this.hasBod){
             this.pos.x = this.myBod.bod.position.x;
-            this.pos.x = this.myBod.bod.position.y;
-            return;
+            this.pos.y = this.myBod.bod.position.y;
         }
         
-        else if (this.pos.x < 0 - (this.radius*this.scale)) 
+        if (this.pos.x < 0 - (this.radius*this.scale)) 
         this.pos.x = width + (this.radius*this.scale);
 
         if (this.pos.x > width + (this.radius*this.scale)) 
@@ -210,6 +209,14 @@ class antBot {
     
         if (this.pos.y > height + (this.radius*this.scale)) 
         this.pos.y = 0 - (this.radius*this.scale);
+        
+        // And now the reverse: set
+        // matter-bod's position to pos,
+        // if not using Euler physics.
+        if (this.hasBod){
+            this.myBod.makePosition (this.pos.x, this.pos.y); 
+        }
+        
     }
     
     // Tests whether antBot off-screen and
