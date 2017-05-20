@@ -64,6 +64,15 @@ class RedHen_2DPhysics {
         ("box",width/2,height-9+width/2,width, true);
         bods[0].makeStatic();
         bods[0].fill = color(200);
+        bods[0].OSR = false;
+        // Edges! To stop escaping from screen.
+        RedHen_2DPhysics.newObj ("GhostRectangle",0-10,height/2,20,height);
+        bods[bods.length-1].makeStatic();
+        bods[bods.length-1].OSR = false;
+        RedHen_2DPhysics.newObj ("GhostRectangle",width+
+        10,height/2,20,height);
+        bods[bods.length-1].makeStatic();
+        bods[bods.length-1].OSR = false;
         
         // Make sure we are drawing rectangles from their centres.
         rectMode(CENTER);
@@ -277,8 +286,7 @@ class Obj {
     }
     
     makeRotate(_deg){
-        _deg *= (this.bod.mass/8000);
-        Matter.Body.rotate(this.bod, _deg);
+        Matter.Body.rotate(this.bod, _deg/(this.bod.mass*12));
     }
 
     // Sets a new angle, without affecting forces etc.

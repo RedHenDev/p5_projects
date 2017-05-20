@@ -163,10 +163,14 @@ class antBot {
     }
     
     // Negative for left, positive right.
-    // NB rotates AND adds force.
     steer(_amount){
+        if (Math.abs(this.myBod.bod.angularVelocity) > 0.1) return;
+        
+        this.myBod.bod.angularVelocity = 0;
         this.myBod.makeRotate(_amount);
-        this.myBod.makeSteer(_amount/1000);
+        
+        // To add torque!
+        //this.myBod.makeSteer(_amount *0.001);
     }
     
     incScale(_amount){
@@ -238,10 +242,10 @@ class antBot {
     }
     
     // Tests whether antBot off-screen and
-    // returns to random pos, doubled in
-    // scale and with corrected angle.
+    // returns to centre top, and with
+    // corrected angle.
     // NB if only using Euler, then
-    // simply places bot at new random pos.
+    // simply places bot at centre top.
     screenTrap(){
         if (this.hasBod){
         if (this.myBod.bod.position.x < -100 ||
@@ -249,19 +253,15 @@ class antBot {
             this.myBod.bod.position.y < -100 ||
             this.myBod.bod.position.y > height+100){
         this.myBod.makePosition(
-            Math.random()*width,
-            Math.random()*height);
+            width/2,
+            height/6);
             this.myBod.makeAngle(0);
-            this.scale *= 2;
-            this.applyScale();
-            this.myBod.makeScale(2);
-            this.myBod.bod.mass = this.scale;
             }
         }
         
         else {
             if (this.pos.x < 0 || this.pos.x > width || this.pos.y < 0     || this.pos.y > height)
-            this.pos = createVector(Math.random ()*width,Math.random()*height);
+            this.pos = createVector(width/2,height/6);
             }
             
     }
@@ -271,7 +271,7 @@ class antBot {
         let hV = createVector(0,0);
         hV.x = Math.sin(this.myBod.bod.angle);
         hV.y = -Math.cos(this.myBod.bod.angle);
-        hV = hV.mult(0.02*(this.scale/10)*_force);
+        hV = hV.mult(0.001*this.myBod.bod.mass*_force);
         this.myBod.addForce(hV);
     }
     
