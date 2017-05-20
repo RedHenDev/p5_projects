@@ -231,111 +231,88 @@ class antBot {
             }  
     }
     
+    // Rel. to antBot's local up direction.
+    moveForward(){
+        //        let vM = createVector(this.myBod.bod.velocity.x,this.myBod.bod.velocity.y);
     
-}// End of antBot class.
-
-
-
-
-
-/// LEGACY FOR REF
-
-
-
-
-
-
-    
-   
-
-
-antBot.prototype.checkGround = function(_y){
-    
-}
-
-antBot.prototype.moveForward = function(){
-    let vM = createVector(this.myBod.bod.velocity.x,
-                          this.myBod.bod.velocity.y);
-    //if (vM.magSq() > 10) return;
-    let hV = createVector(0,0);
-    hV.x = Math.sin(this.myBod.bod.angle);
-    hV.y = -Math.cos(this.myBod.bod.angle);
-    hV = hV.mult(0.02*(this.scale/10));
-    this.myBod.addForce(hV);
-}
-
-antBot.prototype.render = function(){
-    
-    push();
-    
-    
-    if (this.hasBod){
-        translate(this.myBod.bod.position.x, this.myBod.bod.position.y);
-        this.pos.x = 0;
-        this.pos.y = 0;
-        rotate(this.myBod.bod.angle);
+        let hV = createVector(0,0);
+        hV.x = Math.sin(this.myBod.bod.angle);
+        hV.y = -Math.cos(this.myBod.bod.angle);
+        hV = hV.mult(0.02*(this.scale/10));
+        this.myBod.addForce(hV);
     }
     
-    strokeWeight(3);
-    stroke(0);
-    rectMode(CENTER);
-    fill(this.col);
-    
-    // Main body.
-    rect(this.pos.x, this.pos.y, this.width, this.height);
+    render(){
+        push();
     
     
-    // Are we blinking?
-    if (!this.blinking){
-        // Not blinking, so decide if time to blink again.
-        if (frameCount % this.blinkRate === 0 &&
-           Math.random() > 0.8){
-            this.blinking = true;
-            this.blinkTime = millis();
+        if (this.hasBod){
+            translate(this.myBod.bod.position.x, this.myBod.bod.position.y);
+            this.pos.x = 0;
+            this.pos.y = 0;
+            rotate(this.myBod.bod.angle);
         }
-    }
-    else if (this.blinking){
-        if (millis() - this.blinkTime > this.blinkDuration){
-            this.blinking = false;
+    
+        strokeWeight(3);
+        stroke(0);
+        rectMode(CENTER);
+        fill(this.col);
+    
+        // Main body.
+        rect(this.pos.x, this.pos.y, this.width, this.height);
+    
+        // Are we blinking?
+        if (!this.blinking){
+            // Not blinking, so decide if time to blink again.
+            if (frameCount % this.blinkRate === 0 &&
+            Math.random() > 0.8){
+                this.blinking = true;
+                this.blinkTime = millis();
+            }
         }
-    }
+        else if (this.blinking){
+            if (millis() - this.blinkTime > this.blinkDuration){
+                this.blinking = false;
+            }
+        }
     
-    noStroke();
-    // Left eye.
-    if (!this.blinking) fill(255); else fill(this.col);
-    rect(this.pos.x - this.eyePos, this.pos.y,
-         this.eyeSizeX, 
-         this.eyeSizeY);
-    // Right eye.
-    rect(this.pos.x + this.eyePos, this.pos.y,
-         this.eyeSizeX, 
-         this.eyeSizeY);
-    // Left pupil (square).
-    if (!this.blinking) fill(0); else fill(this.col);
-    rect(this.pos.x - this.eyePos, this.pos.y,
-         this.pupSizeX, 
-         this.pupSizeX);
-    // Right pupil (square).
-    rect(this.pos.x + this.eyePos, this.pos.y,
-         this.pupSizeX, 
-         this.pupSizeX);
+        noStroke();
+        // Left eye.
+        if (!this.blinking) fill(255); else fill(this.col);
+        rect(this.pos.x - this.eyePos, this.pos.y,
+        this.eyeSizeX, 
+        this.eyeSizeY);
+        // Right eye.
+        rect(this.pos.x + this.eyePos, this.pos.y,
+        this.eyeSizeX, 
+        this.eyeSizeY);
+        // Left pupil (square).
+        if (!this.blinking) fill(0); else fill(this.col);
+        rect(this.pos.x - this.eyePos, this.pos.y,
+        this.pupSizeX, 
+        this.pupSizeX);
+        // Right pupil (square).
+        rect(this.pos.x + this.eyePos, this.pos.y,
+        this.pupSizeX, 
+        this.pupSizeX);
     
-    // Pods.
-    fill(0,0,255,101);
-    stroke(255);
-    strokeWeight(2);
-    let goldenRatio= 0.618;
-    this.posX = this.pos.x - (this.radius * this.scale) +    (this.podSize/2);
-    this.posY = (this.height/2)+(goldenRatio * (this.radius + 3*this.scale));
-    for (let i = 0; i < 4; i++){
+        // Pods.
+        fill(0,0,255,101);
+        stroke(255);
+        strokeWeight(2);
+        let goldenRatio= 0.618;
+        this.posX = this.pos.x - (this.radius * this.scale) +    (this.podSize/2);
+        this.posY = (this.height/2)+(goldenRatio * (this.radius + 3*this.scale));
+        for (let i = 0; i < 4; i++){
         let xP = this.podSize * i + (2*this.scale);
         rect(   this.posX + xP, 
                 this.pos.y + this.posY + (this.scale*3) * Math.sin((frameCount/8)+(i*this.blinkRate)),
                 this.podSize, this.podSize);
         
+        }
+    
+        pop();
     }
     
-    pop();
     
-    
-}
+}// End of antBot class.
