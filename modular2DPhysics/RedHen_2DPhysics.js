@@ -187,6 +187,34 @@ class RedHen_2DPhysics {
             }
     }
     
+    // Gravity and movement of all bods through
+    // p5 input system 'keyIsDown'.
+    static checkInputgGlobalMovement(){
+        // Gravity controls.
+        // Space-bar to...go to space! 
+        // Zero gravity :D
+        if (keyIsDown(32)) this.setGravity(0,0);
+        // 'G' for familiar gravity.
+        if (keyIsDown(71)) this.setGravity(0,1);
+    
+        // w
+        if (keyIsDown(87)){
+            this.globalMovement( 0,-1);
+        }
+        // d
+        if (keyIsDown(68)){
+            this.globalMovement( 1,0);
+        }
+        // s
+        if (keyIsDown(83)){
+            this.globalMovement( 0,1);
+        }
+        // a
+        if (keyIsDown(65)){
+            this.globalMovement( -1,0);
+        }
+    }
+    
     static setupMouseConstraint(){
        let canvasMouse = Matter.Mouse.create(canvas.elt);
   

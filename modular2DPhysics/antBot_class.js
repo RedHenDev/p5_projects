@@ -25,7 +25,66 @@
 // antBot object.
 // Do you want to give it a matter.js body?
 
+// Utility class: input and other...things.
+// Input methods will work by passing in an
+// index to the antBot you want to control.
 
+// Array of antBot objects, so as to be
+// handled by the class itself.
+var RH_ants = [];
+// Index of antBot under user control.
+var controlAnt_index = 0;
+
+class RedHen_antBot {
+    
+    // Designed to work with p5's keyTyped().
+    static scaleAntInput(_key){
+        if (_key==='='){
+            RH_ants[controlAnt_index].incScale(0.1);
+        }
+        if (_key==='-' && RH_ants[controlAnt_index].scale > 0.1){
+            RH_ants[controlAnt_index].incScale(-0.1);
+        }
+    }
+    
+    // Checks for p5's 'keyIsDown'.
+    static controlAntInput(){
+        // First, check if keyTyped()...
+        this.scaleAntInput(key);
+        
+        let forceAmount = 0;
+        if (keyIsDown(UP_ARROW)) { 
+            //setGravity(0,-1);
+            if (myWorld.gravity.y > 0){
+                forceAmount = 2;
+            }
+            else {forceAmount = 0.3;}
+            
+            RH_ants[controlAnt_index].moveForward (forceAmount);
+        }
+        if (keyIsDown(DOWN_ARROW)){
+            //setGravity(0,-1);
+            if (myWorld.gravity.y > 0){
+                forceAmount = 2;
+        }
+            else {forceAmount = 0.3;}
+            RH_ants[controlAnt_index].moveForward(-forceAmount);
+        }
+        if (keyIsDown(RIGHT_ARROW)) {
+       // setGravity(1,0);
+        RH_ants[controlAnt_index].steer(1);
+        }
+        if (keyIsDown(LEFT_ARROW)) {
+       // setGravity(-1,0);
+        RH_ants[controlAnt_index].steer(-1);
+        }
+    }
+   
+    
+} // End of antBot utility class.
+
+
+// antBot object.
 class antBot {
     constructor (_hasMatterBod, _x, _y, _scale){
     
@@ -146,7 +205,7 @@ class antBot {
     // For use with main body and pods.
     let goldenRatio = 0.618;
     
-    this.hopForce = createVector(0,-1*(this.scale/42));
+    this.hopForce = this.scale*22;
     
     // Main body.
     this.width = this.dm*this.scale;

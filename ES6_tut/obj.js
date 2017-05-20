@@ -225,7 +225,7 @@ class Cue extends Edge {
             let l2 = createVector(wtpi.x, wtpi.y); 
             l2 = l2.sub(backCB.mult(280));
           
-            // Paint cue tip.
+            // Paint cue and tip.
             line(l1.x,l1.y,l2.x,l2.y);
             stroke(200);
             strokeWeight(11);
