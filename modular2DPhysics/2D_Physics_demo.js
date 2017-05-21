@@ -7,6 +7,13 @@ var canSpawn = true;// Not moving obj, so can spawn obj.
 var noB;        // Number of blocks in 'sine bridge'.
 var theta = 0;  // Angle of 'sine bridge'.
 
+var img_RedHen;
+function preload(){
+    //imageMode(CENTER);
+    img_RedHen = loadImage("RedHenIconAlpha512512.png");
+    
+}
+
 function setup(){
     // Remember to assign value of canvas like this :)
     canvas = createCanvas(windowWidth,windowHeight);
@@ -23,22 +30,25 @@ function setup(){
     controlAnt_index = 0;
     
     // Create white circles.
-    let mW = 12;
-    for (let i = 0; i < 32; i++){
+    // Note how to load texture (img).
+    let mW = 24;
+    for (let i = 0; i < 12; i++){
         RedHen_2DPhysics.newObj(
         "circle",mW+(i*mW*3),64,mW);
         bods[bods.length-1].fill = color(255);
         bods[bods.length-1].stroke = color(0);
         bods[bods.length-1].strokeWeight = 3;
+        bods[bods.length-1].texture = img_RedHen;
     }
 }
 
 // ***** UDPATE LOOP *****
 function draw(){ 
     background(72);
-    //printInstructions();
-   
-    RedHen_2DPhysics.checkInputgGlobalMovement();
+    printInstructions();
+    
+    
+    RedHen_2DPhysics. checkInputgGlobalMovement();
     RedHen_2DPhysics.updateObjs();
     
     waveBridge();

@@ -76,7 +76,7 @@ class RedHen_2DPhysics {
         
         // Make sure we are drawing rectangles from their centres.
         rectMode(CENTER);
-    
+        imageMode(CENTER);
     }
     
     static setGravity(_xDir, _yDir){
@@ -359,12 +359,24 @@ class GhostRectangle extends Obj{
     }
 }
 
+// First class of object to include 
+// rendering properties. See .texture and
+// .roll.
 class Box extends Obj {
     constructor(_x, _y, _diameter, _ImakeBody){
         super(_x, _y, 0.5 * _diameter, false);
         
         // Render() returns immediately if set to false.
         this.visible = true;
+        
+        // If ever other than null,
+        // render will use image.
+        this.texture = null;
+        
+        // If true, translate and rotate
+        // used in render, else bod always
+        // painted in upright orientation.
+        this.roll = true;
         
         // *** default ***
         // NEEDS UPDATE
@@ -421,15 +433,34 @@ class Box extends Obj {
         stroke(this.stroke);
         strokeWeight(this.strokeWeight);
     
-        push();
-        //this.pos.x = this.bod.position.x;
-        //this.pos.y = this.bod.position.y;
-        translate(this.bod.position.x, this.bod.position.y);
-        rotate(this.bod.angle);
+        // Render rotation?
+        if (this.roll){
+            push();
+            //this.pos.x = this.bod.position.x;
+            //this.pos.y = this.bod.position.y;
+            translate(this.bod.position.x, this.bod.position.y);
+            rotate(this.bod.angle);
+            // Textured or not?
+            if (this.texture == null){
+                rect(0,0,this.dia,this.dia);
+                }
+            else{
+                image(this.texture,0,0,this.dia,this.dia);
+                }
+            
         
-        rect(0,0,this.dia,this.dia);
-        
-        pop();
+            pop();
+        }   // Render without rotation.
+            // NB matter-bod still rotates. 
+        else if (!this.roll){
+            // Textured or not?
+            if (this.texture == null){
+                rect(this.bod.position.x, this.bod.position.y,this.dia,this.dia);
+                }
+                else{
+                    image(this.texture,this.bod.position.x,this.bod.position.y,this.dia,this.dia);
+                }
+        }
     
     }
 
@@ -438,6 +469,12 @@ class Box extends Obj {
 class Circle extends Box{
     constructor(_x, _y, _radius, _ImakeBody){
         super(_x, _y, _radius * 2, false);
+        
+        // Differently to Box, more efficient
+        // to render circles without
+        // translation and rotation (since
+        // they look the same any angle).
+        this.roll = false;
         
         // Instantiate a 2D Physics Body, a circle.
         // Set default poperties of matter.js object.
@@ -462,12 +499,35 @@ class Circle extends Box{
         stroke(this.stroke);
         strokeWeight(this.strokeWeight);
         
-        ellipse(this.bod.position.x,
+        // Render rotation?
+        if (this.roll){
+            translate(this.bod.position.x,
+                this.bod.position.y);
+            rotate(this.bod.angle);
+            // Textured or not?
+            if (this.texture == null){
+                ellipse(0,0,this.dia);
+            }
+            else{
+                image(this.texture, 0, 0, this.dia, this.dia);
+            }
+            
+        }
+        else if (!this.roll){
+            if (this.texture == null){
+                ellipse(this.bod.position.x,
                 this.bod.position.y,
                 this.dia);
+             }
+            else{
+                image(this.texture, this.bod.position.x, this.bod.position.y, this.dia, this.dia);
+            }
+        }
         
     }
 }
+
+
 
 
 //*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&
