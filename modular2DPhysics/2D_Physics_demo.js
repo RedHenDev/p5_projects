@@ -9,9 +9,7 @@ var theta = 0;  // Angle of 'sine bridge'.
 
 var img_RedHen;
 function preload(){
-    //imageMode(CENTER);
     img_RedHen = loadImage("RedHenIconAlpha512512.png");
-    
 }
 
 function setup(){
@@ -47,7 +45,6 @@ function setup(){
 function draw(){ 
     background(72);
     printInstructions();
-    
     
     RedHen_2DPhysics. checkInputgGlobalMovement();
     RedHen_2DPhysics.updateObjs();
