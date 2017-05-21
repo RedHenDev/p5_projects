@@ -223,13 +223,13 @@ class antBot {
     
     // Negative for left, positive right.
     steer(_amount){
-        if (Math.abs(this.myBod.bod.angularVelocity) > 0.1) return;
+        if (this.myBod.bod.angularSpeed > 0.1) return;
         
-        this.myBod.bod.angularVelocity = 0;
-        this.myBod.makeRotate(_amount);
+        this.myBod.bod.angularSpeed = 0;
+        //this.myBod.makeRotate(_amount);
         
         // To add torque!
-        //this.myBod.makeSteer(_amount *0.001);
+        this.myBod.makeSteer((_amount/40) * this.myBod.bod.mass);
     }
     
     incScale(_amount){

@@ -60,19 +60,19 @@ class RedHen_2DPhysics {
         // NB We position this to make
         // a floor/ground, and set to
         // static.
-        this.newObj
-        ("box",width/2,height-9+width/2,width, true);
-        bods[0].makeStatic();
-        bods[0].fill = color(200);
-        bods[0].OSR = false;
-        // Edges! To stop escaping from screen.
-        RedHen_2DPhysics.newObj ("GhostRectangle",0-10,height/2,20,height);
-        bods[bods.length-1].makeStatic();
-        bods[bods.length-1].OSR = false;
-        RedHen_2DPhysics.newObj ("GhostRectangle",width+
-        10,height/2,20,height);
-        bods[bods.length-1].makeStatic();
-        bods[bods.length-1].OSR = false;
+//        this.newObj
+//        ("box",width/2,height-9+width/2,width, true);
+//        bods[0].makeStatic();
+//        bods[0].fill = color(200);
+//        bods[0].OSR = false;
+//        // Edges! To stop escaping from screen.
+//        RedHen_2DPhysics.newObj ("GhostRectangle",0-10,height/2,20,height);
+//        bods[bods.length-1].makeStatic();
+//        bods[bods.length-1].OSR = false;
+//        RedHen_2DPhysics.newObj ("GhostRectangle",width+
+//        10,height/2,20,height);
+//        bods[bods.length-1].makeStatic();
+//        bods[bods.length-1].OSR = false;
         
         // Make sure we are drawing rectangles from their centres.
         rectMode(CENTER);
@@ -309,12 +309,13 @@ class Obj {
     // Add rotation force using
     //  matter.js torque.
     makeSteer(_turn){
-        let tF = _turn * (this.bod.mass * this.bod.mass * 10);
-        this.bod.torque += tF;
+        //let tF = _turn * (this.bod.mass * this.bod.mass * 10);
+        //this.bod.torque += tF;
+        this.bod.torque += _turn;
     }
     
     makeRotate(_angle){
-        Matter.Body.rotate(this.bod, _angle/(this.scale));
+        Matter.Body.rotate(this.bod, _angle);
     }
 
     // Sets a new angle, without affecting forces etc.
@@ -536,8 +537,3 @@ class Circle extends Box{
 
 //*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&
 //*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&
-
-
-
-
-

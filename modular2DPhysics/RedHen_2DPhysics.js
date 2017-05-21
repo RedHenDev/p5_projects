@@ -146,7 +146,7 @@ class RedHen_2DPhysics {
         // relevant class ourselves, so
         // will always want that particular
         // constructor to instantiate the 
-        // matter-bod.
+        // matter-bod (set to true).
         let _makeDirect = true;
         
         // If user enters nonsense, they'll hopefully just get a box. So, not too big a loss :)
@@ -264,7 +264,7 @@ class Obj {
         // use the matter.js bod.position.
         this.pos = createVector(0,0);
         
-        // Place body at screen centre is any funny business.
+        // Place body at screen centre if any funny business.
         if (_x != null) this.pos.x = _x;
         else            this.pos.x = width/2;
         if (_y != null) this.pos.y = _y;
@@ -309,12 +309,13 @@ class Obj {
     // Add rotation force using
     //  matter.js torque.
     makeSteer(_turn){
-        let tF = _turn * (this.bod.mass * this.bod.mass * 10);
-        this.bod.torque += tF;
+        //let tF = _turn * (this.bod.mass * this.bod.mass * 10);
+        //this.bod.torque += tF;
+        this.bod.torque += _turn;
     }
     
-    makeRotate(_deg){
-        Matter.Body.rotate(this.bod, _deg/(this.bod.mass*12));
+    makeRotate(_angle){
+        Matter.Body.rotate(this.bod, _angle);
     }
 
     // Sets a new angle, without affecting forces etc.
