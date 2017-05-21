@@ -448,7 +448,6 @@ class Box extends Obj {
                 image(this.texture,0,0,this.dia,this.dia);
                 }
             
-        
             pop();
         }   // Render without rotation.
             // NB matter-bod still rotates. 
@@ -501,17 +500,22 @@ class Circle extends Box{
         
         // Render rotation?
         if (this.roll){
+            
+            push();
+            
             translate(this.bod.position.x,
                 this.bod.position.y);
             rotate(this.bod.angle);
             // Textured or not?
             if (this.texture == null){
                 ellipse(0,0,this.dia);
+                
+            
             }
             else{
                 image(this.texture, 0, 0, this.dia, this.dia);
             }
-            
+            pop();
         }
         else if (!this.roll){
             if (this.texture == null){

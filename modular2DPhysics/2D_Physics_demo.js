@@ -39,6 +39,7 @@ function setup(){
         bods[bods.length-1].stroke = color(0);
         bods[bods.length-1].strokeWeight = 3;
         bods[bods.length-1].texture = img_RedHen;
+        bods[bods.length-1].roll = true;
     }
 }
 
