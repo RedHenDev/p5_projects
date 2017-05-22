@@ -160,6 +160,9 @@ class RedHen_2DPhysics {
         
         else if (_requestedBody === "GhostRectangle" || _requestedBody === "ghostRectangle")
         bods.push(new GhostRectangle(_x, _y, _size, _makeDirect, _size2));
+        
+        else if (_requestedBody === "Rectangle" || _requestedBody === "rectangle")
+        bods.push(new Rectangle(_x, _y, _size, _size2, _makeDirect));
     }
     
     // Renders all objects to canvas. This is managed through an array. Main js file, then, does not have to look after this array -- it's all taken care of by the RedHen_2DPhysics class.
@@ -464,6 +467,71 @@ class Box extends Obj {
     
     }
 
+}
+
+class Rectangle extends Box{
+    constructor(_x, _y, _width, _height, _ImakeBody){
+        super(_x, _y, _width, false);
+
+        
+        this.width = this.dia;
+        this.height = _height;
+        
+        
+        // Instantiate a 2D Physics Body, a circle.
+        // Set default poperties of matter.js object.
+        if (_ImakeBody){
+        var options = {
+            isStatic: false,
+            restitution: 0.8,
+            friction: 0.04
+        }
+        this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.width, this.height,options); 
+        
+        // Add the body to the Physics World.
+        Matter.World.add(myWorld, this.bod);
+        }
+        
+    }
+    
+    render(){
+    if (!this.visible) return;
+        
+        fill(this.fill);
+        stroke(this.stroke);
+        strokeWeight(this.strokeWeight);
+    
+        // Render rotation?
+        if (this.roll){
+            push();
+            //this.pos.x = this.bod.position.x;
+            //this.pos.y = this.bod.position.y;
+            translate(this.bod.position.x, this.bod.position.y);
+            rotate(this.bod.angle);
+            // Textured or not?
+            if (this.texture == null){
+                rect(0,0,this.width,this.height);
+                }
+            else{
+                image(this.texture,0,0,this.width,this.height);
+                }
+            
+            pop();
+        }   // Render without rotation.
+            // NB matter-bod still rotates. 
+        else if (!this.roll){
+            // Textured or not?
+            if (this.texture == null){
+                rect(this.bod.position.x, this.bod.position.y,this.width,this.height);
+                }
+                else{
+                    image(this.texture,this.bod.position.x,this.bod.position.y,this.width,this.height);
+                }
+        }
+    
+    }
+    
+    
 }
 
 class Circle extends Box{
