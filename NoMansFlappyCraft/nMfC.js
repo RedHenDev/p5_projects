@@ -77,6 +77,30 @@ function spawnBaby(_vPipePos){
     
 }
 
+function hitPipe(event){
+        // Ref to all pairs of bodies colliding.
+        var pairs = event.pairs;
+        // Iterate over the pairs to
+        // find the condition you're
+        // looking for.
+        for (let i = 0; i < pairs.length;i++){
+            // The event's pairs will have a 
+            // bodyA and bodyB object that
+            // we can grab here...
+            let bodA = pairs[i].bodyA;
+            let bodB = pairs[i].bodyB;
+            
+            // E.g.
+              if (bodA.label == "pipe"){
+                  for (let j = 0; j < pipes.length; j ++){
+                 pipes[j].makePosition
+                 (pipes[j].bod.position.x, 
+                  pipes[j].bod.position.y+10);
+                  }
+              break;}
+            }   // End of forLoop.
+}       // End of collision events function.
+
 function spawnPipes(_number){
     
     let woP = 132;    // Width of pipe.
@@ -86,6 +110,7 @@ function spawnPipes(_number){
         RedHen_2DPhysics.newObj 
         ("rectangle", woP*2*i + (width/5),-100 + Math.random()* loP/2,
         woP, loP);
+        bods[bods.length-1].bod.label = "pipe";
         bods[bods.length-1].makeStatic();
         pipes.push(bods[bods.length-1]);
         bods[bods.length-1].OSR = false;

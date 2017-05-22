@@ -54,7 +54,7 @@ class RedHen_2DPhysics {
         this.setupMouseConstraint();
         
         // We have functionality, but not yet implemented for general use.
-        //this.setupCollisions();
+        this.setupCollisions();
         
         // Instantiate a box as default!
         // NB We position this to make
@@ -99,21 +99,26 @@ class RedHen_2DPhysics {
         // Iterate over the pairs to
         // find the condition you're
         // looking for.
-        for (var i = 0; i < pairs.length;       i++){
+        for (let i = 0; i < pairs.length; i++){
             // The event's pairs will have a 
             // bodyA and bodyB object that
             // we can grab here...
             var bodA = pairs[i].bodyA;
             var bodB = pairs[i].bodyB;
+            
             // E.g.
              if (Math.abs(bodA.velocity.x *             bodA.velocity.y) > 4){
                 Matter.Body.setStatic(bodB, true);}
             }   // End of forLoop.
-        }       // End of collision events function. 
+        }       // End of collision events function.
+        
     // Turn on collision events.
     // The third parameter 'collision' is a 
     // call back to the function above.
-        Matter.Events.on(myEngine, 'collisionStart', collision);
+        //Matter.Events.on(myEngine, 'collisionStart', collision);
+        
+        // Might we pass in a function name to static events function in here?
+        Matter.Events.on(myEngine, 'collisionStart', hitPipe);
     
     }
     
