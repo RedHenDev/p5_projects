@@ -474,7 +474,7 @@ class Rectangle extends Box{
         super(_x, _y, _width, false);
 
         
-        this.width = this.dia;
+        this.width = _width;
         this.height = _height;
         
         
