@@ -51,13 +51,13 @@ function draw(){
     if (theta > 1) dayT = true;
     }
     
-//    textSize(32);
-//    text("FPS: " + Math.round(frameRate()), 32,32);
+    textSize(32);
+    text("FPS: " + Math.round(frameRate()), 32,32);
     
 //    stroke(0,100,0);
 //    strokeWeight(4);
 //    fill(51,51,0);
-//    rect(width/2, height-110, width,240);
+//    rect(width/2, height-20, width,40);
     
     RedHen_2DPhysics.updateObjs();
     
@@ -148,12 +148,11 @@ function createTerrain(_EveInc){
     // How many blocks can we instantiate
     // that both looks good and runs smoothly?
     
-    
     let nOr = 4;
     let nOc = 32;
     let bWid = width/nOc;
     let steepness = bWid*10;
-    let grade = 10;
+    let grade = 20;
     
     // Check whether we need to splice old blocks...
     if (_EveInc != 0){
@@ -169,16 +168,16 @@ function createTerrain(_EveInc){
     for (let row = 0; row < nOr; row++){
         for (let col = 0; col < nOc; col++){
             
-            if (row == 0)
+            if (row === 0){
             RedHen_2DPhysics.newObj 
             ("rectangle",(col*bWid)+bWid/2,
-            height-(bWid*1.5)-((noise((col+offset)/grade)*steepness)/2),
-            bWid,(noise((col+offset)/grade)*steepness)+(bWid*3));    
+            height-((noise((col+offset)/grade)*steepness)/2),
+            bWid,(noise((col+offset)/grade)*steepness));  }  
                 
             else{
             RedHen_2DPhysics.newObj 
             ("box",(col*bWid)+bWid/2,
-            height-(row*bWid)-80,
+            height-(row*bWid)-(col*4),
             bWid);
             }
             
@@ -186,11 +185,11 @@ function createTerrain(_EveInc){
             // to reuse them later.
             bods[bods.length-1].OSR = false;
             // Mass increase so that flappy doesn't knock them around easily.
-            bods[bods.length-1].bod.density = 1;
+            //bods[bods.length-1].bod.density = 1;
             bods[bods.length-1].bod.restitution = 0;
             
             // Store index of *first* block, so that
-            // we can reference them later :)
+            // we can reference the blocks later :)
             if (row == 0 && col == 0){
             firstBlockID = bods.length-1;}
             
@@ -212,7 +211,3 @@ function createTerrain(_EveInc){
     }
     
 }
-
-
-
-
