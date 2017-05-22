@@ -36,8 +36,20 @@ function setup(){
     
 }
 
+var theta = 1;
+var dayT = true;
+
 function draw(){
-    background(0,101,222);
+    background(0,101*theta,222*theta);
+    
+    if (dayT){
+    theta -=0.0005;
+    if (theta <= 0) dayT = false;
+    }
+    if (!dayT){
+    theta +=0.0005;
+    if (theta > 1) dayT = true;
+    }
     
 //    textSize(32);
 //    text("FPS: " + Math.round(frameRate()), 32,32);
@@ -50,6 +62,18 @@ function draw(){
     RedHen_2DPhysics.updateObjs();
     
     checkNavigation();
+    
+}
+
+
+// To handle collision events, we could have a static
+// method that returns the indices of the pair of
+// bods hit, respective to two labels passed in! How do
+// we get TWO indices out? In a 2D vector :)
+
+function spawnBaby(_vPipePos){
+    
+    // Spawns a baby hen/thing just beneath pipe.
     
 }
 
@@ -178,8 +202,9 @@ function createTerrain(_EveInc){
             }
             let myC = map(row,0,nOr,100, 200);
             bods[bods.length-1].fill = color(myC*2,myC,0);
-            bods[bods.length-1].stroke = color(myC*2,myC-60,0);
-            bods[bods.length-1].strokeWeight = 2;
+            //bods[bods.length-1].stroke = color(myC*2,myC-60,0);
+            bods[bods.length-1].stroke = color(0);
+            bods[bods.length-1].strokeWeight = 4;
             if (row==nOr-1) {bods[bods.length-1].fill = color(0,myC,0);
             bods[bods.length-1].stroke = color(0,myC-60,0);
                             }
