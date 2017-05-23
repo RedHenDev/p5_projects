@@ -138,7 +138,6 @@ class RedHen_2DPhysics {
         bods.splice(_index,1); 
     }
     
-   
     // Call to make a new 2D_Physics object of any type.
     static newObj(_requestedBody, _x, _y, _size, _size2, _other){
         
@@ -292,7 +291,7 @@ class Obj {
         if (_ImakeObject){
         // Instantiate a 2D Physics Body, a circle.
        this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.dia,options); 
-        
+        this.id = bods.length-1;
         // Add the body to the Physics World.
        Matter.World.add(myWorld, this.bod);
         }
@@ -309,9 +308,14 @@ class Obj {
         Matter.Body.scale(this.bod, _scale, _scale);
     }
 
-    // Makes the body static.
+    // Makes the body (permanently) static.
     makeStatic(){
         Matter.Body.setStatic(this.bod, true);
+    }
+    
+    // Makes the body temporarily static/non-static.
+    makeSleep(_trueOrFalse){
+        Matter.Sleeping.set(this.bod, _trueOrFalse)
     }
     
     // Add rotation force using
@@ -361,7 +365,7 @@ class GhostRectangle extends Obj{
             }
             
             this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.dia,this.height,options);  
-        
+        this.id = bods.length-1;
             // Add the body to the Physics World.
             Matter.World.add(myWorld, this.bod);
         }
@@ -427,7 +431,7 @@ class Box extends Obj {
             friction: 0.04
         }
         this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.dia,this.dia,options); 
-        
+        this.id = bods.length-1;
         // Add the body to the Physics World.
         Matter.World.add(myWorld, this.bod);
         }
@@ -492,7 +496,7 @@ class Rectangle extends Box{
             friction: 0.04
         }
         this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.width, this.height,options); 
-        
+        this.id = bods.length-1;
         // Add the body to the Physics World.
         Matter.World.add(myWorld, this.bod);
         }
@@ -558,7 +562,7 @@ class Circle extends Box{
             friction: 0.04
         }
         this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.rad,options); 
-        
+        this.id = bods.length-1;
         // Add the body to the Physics World.
         Matter.World.add(myWorld, this.bod);
         }
