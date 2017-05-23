@@ -15,6 +15,9 @@ var flappy;
 
 var pipeTex;
 var pipes = [];
+var woP = 120;    // Width of pipes.
+
+var flappyBabs = [];
 
 function preload(){
     flappyTex = loadImage("RedHenIconAlpha512512.png");
@@ -28,11 +31,19 @@ function setup(){
  
     RedHen_2DPhysics.setupMatter();
     
+    // Note the order we ceate these bods.
+    // If we create flappy last, then this causes
+    // a bug on first level (flappy deleted instead of one of
+    // the baby flappies).
+    spawnFlappy();
+    
+     spawnPipes(3);
+    
     createTerrain(0);
     
-    spawnPipes(3);
+   
     
-    spawnFlappy();
+  
     
 }
 
@@ -59,6 +70,8 @@ function draw(){
 //    fill(51,51,0);
 //    rect(width/2, height-20, width,40);
     
+    RedHen_2DPhysics.checkInputgGlobalMovement();
+    
     RedHen_2DPhysics.updateObjs();
     
     checkNavigation();
@@ -74,6 +87,11 @@ function draw(){
 function spawnBaby(_vPipePos){
     
     // Spawns a baby hen/thing just beneath pipe.
+    RedHen_2DPhysics.newObj("circle", _vPipePos.x, _vPipePos.y + 100, 16);
+    bods[bods.length-1].texture = flappyTex;
+    bods[bods.length-1].OSR = false;
+    bods[bods.length-1].bod.label = "babyFlap";
+    flappyBabs.push(bods[bods.length-1]);
     
 }
 
@@ -91,30 +109,37 @@ function hitPipe(event){
             let bodB = pairs[i].bodyB;
             
             // E.g.
-              if (bodA.label == "pipe"){
-                  for (let j = 0; j < pipes.length; j ++){
-                 pipes[j].makePosition
-                 (pipes[j].bod.position.x, 
-                  pipes[j].bod.position.y+10);
-                  }
-              break;}
+            if (bodB.label == "pipe" && bodA.label == "flappy"){
+                // pipes[0].makeSleep(false); // How to refer to pipe in question?
+                //Matter.Sleeping.set(bodA, false);
+                spawnBaby(bodB.position);
+                spawnBaby(bodB.position);
+                break;
+              }
+            
+//            if (bodA.label == "flappy"){
+//                Matter.Sleeping.set(bodB, false);
+//                break;
+//            }
+//            
             }   // End of forLoop.
 }       // End of collision events function.
 
 function spawnPipes(_number){
     
-    let woP = 132;    // Width of pipe.
+    let pipeX =  woP*2 + (width/10);
     
-    for(let i = 0; i < _number; i++){
-        let loP = height/2;
+    for(let i = 1; i <= _number; i++){
+        let loP = height/3;
         RedHen_2DPhysics.newObj 
-        ("rectangle", woP*2*i + (width/5),-100 + Math.random()* loP/2,
+        ("rectangle", pipeX * i,-50 + Math.random()* 200,
         woP, loP);
         bods[bods.length-1].bod.label = "pipe";
-        bods[bods.length-1].makeStatic();
+        //bods[bods.length-1].makeStatic();
+        bods[bods.length-1].makeSleep(true);
         pipes.push(bods[bods.length-1]);
         bods[bods.length-1].OSR = false;
-        bods[bods.length-1].roll = false;
+        bods[bods.length-1].roll = true;
         bods[bods.length-1].texture = 
             loadImage("tubo.png");
     }
@@ -122,10 +147,15 @@ function spawnPipes(_number){
 }
 
 function reScalePipes(){
+    
+     let pipeX =  woP*2 + (width/10);
+    
     for (let i = 0; i < pipes.length; i++){
+        pipes[i].makeSleep(true);
+        pipes[i].makeAngle(0);
         //pipes[i].bod.height += (Math.random()*100)-50;
-        pipes[i].makePosition(pipes[i].bod.position.x,
-                             -100+ Math.random()*200);
+        pipes[i].makePosition(pipeX * (i+1),
+                             -50+ Math.random()*200);
     }
 }
 
@@ -134,14 +164,15 @@ function checkNavigation(){
         //newTerrain!
         createTerrain(1);
         // Reposition flappy!
-        flappy.makePosition(36, flappy.bod.position.y);
+        flappy.makePosition(42, flappy.bod.position.y-64);
         reScalePipes();
+        return;
     }
     if (flappy.bod.position.x < 32){
         //newTerrain!
         createTerrain(-1);
         // Reposition flappy!
-        flappy.makePosition(width-36, flappy.bod.position.y);
+        flappy.makePosition(width-88, flappy.bod.position.y-164);
         reScalePipes();
     }
 }
@@ -150,13 +181,13 @@ function touchEnded(){
     let flappyDir = createVector(0,0);
     
     if (mouseX > width/2 || mouseX > flappy.bod.position.x){
-        flappyDir.x = 0.01;
+        flappyDir.x = 0.04;
     }
     else {
         flappyDir.x = -0.01; 
     }
     
-    flappyDir.y = -0.08;
+    flappyDir.y = -0.1;
     flappy.addForce(flappyDir); 
     
     
@@ -167,6 +198,7 @@ function spawnFlappy(){
     bods[bods.length-1].texture = flappyTex;
     flappy = bods[bods.length-1];
     flappy.OSR = false;
+    flappy.bod.label = "flappy";
 }
 
 function createTerrain(_EveInc){
@@ -174,16 +206,28 @@ function createTerrain(_EveInc){
     // that both looks good and runs smoothly?
     
     let nOr = 4;
-    let nOc = 32;
+    let nOc = 40;
     let bWid = width/nOc;
-    let steepness = bWid*10;
-    let grade = 20;
+    let steepness = bWid*15;
+    let grade = 9;
+    let groundLevel = height + (100 / 22) * bWid;
     
     // Check whether we need to splice old blocks...
     if (_EveInc != 0){
-            for (let i = 0; i < nOr*nOc; i++){
-                RedHen_2DPhysics.removeObj(firstBlockID);
+         
+        
+        
+        for (let i = flappyBabs.length-1; i >= 0; i--){
+            RedHen_2DPhysics.removeObj(flappyBabs[i].id);
+            flappyBabs.splice(i, 1);
+            //if (i == 0) break;
+        }
+        //flappyBabs = [];
+        
+            for (let i = firstBlockID + (nOr*nOc-1); i >= firstBlockID; i--){
+                RedHen_2DPhysics.removeObj(i);
             }
+       
     }
     
     //Eve += _EveInc*nOc;
@@ -196,13 +240,13 @@ function createTerrain(_EveInc){
             if (row === 0){
             RedHen_2DPhysics.newObj 
             ("rectangle",(col*bWid)+bWid/2,
-            height-((noise((col+offset)/grade)*steepness)/2),
+            groundLevel-((noise((col+offset)/grade)*steepness)/2),
             bWid,(noise((col+offset)/grade)*steepness));  }  
                 
             else{
             RedHen_2DPhysics.newObj 
             ("box",(col*bWid)+bWid/2,
-            height-(row*bWid)-(col*4),
+            groundLevel-(row*bWid)-(col*4),
             bWid);
             }
             
@@ -213,6 +257,8 @@ function createTerrain(_EveInc){
             //bods[bods.length-1].bod.density = 1;
             bods[bods.length-1].bod.restitution = 0;
             
+            //bods[bods.length-1].makeSleep(true);
+            
             // Store index of *first* block, so that
             // we can reference the blocks later :)
             if (row == 0 && col == 0){
@@ -220,6 +266,7 @@ function createTerrain(_EveInc){
             
             if (row < nOr-3){
                 bods[bods.length-1].makeStatic();
+                //bods[bods.length-1].makeSleep(true);
             }
             if (row > 0){
                 bods[bods.length-1].makePosition (bods[bods.length-1].bod.position.x, bods[bods.length-1].bod.position.y - (noise((col+offset)/grade)*steepness));
