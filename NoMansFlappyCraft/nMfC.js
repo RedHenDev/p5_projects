@@ -41,10 +41,6 @@ function setup(){
     
     createTerrain(0);
     
-   
-    
-  
-    
 }
 
 var theta = 1;
@@ -88,7 +84,7 @@ function spawnBaby(_vPipePos){
     
     // Spawns a baby hen/thing just beneath pipe.
     RedHen_2DPhysics.newObj("circle", _vPipePos.x, _vPipePos.y + 100, 16);
-    bods[bods.length-1].texture = flappyTex;
+    //bods[bods.length-1].texture = flappyTex;
     bods[bods.length-1].OSR = false;
     bods[bods.length-1].bod.label = "babyFlap";
     flappyBabs.push(bods[bods.length-1]);
@@ -189,8 +185,6 @@ function touchEnded(){
     
     flappyDir.y = -0.1;
     flappy.addForce(flappyDir); 
-    
-    
 }
 
 function spawnFlappy(){
