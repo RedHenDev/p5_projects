@@ -111,9 +111,16 @@ function babyChase(){
         let fbV = createVector(flappyBabs[i].bod.position.x,
                               flappyBabs[i].bod.position.y);
         
+        let vfV = createVector(flappyBabs[i].bod.velocity.x,
+                               flappyBabs[i].bod.velocity.y);
+        
         hV = p5.Vector.sub(fV, fbV);
         hV = hV.normalize();
-        hV = hV.mult(0.01);
+        vfV = vfV.normalize();
+        
+        let nhV = p5.Vector.sub(vfV, hV);
+        
+        hV = hV.mult(0.004);
         
         flappyBabs[i].addForce(hV);
     }
