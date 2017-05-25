@@ -37,6 +37,8 @@ function setup(){
     // the baby flappies).
     spawnFlappy();
     
+
+    
      spawnPipes(3);
     
     createTerrain(0);
@@ -66,6 +68,9 @@ function draw(){
 //    fill(51,51,0);
 //    rect(width/2, height-20, width,40);
     
+    if (flappyBabs.length > 0 && frameCount % 4 === 0)
+        babyChase();
+    
     RedHen_2DPhysics.checkInputgGlobalMovement();
     
     RedHen_2DPhysics.updateObjs();
@@ -91,6 +96,27 @@ function spawnBaby(_vPipePos){
     bods[bods.length-1].bod.label = "babyFlap";
     flappyBabs.push(bods[bods.length-1]);
     
+}
+
+function babyChase(){
+         let fV = createVector(flappy.bod.position.x,
+                              flappy.bod.position.y);
+    
+         // Baby flappy's heading...
+    var hV = createVector(0,0);
+    
+    for (let i = 0; i < flappyBabs.length; i++){
+       
+    
+        let fbV = createVector(flappyBabs[i].bod.position.x,
+                              flappyBabs[i].bod.position.y);
+        
+        hV = p5.Vector.sub(fV, fbV);
+        hV = hV.normalize();
+        hV = hV.mult(0.01);
+        
+        flappyBabs[i].addForce(hV);
+    }
 }
 
 function hitPipe(event){
