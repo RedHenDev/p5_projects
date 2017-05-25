@@ -19,8 +19,15 @@ var woP = 120;    // Width of pipes.
 
 var flappyBabs = [];
 
+// Ghost texture.
+var babTex;
+
+
+
 function preload(){
     flappyTex = loadImage("RedHenIconAlpha512512.png");
+    
+    babTex = loadImage("ghostEgg.png");
 }
 
 function setup(){
@@ -35,13 +42,16 @@ function setup(){
     // If we create flappy last, then this causes
     // a bug on first level (flappy deleted instead of one of
     // the baby flappies).
+    RedHen_2DPhysics.newObj("GhostRectangle", width/2, -50, width * 1.5, 100);
+    bods[bods.length-1].makeStatic();
+    
     spawnFlappy();
     
-
-    
-     spawnPipes(3);
+    spawnPipes(3);
     
     createTerrain(0);
+    
+    
     
 }
 
@@ -90,12 +100,27 @@ function draw(){
 function spawnBaby(_vPipePos){
     
     // Spawns a baby hen/thing just beneath pipe.
-    RedHen_2DPhysics.newObj("circle", _vPipePos.x, _vPipePos.y + 100, 16);
+    RedHen_2DPhysics.newObj("circle", _vPipePos.x, _vPipePos.y + 100, 20);
     //bods[bods.length-1].texture = flappyTex;
     bods[bods.length-1].OSR = false;
     bods[bods.length-1].bod.label = "babyFlap";
+    bods[bods.length-1].bod.mass = 1.3;
+    bods[bods.length-1].stroke = color(255);
+    bods[bods.length-1].strokeWeight = 8;
+    bods[bods.length-1].texture = babTex;
     flappyBabs.push(bods[bods.length-1]);
     
+}
+
+function repositionGhosts(_amountX, _amountY){
+    // Move the flappy babies.
+        if (flappyBabs.length > 0){
+            for (let i = 0; i < flappyBabs.length; i++){
+                flappyBabs[i].makePosition
+                (flappyBabs[i].bod.position.x + _amountX,
+                flappyBabs[i].bod.position.y + _amountY);
+            }
+        }
 }
 
 function babyChase(){
@@ -120,7 +145,7 @@ function babyChase(){
         
         let nhV = p5.Vector.sub(vfV, hV);
         
-        hV = hV.mult(0.004);
+        hV = hV.mult(0.008);
         
         flappyBabs[i].addForce(hV);
     }
@@ -145,6 +170,15 @@ function hitPipe(event){
                 //Matter.Sleeping.set(bodA, false);
                 spawnBaby(bodB.position);
                 spawnBaby(bodB.position);
+                
+                // Shrink flappy on impact.
+                if (flappy.dia > 20){
+                let recordOfmass = flappy.bod.mass;
+                flappy.makeScale(0.75);
+                flappy.dia = flappy.dia * 0.75;
+                flappy.bod.mass = recordOfmass;
+                }
+                
                 break;
               }
             
@@ -179,7 +213,7 @@ function spawnPipes(_number){
 
 function reScalePipes(){
     
-     let pipeX =  woP*2 + (width/10);
+    let pipeX =  woP*2 + (width/10);
     
     for (let i = 0; i < pipes.length; i++){
         pipes[i].makeSleep(true);
@@ -197,6 +231,7 @@ function checkNavigation(){
         // Reposition flappy!
         flappy.makePosition(42, flappy.bod.position.y-64);
         reScalePipes();
+        
         return;
     }
     if (flappy.bod.position.x < 32){
@@ -205,8 +240,11 @@ function checkNavigation(){
         // Reposition flappy!
         flappy.makePosition(width-88, flappy.bod.position.y-164);
         reScalePipes();
+        
     }
 }
+
+
 
 function touchEnded(){
     let flappyDir = createVector(0,0);
@@ -243,15 +281,13 @@ function createTerrain(_EveInc){
     
     // Check whether we need to splice old blocks...
     if (_EveInc != 0){
-         
         
-        
+        // Remove old flappy babies.
         for (let i = flappyBabs.length-1; i >= 0; i--){
             RedHen_2DPhysics.removeObj(flappyBabs[i].id);
             flappyBabs.splice(i, 1);
-            //if (i == 0) break;
         }
-        //flappyBabs = [];
+       
         
             for (let i = firstBlockID + (nOr*nOc-1); i >= firstBlockID; i--){
                 RedHen_2DPhysics.removeObj(i);
