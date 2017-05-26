@@ -29,10 +29,19 @@ var stars = [];
 
 var landNum = 0;
 
+var vox;
+var coinVox;
+var ghostVox;
+
 function preload(){
     flappyTex = loadImage("RedHenIconAlpha512512.png");
     
     babTex = loadImage("ghostEgg.png");
+    
+    vox = loadSound("Sirens_in_Darkness_by_cynicmusic.mp3");
+    
+    coinVox = loadSound("coin9.wav");
+    ghostVox = loadSound("ghost.wav");
 }
 
 function setup(){
@@ -62,6 +71,9 @@ function setup(){
          100+Math.random()*(height-200))
     stars.push(sPos);
      }
+    
+    vox.play();
+    
 }
 
 var theta = 1;
@@ -122,9 +134,11 @@ function draw(){
     if (flappyBabs.length > 0 && frameCount % 4 === 0)
         babyChase();
     
-    RedHen_2DPhysics.checkInputgGlobalMovement();
+    //RedHen_2DPhysics.checkInputgGlobalMovement();
     
     RedHen_2DPhysics.updateObjs();
+    
+    blinkie.render();
     
     checkNavigation();
     
@@ -140,6 +154,8 @@ function touchEnded(){
         canMove = true;
         return;
     }
+    
+    
     
     let flappyDir = createVector(0,0);
     
@@ -241,6 +257,8 @@ function hitPipe(event){
                 spawnBaby(bodB.position);
                 spawnBaby(bodB.position);
                 
+                ghostVox.play();
+                
                 checkGameOver();
                 
                 break;
@@ -250,11 +268,20 @@ function hitPipe(event){
             if (bodB.label === "babyFlap" &&
                bodA.label === "flappy"){
                 // Shrink flappy on impact.
-                if (flappy.dia > 20){
+           //     if (flappy.dia > 20){
+//                let recordOfmass = flappy.bod.mass;
+//                flappy.makeScale(0.9);
+//                flappy.dia = flappy.dia * 0.9;
+//                flappy.bod.mass = recordOfmass;
+                    
+                if (blinkie.scale > 2){
                 let recordOfmass = flappy.bod.mass;
-                flappy.makeScale(0.75);
-                flappy.dia = flappy.dia * 0.75;
+                //flappy.makeScale(2);
+                //flappy.dia = flappy.dia * 2;
+                blinkie.incScale(-1);
                 flappy.bod.mass = recordOfmass;
+                    
+                    
                 }
                 
                 break;
@@ -327,8 +354,21 @@ function checkNavigation(){
         
         landNum++;
         
+        // Play coin sound!
+        coinVox.play();
+        
+        // Shrink flappy on impact.
+        if (flappy.dia < 222){
+        let recordOfmass = flappy.bod.mass;
+        //flappy.makeScale(2);
+        //flappy.dia = flappy.dia * 2;
+        blinkie.incScale(1);
+        flappy.bod.mass = recordOfmass;
+        }
+        
         //newTerrain!
         createTerrain(1);
+        
         // Reposition flappy!
         flappy.makePosition(42, flappy.bod.position.y-64);
         reScalePipes();
@@ -353,8 +393,11 @@ function checkNavigation(){
 
 
 function spawnFlappy(){
-    RedHen_2DPhysics.newObj("circle", 64, height/10, width/32);
-    bods[bods.length-1].texture = flappyTex;
+    //RedHen_2DPhysics.newObj("circle", 64, height/10, width/32);
+//    bods[bods.length-1].texture = flappyTex;
+    
+    blinkie = new antBot(true, 64, height/10, 4);
+    
     flappy = bods[bods.length-1];
     flappy.OSR = false;
     flappy.bod.label = "flappy";
