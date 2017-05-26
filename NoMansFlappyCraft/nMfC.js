@@ -22,7 +22,12 @@ var flappyBabs = [];
 // Ghost texture.
 var babTex;
 
+// Mechanism to prevent movement when dragging.
+var canMove = true;
 
+var stars = [];
+
+var landNum = 0;
 
 function preload(){
     flappyTex = loadImage("RedHenIconAlpha512512.png");
@@ -51,15 +56,30 @@ function setup(){
     
     createTerrain(0);
     
-    
-    
+     for (let s = 0; s < 42; s++){
+         let sPos = createVector
+         (100+Math.random()*(width-200),
+         100+Math.random()*(height-200))
+    stars.push(sPos);
+     }
 }
 
 var theta = 1;
 var dayT = true;
 
+var ghostyTime = 255;
+
 function draw(){
-    background(0,101*theta,222*theta);
+    
+    // If it's at least somewhat dark,
+    // and there be ghosts, then use
+    // alpha to create strange trails.
+    if (theta < 0.5 &&
+       flappyBabs.length > 0)
+        {ghostyTime = 42;}
+    else ghostyTime = 255;
+    
+    background(0,101*theta,222*theta,ghostyTime);
     
     if (dayT){
     theta -=0.0005;
@@ -70,8 +90,29 @@ function draw(){
     if (theta > 1) dayT = true;
     }
     
+    // Stars...
+    stroke(0,101,222);
+    
+    for (let s = 0; s < stars.length; s++){
+        strokeWeight(Math.random()*4);
+        point(stars[s].x, stars[s].y);
+    }
+    
+    // The SUN!
+    fill(155 + 100 * theta,200,0);
+    noStroke();
+    ellipse(100+theta*width,(height+200)-theta*height,200);
+    
+    noStroke();
+    //strokeWeight(2);
+    fill(255);
     textSize(32);
-    text("FPS: " + Math.round(frameRate()), 32,32);
+    //text("FPS: " + Math.round(frameRate()), 32,32);
+    let units = "";
+    if (landNum === 1 || landNum === -1)
+        units = "mile"
+        else units = "miles!"
+    text("Travelled " + landNum + " " + units, 32, 64);
     
 //    stroke(0,100,0);
 //    strokeWeight(4);
@@ -92,6 +133,32 @@ function draw(){
 }
 
 
+function touchEnded(){
+    
+    // To prevent movement when dragging objects.
+    if (canMove === false) { 
+        canMove = true;
+        return;
+    }
+    
+    let flappyDir = createVector(0,0);
+    
+    if (mouseX > width/2 || mouseX > flappy.bod.position.x){
+        flappyDir.x = 0.04;
+    }
+    else {
+        flappyDir.x = -0.01; 
+    }
+    
+    flappyDir.y = -0.1;
+    flappy.addForce(flappyDir); 
+
+}
+function mouseDragged(){
+    // To prevent movement when dragging objects.
+    canMove = false;
+}
+
 // To handle collision events, we could have a static
 // method that returns the indices of the pair of
 // bods hit, respective to two labels passed in! How do
@@ -99,8 +166,11 @@ function draw(){
 
 function spawnBaby(_vPipePos){
     
+    if (theta < 0.4) ghostSize = 40;
+    else ghostSize = 20;
+    
     // Spawns a baby hen/thing just beneath pipe.
-    RedHen_2DPhysics.newObj("circle", _vPipePos.x, _vPipePos.y + 100, 20);
+    RedHen_2DPhysics.newObj("circle", _vPipePos.x, _vPipePos.y + 100, ghostSize);
     //bods[bods.length-1].texture = flappyTex;
     bods[bods.length-1].OSR = false;
     bods[bods.length-1].bod.label = "babyFlap";
@@ -164,13 +234,21 @@ function hitPipe(event){
             let bodA = pairs[i].bodyA;
             let bodB = pairs[i].bodyB;
             
-            // E.g.
-            if (bodB.label == "pipe" && bodA.label == "flappy"){
+            // Hit pipe...
+            if (bodB.label === "pipe" && bodA.label === "flappy"){
                 // pipes[0].makeSleep(false); // How to refer to pipe in question?
                 //Matter.Sleeping.set(bodA, false);
                 spawnBaby(bodB.position);
                 spawnBaby(bodB.position);
                 
+                checkGameOver();
+                
+                break;
+              }
+            
+            // Bumped by ghost...
+            if (bodB.label === "babyFlap" &&
+               bodA.label === "flappy"){
                 // Shrink flappy on impact.
                 if (flappy.dia > 20){
                 let recordOfmass = flappy.bod.mass;
@@ -180,7 +258,8 @@ function hitPipe(event){
                 }
                 
                 break;
-              }
+            }
+            
             
 //            if (bodA.label == "flappy"){
 //                Matter.Sleeping.set(bodB, false);
@@ -189,6 +268,14 @@ function hitPipe(event){
 //            
             }   // End of forLoop.
 }       // End of collision events function.
+
+function checkGameOver(){
+    if (flappyBabs.length > 20){
+        alert("Oh no! \n That's 21 Pilot Ghosts! \n  It wouldn't be right to carry on.");
+        
+        location.reload();
+    }
+}
 
 function spawnPipes(_number){
     
@@ -225,7 +312,21 @@ function reScalePipes(){
 }
 
 function checkNavigation(){
+    
+    // First, make sure flappy is on screen.
+    
+    if (flappy.bod.position.y < 0 ||
+       flappy.bod.position.y > height){
+       // alert("Oh no! \n Red Hen is lost :( \n Let's refresh!");
+        //location.reload();
+        flappy.makePosition(width/2, height/2);
+    }
+    
+    
     if (flappy.bod.position.x > width-32){
+        
+        landNum++;
+        
         //newTerrain!
         createTerrain(1);
         // Reposition flappy!
@@ -235,6 +336,9 @@ function checkNavigation(){
         return;
     }
     if (flappy.bod.position.x < 32){
+        
+        landNum--;
+        
         //newTerrain!
         createTerrain(-1);
         // Reposition flappy!
@@ -246,19 +350,7 @@ function checkNavigation(){
 
 
 
-function touchEnded(){
-    let flappyDir = createVector(0,0);
-    
-    if (mouseX > width/2 || mouseX > flappy.bod.position.x){
-        flappyDir.x = 0.04;
-    }
-    else {
-        flappyDir.x = -0.01; 
-    }
-    
-    flappyDir.y = -0.1;
-    flappy.addForce(flappyDir); 
-}
+
 
 function spawnFlappy(){
     RedHen_2DPhysics.newObj("circle", 64, height/10, width/32);
