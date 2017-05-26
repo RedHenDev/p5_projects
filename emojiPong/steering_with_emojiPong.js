@@ -293,7 +293,7 @@ function MovePuck(){
     var pB = puckY + puckSize/2;
     
     // Player 1 paddle collisions.
-    if (    pL < p1X + pSizeX && pR > p1X - pSizeX &&
+    if (    pL < p1X - pSizeX && pR > p1X + pSizeX &&
             pU < p1Y + pSizeY &&
             pB > p1Y - pSizeY){
         if (Math.abs(pMovX) > 0.2 || Math.abs(pMovY) > 0.2) // Ordinary collision response if paddle moving at fair speed.
@@ -400,9 +400,9 @@ function DrawPuck(_x, _y){
 }
 
 function DisplayScore(){
-    stroke(255);
-    strokeWeight(2);
-    fill(0,255,0);
+    stroke(0);
+    strokeWeight(4);
+    fill(255);
     textSize(32);
     text(p1Score + " : " + p2Score, (width/2)-32, (height/2)+10);
 }
