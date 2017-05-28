@@ -37,8 +37,17 @@ function mousePressed(){
 
 function newSegment(){
     
-    let nX = pos[0].x + pos.length * sSize * -sMovement.x;
-    let nY = pos[0].y + pos.length * sSize * -sMovement.y;
+    // There is a change here from 
+    // the tutorial video :)
+    // Instead of calculating the position
+    // of the new segment relative to
+    // the 'head segment', I should have
+    // referred to the *last* segment.
+    // In other terms, no pos[0] but
+    // pos[pos.length-1].
+    
+    let nX = pos[pos.length-1];
+    let nY = pos[pos.length-1];
     
     let nV = createVector(nX, nY);
     
@@ -49,7 +58,7 @@ function newSegment(){
 function drawSnake(){
     
     for (let i = 0; i < pos.length; i++){
-     rect(pos[i].x, pos[i].y, sSize, sSize);
+        rect(pos[i].x, pos[i].y, sSize, sSize);
     }
 }
 
@@ -87,6 +96,11 @@ function moveSnake(){
  
     pos[0].x += sMovement.x * sSize;
     pos[0].y += sMovement.y * sSize;
+    
+    if (pos[0].x < 0) pos[0].x = width;
+    if (pos[0].x > width) pos[0].x = 0;
+    if (pos[0].y < 0) pos[0].y = height;
+    if (pos[0].y > height) pos[0].y = 0;
 }
 
 function changeMovement(_x, _y){

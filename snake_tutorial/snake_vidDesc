@@ -1,0 +1,12 @@
+How to Code the Snake Game: tutorial 1
+
+First, I show you how to get started using javascript and the p5.js library. You will learn the simple steps of downloading p5 and linking files to your html file. 
+
+Next, we code the basic graphics and keyboard input, with the traditional snake controls (i.e. you cannot move left, immediately, if you are currently moving right -- so that the snake doesn't try to 'move back through' its own body).
+
+In the next video, we will code the all-important snake segments that trail behind the head of the snake.
+
+Thanks for watching!
+
+
+snake,nokia,game,programming,program,code,coding,input,keyboard input,how to,tutorial,p5,p5js,p5.js,javascript,js,easy,simple,beginner,indiedev,gamedev
