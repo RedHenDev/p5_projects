@@ -13,6 +13,7 @@ function setup() {
     background(100, 204, 45);
     
     rectMode(CENTER);
+    strokeWeight(2);
     
     setupSnake();
     
@@ -22,12 +23,31 @@ function draw() {
     
     background(100, 204, 45);
     
+    textSize(32);
+  text("Tap/Click to add segment to snake.", 64, 64);
+    
     checkInput();
+    
+//    if (frameCount % 10 === 0){
+//    aiMove();
+//        newSegment();
+//    }
     
     drawSnake();
     
-    if (frameCount % 10 === 0){
+    if (frameCount % 4 === 0){
         moveSnake();
+    }
+    
+}
+
+function aiMove(){
+    
+    switch(Math.floor(Math.random()*3)){
+        case 0: changeMovement(0,1); break;
+        case 1: changeMovement(0,-1); break;
+        case 2: changeMovement(1,0); break;
+        case 3: changeMovement(-1,0);
     }
 }
 
@@ -58,8 +78,11 @@ function newSegment(){
 function drawSnake(){
     
     for (let i = 0; i < pos.length; i++){
+        
         rect(pos[i].x, pos[i].y, sSize, sSize);
     }
+    
+    
 }
 
 function checkInput(){
@@ -101,7 +124,9 @@ function moveSnake(){
     if (pos[0].x > width) pos[0].x = 0;
     if (pos[0].y < 0) pos[0].y = height;
     if (pos[0].y > height) pos[0].y = 0;
+    
 }
+
 
 function changeMovement(_x, _y){
     sMovement.x = _x;
