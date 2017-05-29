@@ -30,6 +30,8 @@ var ship;
 
 var lasers = [];
 
+var score = 0;
+
 function setup(){
     
     createCanvas(windowWidth, windowHeight);
@@ -39,6 +41,8 @@ function setup(){
     makeAsteroids(7);
     
     shipsAGoGo();
+  
+  textSize(32);
 }
 
 
@@ -54,8 +58,12 @@ function draw(){
     
     starWars();
     
+    printScore();
 }
 
+function printScore(){
+  text("Score: " + score, 32, 32);
+}
 
 function starWars(){
     
@@ -88,8 +96,12 @@ function keyTyped(){
     if (keyCode == 32){
         lasers.push(new Laser(ship.pos, ship.theta));
     }
-    
+ 
+  // Turns off window scrolling with arrow keys.
+  return false;
+  
 }
+
 
 function updateShip(){
     
@@ -112,25 +124,47 @@ function updateAsteroids(){
     
     var hit = false;
     
-    for (var a = asteroids.length-1; a >= 0; a--){
-        asteroids[a].spaceGlide();
+    for (var a = asteroids.length-1; a >= 0; a--){     
+      asteroids[a].spaceGlide();
         screenWrap(asteroids[a]);
         asteroids[a].render();
         
         if (asteroids[a].radius > 4){
         hit = collision(ship, asteroids[a]);
-        if (hit===true) asteroidSpawn(asteroids[a], a); 
+        if (hit===true){
+          score--;
+          asteroidSpawn(asteroids[a], a); 
+        }
         }
         
         for (var j = lasers.length-1; j >= 0; j--){
             if (asteroids[a].radius > 4){
             hit = collision(lasers[j], asteroids[a]);
-            if (hit===true){ asteroidSpawn(asteroids[a], a); 
+            if (hit===true){
+              score++;
+                
+                // Create new asteroid belt if
+                // there are less than 3 asteroids :)
+                if (asteroids.length < 3){
+                // Number of new asteroids will
+                    // reflect player skill --
+                    // i.e. their score :)
+                  let beltPopulation = Math.round(Math.abs(score)/2); makeAsteroids(beltPopulation);
+                }
+              
+                asteroidSpawn(asteroids[a], a); 
             lasers.splice(j,1);               
             }
             }
         }
         
+      // *** New game behaviour.
+      // If asteroid too small, then remove it from the array. Then, spawn 2 new larger asteroids.
+      if (asteroids[a].dia < 10){
+          asteroids.splice(a,1);
+          
+         
+      }
         
     }
   
@@ -383,6 +417,7 @@ Ast.prototype.spaceGlide = function(){
     this.pos.add(this.vel);
     
 }
+
 
 
 
