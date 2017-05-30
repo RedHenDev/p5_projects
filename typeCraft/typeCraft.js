@@ -55,11 +55,13 @@ var lineAdjust = 0;
 function setup(){
     createCanvas(windowWidth, windowHeight);
     
-    BG_COLOUR = color(0,202,101);
+   // BG_COLOUR = color(0,202,101);
+    
+    BG_COLOUR = color(0,101,255);
     
     setDefaults();
     
-    RedHen_tChar.newTextField(width/10,height/10, width-(width/5), height-(height/5));
+    RedHen_tChar.newTextField(width/10,height/10, width-(width/5), height-(height/5),64);
 }
 
 function draw(){
@@ -72,8 +74,7 @@ function draw(){
     //renderText(currentString);
     rh_textFields[0].printChars();
     
-    // Have we pressed backspace or
-    // return?
+    // Have we pressed backspace.
     deleteCheck();
 }
 
@@ -81,7 +82,7 @@ function setDefaults(){
     
     // Time to wait before we can delete char.
     // Measured in milliseconds.
-    deleteTimeBuffer = 128;
+    deleteTimeBuffer = 60;
     
     //textSize(64);
     
@@ -100,8 +101,10 @@ function keyTyped(){
     // We need to ignore when
     // user *types* RETURN.
     
-    if (key === 'RETURN') return;
-    
+    if (keyCode == 13){ rh_textFields[0]. newLine (); 
+                 return;
+                      }
+
    if ( key === '.' ||
         key === ',' ||
         key === '?' ||
@@ -110,11 +113,27 @@ function keyTyped(){
         key === ":" ||
         key === ";" ||
         key === "'" ||
-        key === '"')
+        key === '"'){
     makeExplosion(
         rh_textFields[0].cursorPos.x,
         rh_textFields[0].cursorPos.y,
-        0);  rh_textFields[0].typeSomething(key);
+        0, 20, color(0,0,0,200));
+    rh_textFields[0].changeEmoji(); 
+       rh_textFields[0].typeSomething(key);
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].fill = color(0);
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(0);
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].strokeWeight = 2;
+   }
+    else {
+        makeExplosion(
+        rh_textFields[0].cursorPos.x,
+        rh_textFields[0].cursorPos.y,
+        0, 2, color(0,200,255));
+        rh_textFields[0].typeSomething(key);
+        
+    }
+       
+       
     
     // Where are we printing char,
     // so that we can place
@@ -125,8 +144,12 @@ function keyTyped(){
     //if (key == '.')
 //    makeExplosion(width/10+(fontSize/3)*((currentString.length-1)/(lineAdjust+1)),lineAdjust+(height/10+(fontSize/2)), 0);
     
-   
-    
+  
+}
+
+function keyPressed(){
+    if (keyCode == 8)
+  rh_textFields[0].deleteSomething();
 }
 
 function deleteCheck(){
@@ -139,10 +162,12 @@ function deleteCheck(){
     if (keyIsDown(BACKSPACE)){
         //currentString = currentString.slice(0, -1);
         rh_textFields[0]. deleteSomething ();
+        
     }
     if (keyIsDown(RETURN)){
-        rh_textFields[0]. newLine ();
+    //    rh_textFields[0]. newLine ();
     }
+    
 }
 
 

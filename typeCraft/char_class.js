@@ -23,7 +23,7 @@ class RedHen_tChar {
     // which will therefore
     // probably be objects in
     // their own right.
-    static newTextField(_marginSize, _width, _height, startPos_x, startPos_y){
+    static newTextField(startPos_x, startPos_y,_width, _height, _fontSize){
         
         // There is here the question
         // of how to structure the
@@ -32,14 +32,14 @@ class RedHen_tChar {
         // towards the lowest object
         // dangling on the chain.
         rh_textFields.push(
-        new TextField(_marginSize, _width, _height, startPos_x, startPos_y));
+        new TextField(startPos_x, startPos_y, _width, _height, _fontSize));
         
     }
     
 }
 
 class TextField {
-    constructor(startPos_x, startPos_y,_width, _height){
+    constructor(startPos_x, startPos_y,_width, _height, _fontSize){
         
         // OK, we'll at least leave
         // polymorphism till later!
@@ -56,18 +56,27 @@ class TextField {
         // left of the text field.
         this.cursorPos = createVector(this.startPos.x, this.startPos.y);
         
+        this.fontSize = _fontSize;
+        
         // An array to manage
         // the tChar objects.
         this.tChars = [];
         
         // Grab random emoji now
         // to place in cursor ellipse.
-        this.myEmoji = this.newEmoji();
+        this.myEmoji = this.getEmoji();
+        
+        // Range 0-1.
+        this.blink_scale = 1;
+        this.blink_rate = 0.02;
+        // 0 = scale decreasing.
+        this.blink_state = 0;
         
     }
     
     newLine(){
-        this.cursorPos.y += 64; this.cursorPos.x = this.startPos.x;
+        this.cursorPos.y += this.fontSize; 
+        this.cursorPos.x = this.startPos.x;
     }
     
     deleteSomething(){
@@ -90,7 +99,7 @@ class TextField {
          
     }
     
-    newEmoji(){
+    getEmoji(){
     // return String.fromCodePoint(
     // '0x1F' + round(random(1536, 1616)).toString(16));
   
@@ -99,7 +108,7 @@ class TextField {
     
     typeSomething(_char){
         
-        this.tChars.push(new tChar(_char, this.cursorPos.x, this.cursorPos.y));
+        this.tChars.push(new tChar(_char, this));
            
         // Render tChar so that
         // p5.width will work
@@ -120,21 +129,45 @@ class TextField {
     }
     
     blinkCursor(){
+        
         noFill();
-        strokeWeight(4);
-        stroke(0,42);
-        
-        
-        
+        strokeWeight(2);
+        stroke(0,255,255);
         
         ellipse(this.cursorPos.x+16,
                this.cursorPos.y-16,
                32);
       fill(255);
-      textSize(32);
+        
+        // Control blinking pulsing.
+        if (this.blink_state === 0)
+            this.blink_scale -=
+                this.blink_rate;
+        else if (this.blink_state === 1)
+            this.blink_scale +=
+                this.blink_rate;
+        
+        if (this.blink_scale >= 1){
+            this.blink_state = 0;
+            this.blink_scale = 1;
+        }
+        if (this.blink_scale <= 0.5){
+            this.blink_scale = 0.5;
+            this.blink_state = 1;
+        }
+        
+      textSize(32*(this.blink_scale+0.1));
         text(   this.myEmoji,
-                this.cursorPos.x,
-                this.cursorPos.y);
+                this.cursorPos.x-1*(this.blink_scale+0.5),
+                this.cursorPos.y-1*(this.blink_scale+0.5));
+    }
+    
+    changeEmoji(){
+        let nE = this.getEmoji();
+        while (nE == this.myEmoji){
+            nE = this.getEmoji();
+        }
+        this.myEmoji = nE;   
     }
     
     adjustCursorPos(_amount){
@@ -165,7 +198,7 @@ class TextField {
 
 
 class tChar {
-    constructor(_char, _x, _y){
+    constructor(_char, _parent){
         // How will the char
         // know how to work
         // out where its
@@ -181,14 +214,14 @@ class tChar {
         // order object, the
         // 'text field'.
         this.pos = createVector
-        (_x, _y);
+        (_parent.cursorPos.x, _parent.cursorPos.y);
         
         this.rotation = 0;
         
-        this.fontSize = 64;
+        this.fontSize = _parent.fontSize;
         this.stroke = color(255);
-        this.strokeWeight = 4;
-        this.fill = color(200,0,200);
+        this.strokeWeight = 2;
+        this.fill = color(255);
         
         
     }
@@ -197,7 +230,7 @@ class tChar {
         
         fill(this.fill);
         stroke(this.stroke);
-        strokeWeight(this.strokeWeight);
+        strokeWeight (this.strokeWeight);
         textSize(this.fontSize);
         
         push();

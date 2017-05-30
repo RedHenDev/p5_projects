@@ -12,11 +12,13 @@ const particleNumber = 40;
 
 // Call this when you'd like an
 // explosion.
-function makeExplosion(_x,_y, _detTime){
+function makeExplosion(_x,_y, _detTime, _particleAmount, _colour){
    splashes.push(new Explosion(
         _x,
         _y,
-        _detTime));
+        _detTime,
+        _particleAmount,
+        _colour));
 }
 
 // Call this in update loop to
@@ -35,13 +37,17 @@ function updateExplosions(){
 // The explosion object uses 'gunpowder particle' objects to
 // populate its explosive bloom.
 // Integral to this object's deployment is a detonation time.
-function Explosion(_x, _y, _detonationTime){
+function Explosion(_x, _y, _detonationTime, _particleAmount, _colour){
     
     // What time was I created?
     this.birthTime = millis();
     
     // Calling function decides my detonation time.
     this.detonationTime = _detonationTime;
+    
+    this.particleAmount = _particleAmount;
+    
+    this.colour = _colour;
     
     // Where do you want the explosion's origin?
     this.pos = createVector(_x, _y);
@@ -75,12 +81,12 @@ Explosion.prototype.update = function(){
 Explosion.prototype.makeExplosion = function(){
     this.exploded = true;
     
-     for (let i = 0; i < particleNumber; i++){
-        this.gunpowder.push(new Gp(this.pos.x, this.pos.y, 20));
+     for (let i = 0; i < this.particleAmount; i++){
+        this.gunpowder.push(new Gp(this.pos.x, this.pos.y, 20, this.colour));
     }
     
-    for (let i = 0; i < particleNumber; i++){
-        this.gunpowder.push(new Gp(this.pos.x, this.pos.y, 8));
+    for (let i = 0; i < this.particleAmount; i++){
+        this.gunpowder.push(new Gp(this.pos.x, this.pos.y, 8, this.colour));
     }
 }
 
@@ -89,7 +95,7 @@ Explosion.prototype.makeExplosion = function(){
 // when a module is destroyed, and each particle will move
 // according to Euler integration. I think it would look best
 // if the particles were only 1 pixel in size each.
-function Gp(_x, _y, _r){
+function Gp(_x, _y, _r, _colour){
     
     // Still alive and onscreen?
     this.intact = true;
@@ -99,6 +105,8 @@ function Gp(_x, _y, _r){
     this.vel = createVector((Math.random()*14)-7, (Math.random()*14)-7);
     this.acc = createVector();
     
+    this.colour = _colour;
+    
     // Default is gravity pulling down.
     this.grav = createVector(0,0.1);
     
@@ -106,13 +114,11 @@ function Gp(_x, _y, _r){
 }
 
 Gp.prototype.render = function(){
- 
-    let colF = (Math.abs(this.vel.y)+10)*(Math.abs(this.vel.x)+10);
     
     //noStroke();
     strokeWeight(1);
     stroke(255);
-    fill(0,colF*12,colF,255);
+    fill(this.colour);
     ellipse(this.pos.x,this.pos.y, this.radius, this.radius);
     
 }
