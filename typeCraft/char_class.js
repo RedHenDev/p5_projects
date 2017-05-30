@@ -39,12 +39,11 @@ class RedHen_tChar {
 }
 
 class TextField {
-    constructor(_marginSize, _width, _height, startPos_x, startPos_y){
+    constructor(startPos_x, startPos_y,_width, _height){
         
         // OK, we'll at least leave
         // polymorphism till later!
         
-        this.marginSize = _marginSize;
         this.startPos = createVector(startPos_x, startPos_y);
         this.width = _width;
         this.height = _height;
@@ -61,12 +60,81 @@ class TextField {
         // the tChar objects.
         this.tChars = [];
         
+        // Grab random emoji now
+        // to place in cursor ellipse.
+        this.myEmoji = this.newEmoji();
+        
+    }
+    
+    newLine(){
+        this.cursorPos.y += 64; this.cursorPos.x = this.startPos.x;
+    }
+    
+    deleteSomething(){
+      
+        // Is there something here
+        // to delete?
+        if (this.tChars.length < 1)
+            return;
+        
+        // Adjust cursor position:
+        // back current tChar's width.
+       // this.adjustCursorPos(-textWidth(this.tChars[this.tChars.length-1].string));
+       
+        this.cursorPos.x = this.tChars[this.tChars.length-1].pos.x; //+ textWidth(this.tChars[this.tChars.length-1].string);
+        this.cursorPos.y = this.tChars[this.tChars.length-1].pos.y;
+        
+        // Remove last tChar typed.
+      this.tChars.splice (this.tChars.length-1, 1);
+        
+         
+    }
+    
+    newEmoji(){
+    // return String.fromCodePoint(
+    // '0x1F' + round(random(1536, 1616)).toString(16));
+  
+        return String.fromCodePoint(0x1F600 + round(random(0,42)));
     }
     
     typeSomething(_char){
+        
         this.tChars.push(new tChar(_char, this.cursorPos.x, this.cursorPos.y));
-                         
-        adjustCursorPos(31);
+           
+        // Render tChar so that
+        // p5.width will work
+        // correctly: it needs
+        // to know the textSize.
+        this.tChars[this.tChars.length-1].print();
+        
+        // Are we at end of line?
+        if (this.cursorPos.x >=
+           this.startPos.x + this.width){
+            this.newLine();
+        } else{
+        // Forward this tChar's
+        // width.
+      let aa =  textWidth(this.tChars[this.tChars.length-1].string);
+        this.adjustCursorPos(aa);
+        }
+    }
+    
+    blinkCursor(){
+        noFill();
+        strokeWeight(4);
+        stroke(0,42);
+        
+        
+        
+        
+        ellipse(this.cursorPos.x+16,
+               this.cursorPos.y-16,
+               32);
+      fill(255);
+      textSize(32);
+        text(   this.myEmoji,
+                this.cursorPos.x,
+                this.cursorPos.y);
     }
     
     adjustCursorPos(_amount){
@@ -85,7 +153,7 @@ class TextField {
         // over all the tChars etc.?
         
         this.cursorPos.x += _amount;
-        
+
     }
     
     printChars(){
@@ -119,18 +187,25 @@ class tChar {
         
         this.fontSize = 64;
         this.stroke = color(255);
+        this.strokeWeight = 4;
         this.fill = color(200,0,200);
         
         
     }
     
     print(){
+        
+        fill(this.fill);
+        stroke(this.stroke);
+        strokeWeight(this.strokeWeight);
+        textSize(this.fontSize);
+        
         push();
         
         translate(this.pos.x, this.pos.y);
         rotate(radians(this.rotation));
         
-        text(this.string, this.pos.x, this.pos.y);
+        text(this.string, 0, 0);
         
         pop();
     }

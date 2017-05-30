@@ -59,18 +59,21 @@ function setup(){
     
     setDefaults();
     
-    RedHen_tChar.newTextField(  width/10,width-(width/5),height-(height/5), width/10,height/10);
+    RedHen_tChar.newTextField(width/10,height/10, width-(width/5), height-(height/5));
 }
 
 function draw(){
     background(BG_COLOUR);
+    
+    rh_textFields[0].blinkCursor();
     
     updateExplosions();
     
     //renderText(currentString);
     rh_textFields[0].printChars();
     
-    // Have we pressed backspace?
+    // Have we pressed backspace or
+    // return?
     deleteCheck();
 }
 
@@ -78,9 +81,9 @@ function setDefaults(){
     
     // Time to wait before we can delete char.
     // Measured in milliseconds.
-    deleteTimeBuffer = 61;
+    deleteTimeBuffer = 128;
     
-    textSize(64);
+    //textSize(64);
     
     // Determine the size of the
     // text box. See last two
@@ -92,9 +95,26 @@ function setDefaults(){
 }
 
 function keyTyped(){
-    currentString += key;
+    //currentString += key;
     
-    rh_textFields[0].typeSomething(key);
+    // We need to ignore when
+    // user *types* RETURN.
+    
+    if (key === 'RETURN') return;
+    
+   if ( key === '.' ||
+        key === ',' ||
+        key === '?' ||
+        key === '-' ||
+        key === '!' ||
+        key === ":" ||
+        key === ";" ||
+        key === "'" ||
+        key === '"')
+    makeExplosion(
+        rh_textFields[0].cursorPos.x,
+        rh_textFields[0].cursorPos.y,
+        0);  rh_textFields[0].typeSomething(key);
     
     // Where are we printing char,
     // so that we can place
@@ -105,16 +125,7 @@ function keyTyped(){
     //if (key == '.')
 //    makeExplosion(width/10+(fontSize/3)*((currentString.length-1)/(lineAdjust+1)),lineAdjust+(height/10+(fontSize/2)), 0);
     
-    if (key == '.' ||
-        key == ',' ||
-        key == '?' ||
-        key == '-' ||
-        key == '!' ||
-        key == "'")
-    makeExplosion(
-        Math.random()*width,
-        Math.random()*height,
-        0);
+   
     
 }
 
@@ -125,8 +136,13 @@ function deleteCheck(){
     
     dTimeStamp = millis();
     
-    if (keyIsDown(BACKSPACE))
-    currentString = currentString.slice(0, -1);
+    if (keyIsDown(BACKSPACE)){
+        //currentString = currentString.slice(0, -1);
+        rh_textFields[0]. deleteSomething ();
+    }
+    if (keyIsDown(RETURN)){
+        rh_textFields[0]. newLine ();
+    }
 }
 
 
