@@ -23,7 +23,6 @@ var puckSize;
 var pMovX;
 var pMovY;
 var puckEmoji;
-var flee = false;
 
 // Ai variables.
 var aiTimeStamp;
@@ -42,7 +41,7 @@ function setup(){
 function draw(){
     
     // With some cheeky alpha, for trail effect...
-    background(0,72, 72,72);
+    background(0,172, 172,72);
     
     DrawCourt();
     
@@ -57,6 +56,8 @@ function draw(){
     DrawPadle(p1X, p1Y);
     DrawPadle(p2X, p2Y);
     
+    updateExplosions();
+  
 }
 
 function touchEnded(){
@@ -172,20 +173,10 @@ function ReynoldsAI(){
     // newVector = targetVector - currentVector;
     
     var newVector = createVector();
-    var targetVector = createVector(puckX+pMovX*0.05, puckY+pMovY*0.05);
-    
-    
+    var targetVector = createVector(puckX+pMovX*5, puckY+pMovY*5);
     var currentVector = createVector(p2MovX, p2MovY);
     
-     // Seek.
-    targetVector = p5.Vector.sub(targetVector, currentVector);
     newVector = p5.Vector.sub(targetVector, currentVector);
-    
-    // Flee.
-//    let cPos = createVector(p2X, p2Y);
-//    targetVector = p5.Vector.sub(cPos, targetVector);
-//    newVector = p5.Vector.sub(currentVector, targetVector);
-    
     
     _hX = newVector.x;
     _hY = newVector.y; 
@@ -247,18 +238,13 @@ function Ai(){
 
 function SetAIPaddleDest(_hX, _hY){
     let hV = createVector(_hX, _hY);    // Destination vector.
-    let pV = createVector(p2X, p2Y);    // Ai's paddle pos.
+    let pV = createVector(p2X, p2Y);    // Ai's paddle vector.
     
     let newV = p5.Vector.sub(hV, pV);
     newV = newV.normalize();
     
-    if (flee){
-    p2MovX -= newV.x * 5;
-    p2MovY -= newV.y * 5;
-    } else{
     p2MovX += newV.x * 5;
     p2MovY += newV.y * 5;
-    }
 }
 
 function MovePuck(){
@@ -281,6 +267,9 @@ function MovePuck(){
     if (    pL < p1X + pSizeX && pR > p1X - pSizeX &&
             pU < p1Y + pSizeY &&
             pB > p1Y - pSizeY){
+      
+      makeExplosion(p1X, p1Y, 1);
+      
         if (Math.abs(pMovX) > 0.2 || Math.abs(pMovY) > 0.2) // Ordinary collision response if paddle moving at fair speed.
         {pMovX = p1MovX*2;
         pMovY = p1MovY*2;}
@@ -289,7 +278,7 @@ function MovePuck(){
     }
     
     // Player 2 paddle collisions.
-    if (    pL < p2X + pSizeX && pR > p2X - pSizeX &&
+    if (    pL < p2X - pSizeX && pR > p2X + pSizeX &&
             pU < p2Y + pSizeY &&
             pB > p2Y - pSizeY){
         if (Math.abs(pMovX) > 0.1 || Math.abs(pMovY) > 0.1) // Ordinary collision response if paddle moving at fair speed.
@@ -342,7 +331,7 @@ function SetStartPositions(){
     p2MovY = 0;
     
     aiHeading = createVector(0,0);
-    aiTime = 0.6; // Ai does something every 0.6 seconds (default).
+    aiTime = 1; // Ai does something every one seconds (default).
     aiTimeStamp = millis(); // Incipient time stamp.
     
     puckEmoji = NewEmoji();
@@ -386,11 +375,152 @@ function DrawPuck(_x, _y){
 
 function DisplayScore(){
     stroke(255);
-    strokeWeight(2);
-    fill(0,255,0);
+    strokeWeight(4);
+    fill(0);
     textSize(32);
     text(p1Score + " : " + p2Score, (width/2)-32, (height/2)+10);
 }
 
 
+
+// Should we add splashes?
+
+
+// Array of splashes/explosions.
+
+var splashes = [];
+
+// Number of particles will be
+// *twice* this number.
+const particleNumber = 3;
+
+// Utility functions.
+
+
+// Call this when you'd like an
+// explosion.
+function makeExplosion(_x,_y, _detTime){
+   splashes.push(new Explosion(
+        _x,
+        _y,
+        _detTime));
+}
+
+// Call this in update loop to
+// animate splashes :)
+function updateExplosions(){
+ 
+    for (let i = 0; i < splashes.length; i++){
+        // Checks whether time to detonate, and
+        // handles physics of particles.
+        splashes[i].update();
+    }
+ 
+}
+
+// Explosion object.
+// The explosion object uses 'gunpowder particle' objects to
+// populate its explosive bloom.
+// Integral to this object's deployment is a detonation time.
+function Explosion(_x, _y, _detonationTime){
+    
+    // What time was I created?
+    this.birthTime = millis();
+    
+    // Calling function decides my detonation time.
+    this.detonationTime = _detonationTime;
+    
+    // Where do you want the explosion's origin?
+    this.pos = createVector(_x, _y);
+    
+    // Array of particles that constitute the explosion.
+    this.gunpowder = [];
+    
+}
+
+// Decide whether to explode: this function
+// handles detonation timing and particle updates.
+Explosion.prototype.update = function(){
+    if (this.exploded) { 
+        for (var i = this.gunpowder.length-1; i > -1; i--){
+        this.gunpowder[i].render();
+        this.gunpowder[i].update();
+        // Splice gunpowder object if flagged as no longer intact.
+        if (this.gunpowder[i].intact===false) this.gunpowder.splice(i,1);
+        }
+        return;
+    }
+    
+    // Check whether time to explode!
+    if (millis()-this.birthTime > this.detonationTime)
+        {
+            this.makeExplosion();
+        }
+    
+}
+
+Explosion.prototype.makeExplosion = function(){
+    this.exploded = true;
+    
+     for (let i = 0; i < particleNumber; i++){
+        this.gunpowder.push(new Gp(this.pos.x, this.pos.y, 20));
+    }
+    
+    for (let i = 0; i < particleNumber; i++){
+        this.gunpowder.push(new Gp(this.pos.x, this.pos.y, 8));
+    }
+}
+
+// Gunpowder particle object.
+// The idea is that we could request, say, a hundred of these
+// when a module is destroyed, and each particle will move
+// according to Euler integration. I think it would look best
+// if the particles were only 1 pixel in size each.
+function Gp(_x, _y, _r){
+    
+    // Still alive and onscreen?
+    this.intact = true;
+    
+    this.pos = createVector(_x, _y);
+    // Initialize with random velocity.
+    this.vel = createVector((Math.random()*14)-7, (Math.random()*14)-7);
+    this.acc = createVector();
+    
+    // Default is gravity pulling down.
+    this.grav = createVector(0,0.1);
+    
+    this.radius = _r;
+}
+
+Gp.prototype.render = function(){
+ 
+    let colF = (Math.abs(this.vel.y)+10)*(Math.abs(this.vel.x)+10);
+    
+    //noStroke();
+    strokeWeight(1);
+    stroke(255);
+    fill(colF,0,colF,255);
+    ellipse(this.pos.x,this.pos.y, this.radius, this.radius);
+    
+}
+
+Gp.prototype.update = function(){
+    
+    // Euler integration, with gravity.
+    
+    // First, gravity force.
+    this.acc.add(this.grav);
+    
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
+    
+    this.acc.mult(0);
+    
+    // If no longer on screen, flag up as no longer intact.
+    // Managing loop/parent object can then splice this object
+    // from relevant array.
+    if (this.pos.x < 0 || this.pos.x > width ||
+        this.pos.y < 0 || this.pos.y > height)
+        this.intact = false;
+}
 
