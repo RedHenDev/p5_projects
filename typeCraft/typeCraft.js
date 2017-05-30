@@ -23,7 +23,7 @@
 // Have now got splashes and textbox
 // working, but it's hardly ideal.
 // It would be cooler to be able to
-// position a slash (etc.) precisely
+// position a splash (etc.) precisely
 // where a character is being printed.
 // So, what we really need is a 
 // class of 'char' object that has
