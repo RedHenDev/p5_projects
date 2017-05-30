@@ -58,6 +58,8 @@ function setup(){
     BG_COLOUR = color(0,202,101);
     
     setDefaults();
+    
+    RedHen_tChar.newTextField(  width/10,width-(width/5),height-(height/5), width/10,height/10);
 }
 
 function draw(){
@@ -65,7 +67,8 @@ function draw(){
     
     updateExplosions();
     
-    renderText(currentString);
+    //renderText(currentString);
+    rh_textFields[0].printChars();
     
     // Have we pressed backspace?
     deleteCheck();
@@ -91,6 +94,8 @@ function setDefaults(){
 function keyTyped(){
     currentString += key;
     
+    rh_textFields[0].typeSomething(key);
+    
     // Where are we printing char,
     // so that we can place
     // splashes correctly?
@@ -104,7 +109,8 @@ function keyTyped(){
         key == ',' ||
         key == '?' ||
         key == '-' ||
-        key == '!')
+        key == '!' ||
+        key == "'")
     makeExplosion(
         Math.random()*width,
         Math.random()*height,
