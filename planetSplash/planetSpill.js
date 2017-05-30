@@ -36,7 +36,9 @@ var gravityForBlinkie;
 var rescued = [];
 
 function setup(){
-    createCanvas(windowWidth,windowHeight);
+    
+    createCanvas(windowWidth, windowHeight);
+    
     background(0,101,255);
     
     testShip = new Ship();
