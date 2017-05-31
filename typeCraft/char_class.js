@@ -257,6 +257,7 @@ class TextField {
     }
     
     // Physics update etc.
+    // This is a hot mess at the mo :s
     updateChars(){
         for (let i = 0; i < this.tChars.length; i++){
                 this.tChars[i].setAttractionPoint(mouseX, mouseY);

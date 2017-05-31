@@ -51,10 +51,13 @@ const fontSize = 64;
 // white and pink text.
 var whiteC = false;
 
+// We could keep these around?
+var binnedChars = [];
+
 function setup(){
     createCanvas(windowWidth, windowHeight);
     
-    BG_COLOUR = color(0,101,255, 101);
+    BG_COLOUR = color(0,101,255);
     
     setDefaults();
     
@@ -77,8 +80,19 @@ function draw(){
     rh_textFields[0].printChars();
     rh_textFields[0].updateChars();
     
+    updateBinned();
+    
     // Have we pressed backspace?
     deleteCheck();
+}
+
+function updateBinned(){
+    for (let i = 0; i < binnedChars.length; i++){
+        binnedChars[i].setAttractionPoint(mouseX, mouseY);
+        //binnedChars[i].feelAttraction(1);
+        binnedChars[i].physicsUpdate();
+        binnedChars[i].print();
+    }
 }
 
 function setDefaults(){
@@ -135,7 +149,7 @@ function keyTyped(){
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].strokeWeight = 4;
        
        // Turn on attraction behaviour!
-       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].beingAttracted = true;
+       //rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].beingAttracted = true;
        
    }
     else {
@@ -163,9 +177,23 @@ function deleteCheck(){
     if (millis() - dTimeStamp <
         deleteTimeBuffer) return;
     
-    if (keyIsDown(BACKSPACE)){
+    if (keyIsDown(BACKSPACE) && rh_textFields[0].tChars.length > 0){
         //currentString = currentString.slice(0, -1);
         dTimeStamp = millis();
+      
+        
+      // Add character to binned chars!
+        binnedChars.push(rh_textFields[0].tChars[rh_textFields[0].tChars.length-1]);
+        // Switch attraction behaviour on!
+        binnedChars[binnedChars.length-1].beingAttracted = true;
+        // Ghostify colour!
+        binnedChars[binnedChars.length-1].fill = color(255,42);
+        binnedChars[binnedChars.length-1].stroke = color(255,42);
+        binnedChars[binnedChars.length-1].strokeWeight = 1;
+        binnedChars[binnedChars.length-1].fontSize = 20;
+        
+        
+        // Delete the actual tChar!
         rh_textFields[0]. deleteSomething ();
         
     }
