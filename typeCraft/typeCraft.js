@@ -50,7 +50,7 @@ var textBox_Y;
 
 const fontSize = 64;
 
-var lineAdjust = 0;
+//var lineAdjust = 0;
 
 // To keep track of alternating
 // white and pink text.
@@ -65,7 +65,7 @@ function setup(){
     
     setDefaults();
     
-    RedHen_tChar.newTextField(width/10,height/10, width-(width/5), height-(height/5),64);
+    RedHen_tChar.newTextField(width/20,height/10, width-(width/5), height-(height/5),64);
 }
 
 function draw(){
@@ -86,7 +86,7 @@ function setDefaults(){
     
     // Time to wait before we can delete char.
     // Measured in milliseconds.
-    deleteTimeBuffer = 128;
+    deleteTimeBuffer = 300;
     
     //textSize(64);
     
@@ -110,7 +110,7 @@ function keyTyped(){
     // Alternate between white and
     // pink fontFill every time
     // space typed.
-    if (key === ' '){
+    if (key === ' ' || key === '-'){
         if (whiteC) {
             rh_textFields[0].fontFill =
                 color(255);
@@ -118,7 +118,7 @@ function keyTyped(){
         }
         else {
             rh_textFields[0].fontFill =
-                color(255,0,255);
+                color(0,200,0);
             whiteC = true;
         }
     }
@@ -135,12 +135,12 @@ function keyTyped(){
     makeExplosion(
         rh_textFields[0].cursorPos.x,
         rh_textFields[0].cursorPos.y,
-        0, 20, color(0,0,0,200));
+        0, 20, color(255,0,255,255));
     rh_textFields[0].changeEmoji(); 
        rh_textFields[0].typeSomething(key);
-       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].fill = color(0);
-       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(0);
-       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].strokeWeight = 2;
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].fill = color(255,0,255);
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(255);
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].strokeWeight = 4;
    }
     else {
         makeExplosion(
@@ -166,8 +166,8 @@ function keyTyped(){
 }
 
 function keyPressed(){
-    if (keyCode == 8)
-  rh_textFields[0].deleteSomething();
+    //if (keyCode == 8)
+  //rh_textFields[0].deleteSomething();
 }
 
 function deleteCheck(){
@@ -175,16 +175,15 @@ function deleteCheck(){
     if (millis() - dTimeStamp <
         deleteTimeBuffer) return;
     
-    dTimeStamp = millis();
+    
     
     if (keyIsDown(BACKSPACE)){
         //currentString = currentString.slice(0, -1);
+        dTimeStamp = millis();
         rh_textFields[0]. deleteSomething ();
         
     }
-    if (keyIsDown(RETURN)){
-    //    rh_textFields[0]. newLine ();
-    }
+    
     
 }
 
