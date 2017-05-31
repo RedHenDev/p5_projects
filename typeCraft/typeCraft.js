@@ -77,10 +77,11 @@ function draw(){
     
     updateExplosions();
     
+    // Draw ghost chars underneath others!
+    updateBinned();
+    
     rh_textFields[0].printChars();
     rh_textFields[0].updateChars();
-    
-    updateBinned();
     
     // Have we pressed backspace?
     deleteCheck();
@@ -122,7 +123,7 @@ function keyTyped(){
         }
         else {
             rh_textFields[0].fontFill =
-                color(0,200,0);
+                color(0);
             whiteC = true;
         }
     }
@@ -190,6 +191,7 @@ function deleteCheck(){
         binnedChars[binnedChars.length-1].fill = color(255,42);
         binnedChars[binnedChars.length-1].stroke = color(255,42);
         binnedChars[binnedChars.length-1].strokeWeight = 1;
+        // Shrink!
         binnedChars[binnedChars.length-1].fontSize = 20;
         
         

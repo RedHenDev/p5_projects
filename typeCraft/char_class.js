@@ -203,7 +203,7 @@ class TextField {
         ellipse(this.cursorPos.x+16,
                this.cursorPos.y-16,
                32*(this.blink_scale+0.1));
-      fill(255);
+        fill(255);
         
         // Control blinking pulsing.
         if (this.blink_state === 0)
