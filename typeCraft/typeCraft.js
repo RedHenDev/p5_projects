@@ -146,7 +146,7 @@ function keyTyped(){
     rh_textFields[0].changeEmoji(); 
        rh_textFields[0].typeSomething(key);
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].fill = color(255,0,255);
-       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(255);
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(0);
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].strokeWeight = 4;
        
        // Turn on attraction behaviour!
