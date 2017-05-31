@@ -100,7 +100,7 @@ function setDefaults(){
     
     // Time to wait before we can delete char.
     // Measured in milliseconds.
-    deleteTimeBuffer = 300;
+    deleteTimeBuffer = 30;
 
 }
 
@@ -109,13 +109,8 @@ function keyTyped(){
     
     // We need to ignore when
     // user *types* RETURN.
-    if (keyCode == 13){ rh_textFields[0]. newLine (); 
-                 return;
-                      }
-    // Alternate between white and
-    // pink fontFill every time
-    // space typed.
-    if (key === ' ' || key === '-'){
+    if (keyCode == 13){ 
+        
         if (whiteC) {
             rh_textFields[0].fontFill =
                 color(255);
@@ -123,10 +118,29 @@ function keyTyped(){
         }
         else {
             rh_textFields[0].fontFill =
-                color(0);
+                color(200);
             whiteC = true;
         }
-    }
+    
+        rh_textFields[0]. newLine (); 
+                       
+        return;
+                      }
+    // Alternate between white and
+    // pink fontFill every time
+    // space typed.
+//    if (key === ' ' || key === '-'){
+//        if (whiteC) {
+//            rh_textFields[0].fontFill =
+//                color(255);
+//            whiteC = false;
+//        }
+//        else {
+//            rh_textFields[0].fontFill =
+//                color(200);
+//            whiteC = true;
+//        }
+//    }
 
    if ( key === '.' ||
         key === ',' ||
@@ -146,7 +160,7 @@ function keyTyped(){
     rh_textFields[0].changeEmoji(); 
        rh_textFields[0].typeSomething(key);
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].fill = color(255,0,255);
-       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(0);
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(255,0,255);
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].strokeWeight = 4;
        
        // Turn on attraction behaviour!
@@ -188,7 +202,7 @@ function deleteCheck(){
         // Switch attraction behaviour on!
         binnedChars[binnedChars.length-1].beingAttracted = true;
         // Ghostify colour!
-        binnedChars[binnedChars.length-1].fill = color(255,42);
+        binnedChars[binnedChars.length-1].fill = color(255,82);
         binnedChars[binnedChars.length-1].stroke = color(255,42);
         binnedChars[binnedChars.length-1].strokeWeight = 1;
         // Shrink!
