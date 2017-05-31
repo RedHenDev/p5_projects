@@ -45,12 +45,7 @@ var BG_COLOUR;          // Background colour.
 var deleteTimeBuffer;   // When can we del. again?
 var dTimeStamp;         // Delete time-stamp.
 
-var textBox_X;
-var textBox_Y;
-
 const fontSize = 64;
-
-//var lineAdjust = 0;
 
 // To keep track of alternating
 // white and pink text.
@@ -59,11 +54,15 @@ var whiteC = false;
 function setup(){
     createCanvas(windowWidth, windowHeight);
     
-   // BG_COLOUR = color(0,202,101);
-    
-    BG_COLOUR = color(0,101,255);
+    BG_COLOUR = color(0,101,255, 101);
     
     setDefaults();
+    
+    // Set mouse positions to middle of
+    // window for more beautiful attraction
+    // behaviour from start.
+    mouseX = width/2;
+    mouseY = height/2;
     
     RedHen_tChar.newTextField(width/20,height/10, width-(width/5), height-(height/5),64);
 }
@@ -75,10 +74,10 @@ function draw(){
     
     updateExplosions();
     
-    //renderText(currentString);
     rh_textFields[0].printChars();
+    rh_textFields[0].updateChars();
     
-    // Have we pressed backspace.
+    // Have we pressed backspace?
     deleteCheck();
 }
 
@@ -87,16 +86,7 @@ function setDefaults(){
     // Time to wait before we can delete char.
     // Measured in milliseconds.
     deleteTimeBuffer = 300;
-    
-    //textSize(64);
-    
-    // Determine the size of the
-    // text box. See last two
-    // parameters of the call of
-    // text(); function in 
-    // RenderText();
-    textBox_X = (width-width/10);
-    textBox_Y = (height-height/10);
+
 }
 
 function keyTyped(){
@@ -131,6 +121,8 @@ function keyTyped(){
         key === ":" ||
         key === ";" ||
         key === "'" ||
+        key === "(" ||
+        key === ")" ||
         key === '"'){
     makeExplosion(
         rh_textFields[0].cursorPos.x,
@@ -141,6 +133,10 @@ function keyTyped(){
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].fill = color(255,0,255);
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].stroke = color(255);
        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].strokeWeight = 4;
+       
+       // Turn on attraction behaviour!
+       rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].beingAttracted = true;
+       
    }
     else {
         makeExplosion(
@@ -151,31 +147,21 @@ function keyTyped(){
         
     }
        
-       
-    
-    // Where are we printing char,
-    // so that we can place
-    // splashes correctly?
-//    if (currentString.length > ((width-(width/5))/(fontSize/3)*(lineAdjust+1)))
-//        lineAdjust+=fontSize;
-    
-    //if (key == '.')
-//    makeExplosion(width/10+(fontSize/3)*((currentString.length-1)/(lineAdjust+1)),lineAdjust+(height/10+(fontSize/2)), 0);
-    
-  
+    // If an 'even character', then let's switch
+    // on attracting behaviour.
+//    if (rh_textFields[0]. 
+//        tChars.length % 2 === 0){
+//        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].beingAttracted = true;
+//        rh_textFields[0].tChars[rh_textFields[0].tChars.length-1].setAttractionPoint(mouseX, mouseY);
+    //}
 }
 
-function keyPressed(){
-    //if (keyCode == 8)
-  //rh_textFields[0].deleteSomething();
-}
 
 function deleteCheck(){
     
+    // Enough time passed to delete another char?
     if (millis() - dTimeStamp <
         deleteTimeBuffer) return;
-    
-    
     
     if (keyIsDown(BACKSPACE)){
         //currentString = currentString.slice(0, -1);
@@ -187,17 +173,6 @@ function deleteCheck(){
     
 }
 
-
-function renderText(_txt){
-    
-    fill(200,0,200);
-    strokeWeight(4);
-    stroke(255);
-    
-    text(_txt, width/10, height/10, 
-        textBox_X, textBox_Y);
-    
-}
 
 
 

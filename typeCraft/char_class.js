@@ -202,7 +202,7 @@ class TextField {
         
         ellipse(this.cursorPos.x+16,
                this.cursorPos.y-16,
-               32);
+               32*(this.blink_scale+0.1));
       fill(255);
         
         // Control blinking pulsing.
@@ -217,16 +217,16 @@ class TextField {
             this.blink_state = 0;
             this.blink_scale = 1;
         }
-        if (this.blink_scale <= 0.5){
-            this.blink_scale = 0.5;
+        if (this.blink_scale <= 0.1){
+            this.blink_scale = 0.1;
             this.blink_state = 1;
         }
         
         
-      textSize(32*(this.blink_scale+0.1));
-        text(   this.myEmoji,
-                this.cursorPos.x-1*(this.blink_scale+0.5),
-                this.cursorPos.y-1*(this.blink_scale+0.5));
+//      textSize(32*(this.blink_scale+0.1));
+//        text(   this.myEmoji,
+//                this.cursorPos.x+0.1*(this.blink_scale),
+//                this.cursorPos.y-0.1*(this.blink_scale));
     }
     
     changeEmoji(){
@@ -255,6 +255,15 @@ class TextField {
         this.cursorPos.x += _amount;
 
     }
+    
+    // Physics update etc.
+    updateChars(){
+        for (let i = 0; i < this.tChars.length; i++){
+                this.tChars[i].setAttractionPoint(mouseX, mouseY);
+                this.tChars[i].physicsUpdate();
+        }
+    }
+    
     
     printChars(){
         for (let i = 0; i < this.tChars.length; i++){
@@ -292,7 +301,41 @@ class tChar {
         this.strokeWeight = 2;
         this.fill = _parent.fontFill;
         
+        // Physics!
+        this.vel = createVector(0,0);
+        this.acc = createVector(0,0);
+        this.attractionPoint = createVector(0,0);
+        this.beingAttracted = false;
+          
+    }
+    
+    physicsUpdate(){
+        if (this.beingAttracted) this.feelAttraction(0.1);
+        // Straight-foward Euler integration.
+        this.vel.add(this.acc);
+        this.pos.add(this.vel);
+        this.acc.mult(0);
+    }
+    
+    // tChar will be attacted to currently
+    // set attractionPoint, at strength
+    // specified here.
+    feelAttraction(_strength){
+        // First, let's find the heading!
+        let hV = p5.Vector.sub(this.attractionPoint,
+                              this.pos);
+        // Normalise so that we have 
+        // unit vector.
+        hV = hV.normalize();
         
+        // Then add a force using this heading.
+        hV = hV.mult(_strength);
+        this.acc.add(hV);
+    }
+    
+    setAttractionPoint(_x, _y){
+        this.attractionPoint.x = _x;
+        this.attractionPoint.y = _y;
     }
     
     print(){
