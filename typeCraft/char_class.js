@@ -57,6 +57,7 @@ class TextField {
         this.cursorPos = createVector(this.startPos.x, this.startPos.y);
         
         this.fontSize = _fontSize;
+        this.fontFill = color(255);
         
         // An array to manage
         // the tChar objects.
@@ -75,6 +76,10 @@ class TextField {
     }
     
     newLine(){
+        
+        // First, we need to check
+        // whether 
+        
         this.cursorPos.y += this.fontSize; 
         this.cursorPos.x = this.startPos.x;
     }
@@ -156,6 +161,7 @@ class TextField {
             this.blink_state = 1;
         }
         
+        
       textSize(32*(this.blink_scale+0.1));
         text(   this.myEmoji,
                 this.cursorPos.x-1*(this.blink_scale+0.5),
@@ -218,10 +224,12 @@ class tChar {
         
         this.rotation = 0;
         
+        // Derive font properties
+        // from parent textField.
         this.fontSize = _parent.fontSize;
-        this.stroke = color(255);
+        this.stroke = _parent.fontFill;
         this.strokeWeight = 2;
-        this.fill = color(255);
+        this.fill = _parent.fontFill;
         
         
     }

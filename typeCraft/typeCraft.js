@@ -52,6 +52,10 @@ const fontSize = 64;
 
 var lineAdjust = 0;
 
+// To keep track of alternating
+// white and pink text.
+var whiteC = false;
+
 function setup(){
     createCanvas(windowWidth, windowHeight);
     
@@ -82,7 +86,7 @@ function setDefaults(){
     
     // Time to wait before we can delete char.
     // Measured in milliseconds.
-    deleteTimeBuffer = 60;
+    deleteTimeBuffer = 128;
     
     //textSize(64);
     
@@ -100,10 +104,24 @@ function keyTyped(){
     
     // We need to ignore when
     // user *types* RETURN.
-    
     if (keyCode == 13){ rh_textFields[0]. newLine (); 
                  return;
                       }
+    // Alternate between white and
+    // pink fontFill every time
+    // space typed.
+    if (key === ' '){
+        if (whiteC) {
+            rh_textFields[0].fontFill =
+                color(255);
+            whiteC = false;
+        }
+        else {
+            rh_textFields[0].fontFill =
+                color(255,0,255);
+            whiteC = true;
+        }
+    }
 
    if ( key === '.' ||
         key === ',' ||
