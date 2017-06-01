@@ -200,9 +200,9 @@ class TextField {
         strokeWeight(2);
         stroke(0,255,255);
         
-        ellipse(this.cursorPos.x+16,
-               this.cursorPos.y-16,
-               32*(this.blink_scale+0.1));
+        ellipse(this.cursorPos.x+(this.fontSize/4),
+               this.cursorPos.y-(this.fontSize/4),
+               (this.fontSize/2)*(this.blink_scale+0.1));
         fill(255);
         
         // Control blinking pulsing.

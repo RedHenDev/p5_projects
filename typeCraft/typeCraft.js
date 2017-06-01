@@ -45,7 +45,7 @@ var BG_COLOUR;          // Background colour.
 var deleteTimeBuffer;   // When can we del. again?
 var dTimeStamp;         // Delete time-stamp.
 
-const fontSize = 64;
+const fontSize = 48;
 
 // To keep track of alternating
 // white and pink text.
@@ -67,7 +67,7 @@ function setup(){
     mouseX = width/2;
     mouseY = height/2;
     
-    RedHen_tChar.newTextField(width/20,height/10, width-(width/5), height-(height/5),64);
+    RedHen_tChar.newTextField(width/20,height/10, width-(width/5), height-(height/5),fontSize);
 }
 
 function draw(){
@@ -202,7 +202,7 @@ function deleteCheck(){
         // Switch attraction behaviour on!
         binnedChars[binnedChars.length-1].beingAttracted = true;
         // Ghostify colour!
-        binnedChars[binnedChars.length-1].fill = color(255,82);
+        binnedChars[binnedChars.length-1].fill = color(255,182);
         binnedChars[binnedChars.length-1].stroke = color(255,42);
         binnedChars[binnedChars.length-1].strokeWeight = 1;
         // Shrink!
