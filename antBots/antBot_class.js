@@ -108,7 +108,7 @@ class antBot {
     
     // My locomotive attributes.
     this.hopForce = createVector(0,-1*(this.scale/42));
-    this.steerAmount = 0.02;
+    this.steerAmount = 0.04;
     this.angularSpeedLimit = 0.4;
         
     // My physics.
@@ -239,7 +239,7 @@ class antBot {
     this.antPX = -this.width/3;
         else this.antPX = this.width/3;
     this.antPY = (this.height/2) + (this.antY/2);
-    this.antBulb = this.antX*4;
+    this.antBulb = this.antX*6.18;
         
     // Pod dimensions.
     this.podSize = (this.scale * this.dm)/5;
@@ -384,12 +384,22 @@ class antBot {
         rect(this.pos.x + this.antPX, 
              this.pos.y - this.antPY,
                 this.antX,this.antY);
-        stroke(255);
-        strokeWeight(2);
-        fill(255,101);
+        
+        // Coloured bobble.
+        //stroke(255);
+        //strokeWeight(1);
+        noStroke();
+        fill(this.col,101);
         ellipse(this.pos.x + this.antPX,
-                this.pos.y - this.antPY-(this.antY/2)-this.antBulb/2,
-            this.antBulb*Math.sin((frameCount/this.blinkRate)));
+                this.pos.y - this.antPY-(this.antY/2)-this.antBulb/3,
+            this.antBulb*Math.sin((frameCount/(this.blinkRate/3))));
+        // Bobble halo.
+         noStroke();
+        fill(255,72);
+        ellipse(this.pos.x + this.antPX,
+                this.pos.y - this.antPY-(this.antY/2)-this.antBulb/3,
+  10+this.antBulb*2*Math.sin((frameCount/(this.blinkRate/3))));
+        
         
         strokeWeight(3);
         stroke(0);

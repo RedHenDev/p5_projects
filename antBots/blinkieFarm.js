@@ -139,9 +139,6 @@ function touchEnded(){
     RedHen_2DPhysics.newObj("circle", mouseX, mouseY, 6);
     RedHen_2DPhysics.lastObjectCreated().fill = color(0,(mouseY/height)*255,0);
     
-    
-    
-    
     canSpawn = true;
 }
 
@@ -153,7 +150,8 @@ function updateBlinkieWayPoints(){
 
 function blinkiesChase(){
     for (let i = 0; i < antBrains.length; i++){
-        antBrains[i].chaseWayPoint(true);
+        // true for instaTurn!
+        antBrains[i].chaseWayPoint(false);
     }
 }
 
