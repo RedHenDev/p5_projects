@@ -13,15 +13,18 @@ class antBrain{
     }
 
     findHeading(){
-        //let headingV = p5.Vector.sub(this.wayPoint, this.antBot.myBod.bod.position);
-        
-        // Angle of rotation for this vector.
-        //headingV = headingV.normalize();
        
+        // Angle directly facing target.
         let newH = Math.atan2(this.wayPoint.x - this.antBot.myBod.bod.position.x, this.antBot.myBod.bod.position.y-this.wayPoint.y);
         
-        // Apply this rotation to the antBot.
-        this.antBot.myBod.makeAngle(newH);
+        // Apply this rotation instantly to the antBot.
+        //this.antBot.myBod.makeAngle(newH);
+        
+        // Add a little steering.
+        let steerDeg = (newH-this.antBot.myBod.bod.angle);
+        this.antBot.steer(steerDeg);
+        // NB whatever the steeringDeg here, the steer()
+        // function will always scale this between 0 and 1.
         
     }
     

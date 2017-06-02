@@ -137,7 +137,7 @@ function touchEnded(){
     RedHen_2DPhysics.newObj("box", mouseX, mouseY, 28);
     if (canSpawn && mouseX > width/2)
     RedHen_2DPhysics.newObj("circle", mouseX, mouseY, 6);
-    
+    RedHen_2DPhysics.lastObjectCreated().fill = color(0,(mouseY/height)*255,0);
     
     
     

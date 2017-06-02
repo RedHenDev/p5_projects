@@ -109,6 +109,7 @@ class antBot {
     // My locomotive attributes.
     this.hopForce = createVector(0,-1*(this.scale/42));
     this.steerAmount = 0.02;
+    this.angularSpeedLimit = 0.4;
         
     // My physics.
     // If we have no pos parameters, then
@@ -232,7 +233,10 @@ class antBot {
     
     // Negative for left, positive right.
     steer(_amount){
-        if (this.myBod.bod.angularSpeed > 0.1) return;
+        if (this.myBod.bod.angularSpeed > this.angularSpeedLimit) return;
+        
+        // Always scale _amount between 0 and 1.
+        if (Math.abs(_amount)>1)_amount = _amount/1;
         
         this.myBod.bod.angularSpeed = 0;
         //this.myBod.makeRotate(_amount);
