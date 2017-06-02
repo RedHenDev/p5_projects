@@ -10,7 +10,7 @@ class antBrain{
         this.antBot = _parent;
         this.state = "chase";
         this.wayPoint = createVector(width/2,height/2);
-        this.forwardForce = Math.random()*4;
+        this.forwardForce = Math.random()*1 + 1;
     }
 
     // Want instaTurn?

@@ -203,6 +203,11 @@ class antBot {
     this.blinkRate = Math.floor(Math.random()*100)+50;
     this.blinkDuration = 0.5; // seconds.
     this.blinkDuration *= 600; // Instead of calculating everytime we render.
+        
+    // Antenna 'handedness'/laterality.
+    if (Math.random() < 0.5)
+        this.antennaLeft = true;
+        else this.antennaLeft = false;
     
     // Now apply scale factor (instead of doing this each time we have to render Blinkie...)
     this.applyScale();
@@ -226,6 +231,15 @@ class antBot {
     this.eyeSizeX = this.scale * ((this.radius)-2) * this.eyeSize;
     this.eyeSizeY = this.eyeSizeX;
     this.pupSizeX = this.eyeSizeX * this.pupilSize;
+        
+    // Antenna dimensions.
+    this.antY = (this.height/2) * goldenRatio;
+    this.antX = 4;
+        if (this.antennaLeft)
+    this.antPX = -this.width/3;
+        else this.antPX = this.width/3;
+    this.antPY = (this.height/2) + (this.antY/2);
+    this.antBulb = this.antX*4;
         
     // Pod dimensions.
     this.podSize = (this.scale * this.dm)/5;
@@ -362,11 +376,25 @@ class antBot {
             rotate(this.myBod.bod.angle);
         }
     
+        
+        // Antenna. How exciting.
+        fill(this.col);
+        stroke(0);
+        strokeWeight(3);
+        rect(this.pos.x + this.antPX, 
+             this.pos.y - this.antPY,
+                this.antX,this.antY);
+        stroke(255);
+        strokeWeight(2);
+        fill(255,101);
+        ellipse(this.pos.x + this.antPX,
+                this.pos.y - this.antPY-(this.antY/2)-this.antBulb/2,
+            this.antBulb*Math.sin((frameCount/this.blinkRate)));
+        
         strokeWeight(3);
         stroke(0);
         rectMode(CENTER);
         fill(this.col);
-    
         // Main body.
         rect(this.pos.x, this.pos.y, this.width, this.height);
     
@@ -405,6 +433,8 @@ class antBot {
         this.pupSizeX, 
         this.pupSizeX);
     
+        
+        
         // Pods.
         fill(0,0,255,101);
         stroke(255);

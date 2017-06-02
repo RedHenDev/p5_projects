@@ -153,7 +153,7 @@ function updateBlinkieWayPoints(){
 
 function blinkiesChase(){
     for (let i = 0; i < antBrains.length; i++){
-        antBrains[i].chaseWayPoint(false);
+        antBrains[i].chaseWayPoint(true);
     }
 }
 
