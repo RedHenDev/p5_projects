@@ -47,6 +47,10 @@ class RedHen_antBot {
         }
     }
     
+    static returnLastAntCreated(){
+        return RH_ants[RH_ants.length-1];
+    }
+    
     // Checks for p5's 'keyIsDown'.
     static controlAntInput(){
         // First, check if keyTyped()...
