@@ -68,8 +68,8 @@ function setupEnvironment(){
     // And, as a little exercise, let's
     // attempt to do this in a functional way?
     
-    const numberOfLedges    = 4;
-    const numberOfLayers    = 3;
+    const numberOfLedges    = 8;
+    const numberOfLayers    = 2;
     let ledgeAmp            = 100;
     
     noiseSeed(9);
@@ -91,7 +91,7 @@ function setupEnvironment(){
         
         // Next, procedurally decide length of ledge.
         ledgeLength = noise(i*1000)*maxLedgeLength;
-        ledgeAmp = ledgeLength/2;
+        //ledgeAmp = ledgeLength/8;
         // How many boxes will one layer need, then?
         let numOfLedgeBoxes = ledgeLength/boxDiameter;
         
@@ -104,10 +104,11 @@ function setupEnvironment(){
         for (let j = 1; j <= numberOfLayers; j++){
             for (let k = 1; k <= numOfLedgeBoxes; k++){
                 
-                let procY = noise((i*1000+k)*noiseResolution)*ledgeAmp;
+                let procY = noise((i*100+k)*noiseResolution)*ledgeAmp;
                 
                 RedHen_2DPhysics.newObj("box", ledgeX-(ledgeLength/2)+(k*boxDiameter), (ledgeY+procY)-j*boxDiameter, boxDiameter);
-                RedHen_2DPhysics.lastObjectCreated ().makeStatic(); 
+//                RedHen_2DPhysics.lastObjectCreated ().makeStatic(); 
+                RedHen_2DPhysics.lastObjectCreated ().makeSleep(true); 
                 RedHen_2DPhysics.lastObjectCreated().fill = color(0,200,0);
                 RedHen_2DPhysics.lastObjectCreated().
                 strokeWeight = 2;
