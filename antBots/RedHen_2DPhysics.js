@@ -63,8 +63,9 @@ class RedHen_2DPhysics {
         this.newObj
         ("box",width/2,height-9+width/2,width, true);
         bods[0].makeStatic();
-        bods[0].fill = color(0,0,200);
-        bods[0].stroke = color(0,0,255);
+        bods[0].fill = color(0,255,0);
+        bods[0].stroke = color(0,200,0);
+        bods[0].strokeWeight = 4;
         bods[0].OSR = false;
         // Edges! To stop escaping from screen.
         RedHen_2DPhysics.newObj ("GhostRectangle",0-10,height/2,20,height);

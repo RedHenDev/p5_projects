@@ -41,7 +41,7 @@ function setup(){
 
 // ***** UDPATE LOOP *****
 function draw(){ 
-    background(0,100,100);
+    background(0,111,222);
    // printInstructions();
     
     RedHen_2DPhysics.checkInputgGlobalMovement();
@@ -102,11 +102,11 @@ function setupEnvironment(){
                 
                 RedHen_2DPhysics.newObj("box", ledgeX-(ledgeLength/2)+(k*boxDiameter), (ledgeY+procY)-j*boxDiameter, boxDiameter);
                 RedHen_2DPhysics.lastObjectCreated ().makeStatic(); 
-                RedHen_2DPhysics.lastObjectCreated().fill = color(0,0,200);
+                RedHen_2DPhysics.lastObjectCreated().fill = color(0,200,0);
                 RedHen_2DPhysics.lastObjectCreated().
                 strokeWeight = 2;
                 RedHen_2DPhysics.lastObjectCreated().
-                stroke = color(0,0,255);
+                stroke = color(0,255,0);
                 
             }
         }
