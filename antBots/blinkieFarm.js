@@ -31,16 +31,15 @@ function setup(){
     
     
     // Create white circles.
-    // Note how to load texture (img).
-    let mW = 24;
-    for (let i = 0; i < 12; i++){
-        RedHen_2DPhysics.newObj(
-        "circle",mW+(i*mW*3),64,mW);
-        bods[bods.length-1].fill = color(255);
-        bods[bods.length-1].stroke = color(0);
-        bods[bods.length-1].strokeWeight = 3;
-        bods[bods.length-1].roll = true;
-    }
+//    let mW = 24;
+//    for (let i = 0; i < 12; i++){
+//        RedHen_2DPhysics.newObj(
+//        "circle",mW+(i*mW*3),64,mW);
+//        bods[bods.length-1].fill = color(255);
+//        bods[bods.length-1].stroke = color(0);
+//        bods[bods.length-1].strokeWeight = 3;
+//        bods[bods.length-1].roll = true;
+//    }
 }
 
 // ***** UDPATE LOOP *****
@@ -68,7 +67,7 @@ function setupEnvironment(){
     // And, as a little exercise, let's
     // attempt to do this in a functional way?
     
-    const numberOfLedges    = 8;
+    const numberOfLedges    = 3;
     const numberOfLayers    = 2;
     let ledgeAmp            = 100;
     
@@ -154,7 +153,7 @@ function updateBlinkieWayPoints(){
 
 function blinkiesChase(){
     for (let i = 0; i < antBrains.length; i++){
-        antBrains[i].chaseWayPoint();
+        antBrains[i].chaseWayPoint(false);
     }
 }
 

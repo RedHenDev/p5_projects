@@ -10,21 +10,26 @@ class antBrain{
         this.antBot = _parent;
         this.state = "chase";
         this.wayPoint = createVector(width/2,height/2);
+        this.forwardForce = Math.random()*4;
     }
 
-    findHeading(){
+    // Want instaTurn?
+    findHeading(_instantTurn){
        
         // Angle directly facing target.
         let newH = Math.atan2(this.wayPoint.x - this.antBot.myBod.bod.position.x, this.antBot.myBod.bod.position.y-this.wayPoint.y);
         
         // Apply this rotation instantly to the antBot.
-        //this.antBot.myBod.makeAngle(newH);
-        
-        // Add a little steering.
+        if (_instantTurn===true){
+            this.antBot.myBod.makeAngle(newH);
+        }
+        else if (_instantTurn===false){
+            // Add just a little steering. 
         let steerDeg = (newH-this.antBot.myBod.bod.angle);
         this.antBot.steer(steerDeg);
-        // NB whatever the steeringDeg here, the steer()
-        // function will always scale this between 0 and 1.
+            // NB whatever the steeringDeg here, the steer()
+            // function will always scale this between 0 and 1.
+        }
         
     }
     
@@ -33,9 +38,9 @@ class antBrain{
         this.wayPoint.y = _y;
     }
     
-    chaseWayPoint(){
-        this.findHeading();
-        this.antBot.moveForward(2);
+    chaseWayPoint(_instantTurn){
+        this.findHeading(_instantTurn);
+        this.antBot.moveForward(this.forwardForce);
     }
 
 
