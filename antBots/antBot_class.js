@@ -62,7 +62,8 @@ class RedHen_antBot {
             if (myWorld.gravity.y > 0){
                 forceAmount = 2;
             }
-            else {forceAmount = 0.3;}
+            else {forceAmount = 2;}
+            //else {forceAmount = 0.3;}
             
             RH_ants[controlAnt_index].moveForward (forceAmount);
         }
@@ -71,12 +72,15 @@ class RedHen_antBot {
             if (myWorld.gravity.y > 0){
                 forceAmount = 2;
         }
-            else {forceAmount = 0.3;}
+            //else {forceAmount = 0.3;}
+            else {forceAmount = 2;}
             RH_ants[controlAnt_index].moveForward(-forceAmount);
         }
         if (keyIsDown(RIGHT_ARROW)) {
        // setGravity(1,0);
         RH_ants[controlAnt_index].steer(1);
+            
+            
         }
         if (keyIsDown(LEFT_ARROW)) {
        // setGravity(-1,0);
@@ -104,7 +108,8 @@ class antBot {
     
     // My locomotive attributes.
     this.hopForce = createVector(0,-1*(this.scale/42));
-    
+    this.steerAmount = 0.02;
+        
     // My physics.
     // If we have no pos parameters, then
     // position antBot in centre of screen.
@@ -232,8 +237,12 @@ class antBot {
         this.myBod.bod.angularSpeed = 0;
         //this.myBod.makeRotate(_amount);
         
+        //this.myBod.bod.angularSpeed = 0;
+        this.myBod.makeAngle(this.myBod.bod.angle+
+                             (_amount * this.steerAmount)); 
+        
         // To add torque!
-        this.myBod.makeSteer((_amount/40) * this.myBod.bod.mass);
+//        this.myBod.makeSteer((_amount/40) * this.myBod.bod.mass);
     }
     
     incScale(_amount){

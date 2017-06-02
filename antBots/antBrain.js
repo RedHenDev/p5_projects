@@ -32,7 +32,7 @@ class antBrain{
     
     chaseWayPoint(){
         this.findHeading();
-        this.antBot.moveForward(1);
+        this.antBot.moveForward(2);
     }
 
 

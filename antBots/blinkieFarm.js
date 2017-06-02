@@ -17,11 +17,11 @@ function setup(){
     bods[bods.length-1].makeStatic();
     
     // Create 7 blinkies ('antBots') of random scale.
-    for (let i = 0; i < 44; i++){
+    for (let i = 0; i < 7; i++){
         RH_ants.push(new antBot(true, Math.random()*width, 64, Math.floor(Math.random()*width/200)+1));
         // Give them a brain!
         // But not 0. Not you!
-        //if (i !== 0)
+        if (i !== 0)
         antBrains.push(new antBrain(RedHen_antBot.returnLastAntCreated()));
     }
     controlAnt_index = 0;
