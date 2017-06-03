@@ -8,7 +8,7 @@ var cloner;
 
 function setup(){
     // Remember to assign value of canvas like this :)
-    canvas = createCanvas(windowWidth,windowHeight);
+    canvas = createCanvas(800,600);
     background(72);
     
     RedHen_2DPhysics.setupMatter();
@@ -17,12 +17,10 @@ function setup(){
     bods[bods.length-1].makeStatic();
     
     // Create 7 blinkies ('antBots') of random scale.
+    let giveMeAi = false;
     for (let i = 0; i < 7; i++){
-        RH_ants.push(new antBot(true, Math.random()*width, 64, Math.floor(Math.random()*width/200)+1));
-        // Give them a brain!
-        // But not 0. Not you!
-        if (i !== 0)
-        antBrains.push(new antBrain(RedHen_antBot.returnLastAntCreated()));
+        if (i > 0) giveMeAi = true;
+        RH_ants.push(new antBot(true, Math.random()*width, 64, Math.floor(Math.random()*width/200)+1,giveMeAi));
     }
     controlAnt_index = 0;
     
@@ -48,7 +46,7 @@ function draw(){
     background(0,111,222);
    // printInstructions();
     
-        blinkiesChase();
+        //blinkiesChase();
     
     RedHen_2DPhysics.checkInputgGlobalMovement();
     RedHen_2DPhysics.updateObjs();
@@ -126,10 +124,6 @@ function setupEnvironment(){
 }
 
 
-function mouseMoved(){
-    updateBlinkieWayPoints();
-  
-}
 
 function mouseDragged(){
     
@@ -148,18 +142,7 @@ function touchEnded(){
     canSpawn = true;
 }
 
-function updateBlinkieWayPoints(){
-    for(let i = 0; i < antBrains.length; i++){
-        antBrains[i].setWayPoint(mouseX, mouseY);   
-    }
-}
 
-function blinkiesChase(){
-    for (let i = 0; i < antBrains.length; i++){
-        // true for instaTurn!
-        antBrains[i].chaseWayPoint(false);
-    }
-}
 
 function updateBlinkies(){
     
@@ -173,6 +156,7 @@ function updateBlinkies(){
         
         //RH_ants[i].screenWrap();
         // RH_ants[i].screenTrap();
+        RH_ants[i].think();
         RH_ants[i].render();
         
         cloner.checkEntry(RH_ants[i].myBod.bod.position.x,

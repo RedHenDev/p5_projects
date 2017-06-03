@@ -94,11 +94,12 @@ class RedHen_antBot {
 
 // antBot object.
 class antBot {
-    constructor (_hasMatterBod, _x, _y, _scale){
+    constructor (_hasMatterBod, _x, _y, _scale, _hasBrain){
     
     // Do we have a matter.js physics body?
     this.hasBod = _hasMatterBod;
-    
+    this.hasBrain = _hasBrain;
+        
     // My dimensions.
     this.mass = 1;
     this.radius = 10;
@@ -110,6 +111,10 @@ class antBot {
     this.hopForce = createVector(0,-1*(this.scale/42));
     this.steerAmount = 0.04;
     this.angularSpeedLimit = 0.4;
+        
+    if (this.hasBrain){
+        this.brain = new antBrain(this);
+    } else this.brain = null;
         
     // My physics.
     // If we have no pos parameters, then
@@ -243,6 +248,15 @@ class antBot {
         
     // Pod dimensions.
     this.podSize = (this.scale * this.dm)/5;
+    }
+    
+    // Apply 'antBrain class' functions.
+    think(){
+        if (this.hasBrain === false) return;
+        //this.brain.setWayPoint(mouseX, mouseY);
+        this.brain.setWayPoint(RH_ants[0].myBod.bod.position.x,
+                              RH_ants[0].myBod.bod.position.y)
+        this.brain.chaseWayPoint(false);
     }
     
     // Negative for left, positive right.

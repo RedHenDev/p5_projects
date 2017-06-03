@@ -40,12 +40,10 @@ class CloningOrb {
             console.log("Cloning time! @ " + this.lastCloneTime);
         } else return;
             
-            RH_ants.push(new antBot(true, this.pos.x, this.pos.y + this.dia*2, 1));
+            RH_ants.push(new antBot(true, this.pos.x, this.pos.y + this.dia*2, 1, true));
             // Clone paren'ts colour.
             RedHen_antBot.returnLastAntCreated().col =
                 _obj.col;
-            // Give baby a brain!
-            antBrains.push(new antBrain(RedHen_antBot.returnLastAntCreated()));
             
         }
         

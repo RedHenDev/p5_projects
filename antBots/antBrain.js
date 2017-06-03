@@ -1,6 +1,5 @@
 
-// Global array of antBrains.
-var antBrains = [];
+
 
 // The antBrain object, then, will 
 // become a child of the antBot object itself.
@@ -9,8 +8,9 @@ class antBrain{
     constructor(_parent){
         this.antBot = _parent;
         this.state = "chase";
+        
         this.wayPoint = createVector(width/2,height/2);
-        this.forwardForce = Math.random()*2 + 1;
+        this.forwardForce = Math.random() * 2 + 1;
     }
 
     // Want instaTurn?
@@ -37,6 +37,7 @@ class antBrain{
         this.wayPoint.x = _x;
         this.wayPoint.y = _y;
     }
+    
     
     chaseWayPoint(_instantTurn){
         this.findHeading(_instantTurn);
