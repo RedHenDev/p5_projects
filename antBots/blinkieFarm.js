@@ -63,8 +63,8 @@ function setupEnvironment(){
     // Each ledge to be made up of
     // 2 layers of (static?) boxes.
     
-    const numberOfLedges    = 0;
-    const numberOfLayers    = 6;
+    const numberOfLedges    = 3;
+    const numberOfLayers    = 4;
     let ledgeAmp            = 80;
     
     noiseSeed(9);
@@ -82,7 +82,7 @@ function setupEnvironment(){
     for (let i = 1; i <= numberOfLedges; i++){
         // First, decide position of ledge.
         ledgeX = noise(i*width)*width;
-        ledgeY = noise(i*height)*height;
+        ledgeY = noise(i*height)*height/2;
         
         // Next, procedurally decide length of ledge.
         ledgeLength = noise(i*500)*maxLedgeLength;
@@ -123,16 +123,10 @@ function setupEnvironment(){
     }
     
     
-    generateFloor(height/2, 0.02);
+    generateFloor(height/2, 0.1);
     
 }
 
-var tGrad = 1;
-
-function mousePressed(){
-    //tGrad *= 0.9;
-    //generateFloor(height/2, tGrad);
-}
 
 function generateFloor(_amplitude, _grad){
     
@@ -143,9 +137,11 @@ function generateFloor(_amplitude, _grad){
     const bNum = width/bruckWidth;
     let floorAmp = _amplitude;
     
-    const bLayers = 8;
+    const bLayers = 3;
     
     let KensNumber = 0;
+    
+    let bHei = bruckWidth;
     
     noiseSeed(999);
     
@@ -153,13 +149,19 @@ function generateFloor(_amplitude, _grad){
         
         KensNumber = noise(i * _grad)*floorAmp;
         
+        bHei = bruckWidth;
         
         for (let j = 0; j < bLayers; j++){
             
-        RedHen_2DPhysics.newObj("box", i*bruckWidth+ bruckWidth/2, height-10- KensNumber + bruckWidth * j, bruckWidth);
+            if (j == bLayers-1){
+                bHei = 100+height-(100+height- KensNumber + (bruckWidth * j));
+            }
+            
+        RedHen_2DPhysics.newObj("rectangle", i*bruckWidth+ bruckWidth/2, 100+height- KensNumber + (bruckWidth * j)+(bHei/2), bruckWidth, bHei);
         RedHen_2DPhysics.lastObjectCreated().makeStatic();
         
-         RedHen_2DPhysics.lastObjectCreated().fill = color(0,255*j*0.1,0);
+            RedHen_2DPhysics.lastObjectCreated().OSR = false;
+         RedHen_2DPhysics.lastObjectCreated().fill = color(0,255*j*0.5,0);
         }
         
         
