@@ -4,7 +4,7 @@ var canvas;
 
 var canSpawn = true;// Not moving obj, so can spawn obj.
 
-
+var cloner;
 
 function setup(){
     // Remember to assign value of canvas like this :)
@@ -29,6 +29,7 @@ function setup(){
     
     setupEnvironment();
     
+    cloner = new CloningOrb(64, 64, 32);
     
     // Create white circles.
 //    let mW = 24;
@@ -156,15 +157,22 @@ function blinkiesChase(){
 }
 
 function updateBlinkies(){
-    let hopTime = false;
-    if (frameCount % 100 === 0) hopTime = true;
-    for(let i = 0; i < RH_ants.length; i++){
-        if (hopTime && i > 0) //RH_ants[i].moveForward(RH_ants[i].hopForce);
-        RH_ants[i].screenWrap();
-       // RH_ants[i].screenTrap();
+    
+    cloner.render();
+    
+    //let hopTime = false;
+    //if (frameCount % 100 === 0) hopTime = true;
+    
+    for(let i = RH_ants.length-1; i >= 0 ; i--){
+        //if (hopTime && i > 0) //RH_ants[i].moveForward(RH_ants[i].hopForce);
+        
+        //RH_ants[i].screenWrap();
+        // RH_ants[i].screenTrap();
         RH_ants[i].render();
         
-
+        cloner.checkEntry(RH_ants[i].myBod.bod.position.x,
+                          RH_ants[i].myBod.bod.position.y,
+                        RH_ants[i].radius, RH_ants[i]);
         
     }
 }
