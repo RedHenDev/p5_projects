@@ -18,7 +18,7 @@ function setup(){
     
     // Create 7 blinkies ('antBots') of random scale.
     let giveMeAi = false;
-    for (let i = 0; i < 1; i++){
+    for (let i = 0; i < 7; i++){
         if (i > 0) giveMeAi = true;
         RH_ants.push(new antBot(true, Math.random()*width, 64, Math.floor(Math.random()*width/200)+1,giveMeAi));
     }
@@ -143,7 +143,7 @@ function generateFloor(_amplitude, _grad){
     
     let bHei = bruckWidth;
     
-    noiseSeed(999);
+    noiseSeed(Math.random()*100);
     
     for (let i = 0; i < bNum; i++){
         
