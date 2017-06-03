@@ -65,12 +65,9 @@ function setupEnvironment(){
     // Each ledge to be made up of
     // 2 layers of (static?) boxes.
     
-    // And, as a little exercise, let's
-    // attempt to do this in a functional way?
-    
-    const numberOfLedges    = 3;
-    const numberOfLayers    = 2;
-    let ledgeAmp            = 100;
+    const numberOfLedges    = 4;
+    const numberOfLayers    = 6;
+    let ledgeAmp            = 80;
     
     noiseSeed(9);
     let screenScale = 1440/width;
@@ -79,9 +76,9 @@ function setupEnvironment(){
     let ledgeX = 0;
     let ledgeY = 0;
     let ledgeLength = 100;
-    let maxLedgeLength = width;
+    let maxLedgeLength = width/1.5;
     
-    const boxDiameter = maxLedgeLength/100;
+    const boxDiameter = maxLedgeLength/64;
     
     
     for (let i = 1; i <= numberOfLedges; i++){
@@ -90,7 +87,7 @@ function setupEnvironment(){
         ledgeY = noise(i*height)*height;
         
         // Next, procedurally decide length of ledge.
-        ledgeLength = noise(i*1000)*maxLedgeLength;
+        ledgeLength = noise(i*500)*maxLedgeLength;
         //ledgeAmp = ledgeLength/8;
         // How many boxes will one layer need, then?
         let numOfLedgeBoxes = ledgeLength/boxDiameter;
@@ -104,17 +101,22 @@ function setupEnvironment(){
         for (let j = 1; j <= numberOfLayers; j++){
             for (let k = 1; k <= numOfLedgeBoxes; k++){
                 
+                // Only make block if...
+                // (for 'degraded' effect)
+                if ((j > 1 && j < numberOfLayers) || Math.random()>0.1){
+                
                 let procY = noise((i*100+k)*noiseResolution)*ledgeAmp;
                 
                 RedHen_2DPhysics.newObj("box", ledgeX-(ledgeLength/2)+(k*boxDiameter), (ledgeY+procY)-j*boxDiameter, boxDiameter);
 //                RedHen_2DPhysics.lastObjectCreated ().makeStatic(); 
                 RedHen_2DPhysics.lastObjectCreated ().makeSleep(true); 
-                RedHen_2DPhysics.lastObjectCreated().fill = color(0,200,0);
+                RedHen_2DPhysics.lastObjectCreated().fill = color(0,200+(j*8),0);
                 RedHen_2DPhysics.lastObjectCreated().
                 strokeWeight = 2;
                 RedHen_2DPhysics.lastObjectCreated().
                 stroke = color(0,255,0);
-                
+                }
+                    
             }
         }
         
@@ -134,11 +136,14 @@ function mouseDragged(){
     canSpawn = false;
 }
 function touchEnded(){
-    if (canSpawn && mouseX < width/2)
+    if (canSpawn && mouseX < width/2){
     RedHen_2DPhysics.newObj("box", mouseX, mouseY, 28);
-    if (canSpawn && mouseX > width/2)
-    RedHen_2DPhysics.newObj("circle", mouseX, mouseY, 6);
-    RedHen_2DPhysics.lastObjectCreated().fill = color(0,(mouseY/height)*255,0);
+        RedHen_2DPhysics.lastObjectCreated().fill = color(0,(mouseY/height)*255,0);
+    }
+    if (canSpawn && mouseX > width/2){
+        RedHen_2DPhysics.newObj("circle", mouseX, mouseY, 6);
+        RedHen_2DPhysics.lastObjectCreated().fill = color(0,(mouseY/height)*255,0);
+    }
     
     canSpawn = true;
 }
