@@ -18,7 +18,7 @@ function setup(){
     
     // Create 7 blinkies ('antBots') of random scale.
     let giveMeAi = false;
-    for (let i = 0; i < 7; i++){
+    for (let i = 0; i < 1; i++){
         if (i > 0) giveMeAi = true;
         RH_ants.push(new antBot(true, Math.random()*width, 64, Math.floor(Math.random()*width/200)+1,giveMeAi));
     }
@@ -63,7 +63,7 @@ function setupEnvironment(){
     // Each ledge to be made up of
     // 2 layers of (static?) boxes.
     
-    const numberOfLedges    = 4;
+    const numberOfLedges    = 0;
     const numberOfLayers    = 6;
     let ledgeAmp            = 80;
     
@@ -121,7 +121,54 @@ function setupEnvironment(){
             
         
     }
+    
+    
+    generateFloor(height/2, 0.02);
+    
 }
+
+var tGrad = 1;
+
+function mousePressed(){
+    //tGrad *= 0.9;
+    //generateFloor(height/2, tGrad);
+}
+
+function generateFloor(_amplitude, _grad){
+    
+    const bruckWidth = 10;
+    
+    // p5.
+    
+    const bNum = width/bruckWidth;
+    let floorAmp = _amplitude;
+    
+    const bLayers = 8;
+    
+    let KensNumber = 0;
+    
+    noiseSeed(999);
+    
+    for (let i = 0; i < bNum; i++){
+        
+        KensNumber = noise(i * _grad)*floorAmp;
+        
+        
+        for (let j = 0; j < bLayers; j++){
+            
+        RedHen_2DPhysics.newObj("box", i*bruckWidth+ bruckWidth/2, height-10- KensNumber + bruckWidth * j, bruckWidth);
+        RedHen_2DPhysics.lastObjectCreated().makeStatic();
+        
+         RedHen_2DPhysics.lastObjectCreated().fill = color(0,255*j*0.1,0);
+        }
+        
+        
+        
+    }
+    
+}
+
+
 
 
 
