@@ -6,6 +6,8 @@ var canSpawn = true;// Not moving obj, so can spawn obj.
 
 var cloner;
 
+var tRods = [];
+
 function setup(){
     // Remember to assign value of canvas like this :)
     canvas = createCanvas(800,600);
@@ -18,9 +20,11 @@ function setup(){
     
     // Create 7 blinkies ('antBots') of random scale.
     let giveMeAi = false;
+    //let antScale = Math.floor(Math.random()*width/200)+1;
+    let antScale = 2;
     for (let i = 0; i < 7; i++){
         if (i > 0) giveMeAi = true;
-        RH_ants.push(new antBot(true, Math.random()*width, 64, Math.floor(Math.random()*width/200)+1,giveMeAi));
+        RH_ants.push(new antBot(true, Math.random()*width, 64, antScale,giveMeAi));
     }
     controlAnt_index = 0;
     
@@ -45,17 +49,30 @@ function setup(){
 function draw(){ 
     background(0,111,222);
    // printInstructions();
-    
-        //blinkiesChase();
-    
     RedHen_2DPhysics.checkInputgGlobalMovement();
     RedHen_2DPhysics.updateObjs();
     
     RedHen_antBot.controlAntInput();
     updateBlinkies();
+    
+    terrainWave();
 }
 
 // ***** INPUT and OTHER FUNCTIONS *****
+
+function terrainWave(){
+    
+    let magicSine = 0;  //Math.sin(frameCount/100)*0.1;
+    
+    for (let i = 0; i < tRods.length; i++){
+        magicSine =  Math.sin(frameCount/50+(i/10))*0.1;
+        tRods[i].makePosition(
+        tRods[i].bod.position.x,
+        tRods[i].bod.position.y+
+        magicSine);
+    }
+}
+
 
 function setupEnvironment(){
     // We'll have perhaps 3 'ledges'
@@ -122,8 +139,9 @@ function setupEnvironment(){
         
     }
     
-    
-    generateFloor(height/2, 0.1);
+    // 1st param = amplitude.
+    // 2nd param = gradient.
+    generateFloor(height/3, 0.04);
     
 }
 
@@ -132,18 +150,19 @@ function generateFloor(_amplitude, _grad){
     
     const bruckWidth = 10;
     
-    // p5.
-    
     const bNum = width/bruckWidth;
     let floorAmp = _amplitude;
     
-    const bLayers = 3;
+    const bLayers = 2;
     
     let KensNumber = 0;
     
     let bHei = bruckWidth;
     
-    noiseSeed(Math.random()*100);
+    // Terrain colour.
+    let terrC = color(0,222,0);
+    
+    //noiseSeed(Math.random()*100);
     
     for (let i = 0; i < bNum; i++){
         
@@ -153,15 +172,33 @@ function generateFloor(_amplitude, _grad){
         
         for (let j = 0; j < bLayers; j++){
             
-            if (j == bLayers-1){
-                bHei = 100+height-(100+height- KensNumber + (bruckWidth * j));
+            if (j === bLayers-1){
+                bHei = height-(height- KensNumber + (bruckWidth * j));
             }
             
-        RedHen_2DPhysics.newObj("rectangle", i*bruckWidth+ bruckWidth/2, 100+height- KensNumber + (bruckWidth * j)+(bHei/2), bruckWidth, bHei);
-        RedHen_2DPhysics.lastObjectCreated().makeStatic();
-        
+        RedHen_2DPhysics.newObj("rectangle", i*bruckWidth+ bruckWidth/2, height- KensNumber + (bruckWidth * j)+(bHei/2), bruckWidth, bHei);
+      
+            // Static or loose?
+           if (j === bLayers-1){  RedHen_2DPhysics.lastObjectCreated().makeStatic();
+                                tRods.push(RedHen_2DPhysics.lastObjectCreated());
+            }
+           
             RedHen_2DPhysics.lastObjectCreated().OSR = false;
-         RedHen_2DPhysics.lastObjectCreated().fill = color(0,255*j*0.5,0);
+        
+            // Colour & mass.
+            if (j != bLayers-1){ 
+                terrC = color(0,155+Math.random()*100,0,200);
+              
+                RedHen_2DPhysics.lastObjectCreated().bod.mass = 100;
+                RedHen_2DPhysics.lastObjectCreated().stroke = color(0,72,0);
+                RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
+            } else {
+                terrC = color(0,255*i*0.008,0);
+                RedHen_2DPhysics.lastObjectCreated().stroke = color(0,72,0);
+                RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
+            }
+            RedHen_2DPhysics.lastObjectCreated().fill = terrC;
+            
         }
         
         
@@ -203,8 +240,8 @@ function updateBlinkies(){
     for(let i = RH_ants.length-1; i >= 0 ; i--){
         //if (hopTime && i > 0) //RH_ants[i].moveForward(RH_ants[i].hopForce);
         
-        //RH_ants[i].screenWrap();
-        // RH_ants[i].screenTrap();
+        RH_ants[i].screenWrap();
+        //RH_ants[i].screenTrap();
         RH_ants[i].think();
         RH_ants[i].render();
         
