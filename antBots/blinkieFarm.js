@@ -22,7 +22,7 @@ function setup(){
     let giveMeAi = false;
     //let antScale = Math.floor(Math.random()*width/200)+1;
     let antScale = 2;
-    for (let i = 0; i < 7; i++){
+    for (let i = 0; i < 3; i++){
         if (i > 0) giveMeAi = true;
         RH_ants.push(new antBot(true, Math.random()*width, 64, antScale,giveMeAi));
     }
@@ -193,7 +193,7 @@ function generateFloor(_amplitude, _grad){
                 RedHen_2DPhysics.lastObjectCreated().stroke = color(0,72,0);
                 RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
             } else {
-                terrC = color(0,255*i*0.008,0);
+                terrC = color(0,255*i*0.04,0);
                 RedHen_2DPhysics.lastObjectCreated().stroke = color(0,72,0);
                 RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
             }
