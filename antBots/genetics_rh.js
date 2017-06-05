@@ -37,13 +37,15 @@ class CloningOrb {
             
             if (millis() - this.lastCloneTime > this.rate){
             this.lastCloneTime = millis();
-            console.log("Cloning time! @ " + this.lastCloneTime);
+            //console.log("Cloning time! @ " + this.lastCloneTime);
         } else return;
             
-            RH_ants.push(new antBot(true, this.pos.x, this.pos.y + this.dia*2, 1, true));
+            RH_ants.push(new antBot(true, this.pos.x, this.pos.y + this.dia*2, _obj.scale*0.618, true));
             // Clone paren'ts colour.
             RedHen_antBot.returnLastAntCreated().col =
                 _obj.col;
+            
+            RedHen_antBot.returnLastAntCreated().brain.targetObj = _obj;
             
         }
         

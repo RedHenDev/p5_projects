@@ -254,8 +254,8 @@ class antBot {
     think(){
         if (this.hasBrain === false) return;
         //this.brain.setWayPoint(mouseX, mouseY);
-        this.brain.setWayPoint(RH_ants[0].myBod.bod.position.x,
-                              RH_ants[0].myBod.bod.position.y)
+        //this.brain.setWayPoint(RH_ants[0].myBod.bod.position.x,
+        //RH_ants[0].myBod.bod.position.y)
         this.brain.chaseWayPoint(false);
     }
     

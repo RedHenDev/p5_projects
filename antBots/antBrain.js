@@ -6,11 +6,14 @@
 class antBrain{
 
     constructor(_parent){
-        this.antBot = _parent;
+        this.antBot = _parent;  // Not genetic parent! OOP parent.
         this.state = "chase";
+        this.targetObj = null;
         
         this.wayPoint = createVector(width/2,height/2);
-        this.forwardForce = Math.random() * 2 + 1;
+        this.forwardWill = Math.random() * 2 + 1;
+        
+        
     }
 
     // Want instaTurn?
@@ -33,6 +36,13 @@ class antBrain{
         
     }
     
+    
+    chaseParent(_instantTurn){
+        this.setWayPoint(   this.targetObj.myBod.bod.position.x,
+                            this.targetObj.myBod.bod.position.y);
+        this.chaseWayPoint(_instantTurn);
+    }
+    
     setWayPoint(_x, _y){
         this.wayPoint.x = _x;
         this.wayPoint.y = _y;
@@ -41,7 +51,7 @@ class antBrain{
     
     chaseWayPoint(_instantTurn){
         this.findHeading(_instantTurn);
-        this.antBot.moveForward(this.forwardForce);
+        this.antBot.moveForward(this.forwardWill);
     }
 
 
