@@ -13,10 +13,8 @@ function setup(){
     canvas = createCanvas(800,600);
     background(72);
     
-    RedHen_2DPhysics.setupMatter();
-    
-    RedHen_2DPhysics.newObj("ghostrectangle", width/2,-50,width,100);
-    bods[bods.length-1].makeStatic();
+    // Set parameter to 'true' to create window bounds automatically.
+    RedHen_2DPhysics.setupMatter(true);
     
     // Create 7 blinkies ('antBots') of random scale.
     let giveMeAi = false;
