@@ -19,8 +19,11 @@ class CloningOrb {
     
     render(){
         fill(0,200,0,172);
-        stroke(0,200,0);
-        strokeWeight(1);
+        stroke(255,172);
+        strokeWeight(5);
+        
+        this.pos.x = mouseX;
+        this.pos.y = mouseY;
         
         ellipse(this.pos.x, this.pos.y, this.dia);
     }

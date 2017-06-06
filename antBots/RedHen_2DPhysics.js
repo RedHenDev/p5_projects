@@ -1,7 +1,7 @@
 
 //*********&&&&&&&&&&&&****************&&&&&&&&&&&&****************
 
-// Modular 'Obj' wrapper classes for use with Liam Brummit's matter.js 
+// Wrapper classes for use with Liam Brummit's matter.js 
 
 // B 'Red Hen' New 2017.
 
@@ -95,6 +95,7 @@ class RedHen_2DPhysics {
         // Glass ceiling.
         this.newObj("ghostrectangle", width/2,-50,width,100);
         bods[bods.length-1].makeStatic();
+        bods[bods.length-1].OSR = false;
     }
     
     static setGravity(_xDir, _yDir){

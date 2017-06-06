@@ -10,7 +10,7 @@ var tRods = [];
 
 function setup(){
     // Remember to assign value of canvas like this :)
-    canvas = createCanvas(800,600);
+    canvas = createCanvas(windowWidth,windowHeight);
     background(72);
     
     // Set parameter to 'true' to create window bounds automatically.
@@ -21,7 +21,7 @@ function setup(){
     //let antScale = Math.floor(Math.random()*width/200)+1;
     let antScale = 2;
     for (let i = 0; i < 3; i++){
-        if (i > 0) giveMeAi = true;
+        if (i >= 0) giveMeAi = true;
         RH_ants.push(new antBot(true, Math.random()*width, 64, antScale,giveMeAi));
     }
     controlAnt_index = 0;
@@ -78,9 +78,9 @@ function setupEnvironment(){
     // Each ledge to be made up of
     // 2 layers of (static?) boxes.
     
-    const numberOfLedges    = 3;
-    const numberOfLayers    = 4;
-    let ledgeAmp            = 80;
+    const numberOfLedges    = 1;
+    const numberOfLayers    = 3;
+    let ledgeAmp            = 99;
     
     noiseSeed(9);
     let screenScale = 1440/width;
@@ -88,7 +88,7 @@ function setupEnvironment(){
     
     let ledgeX = 0;
     let ledgeY = 0;
-    let ledgeLength = 100;
+    let ledgeLength = 10;
     let maxLedgeLength = width/1.5;
     
     const boxDiameter = maxLedgeLength/64;
@@ -116,7 +116,9 @@ function setupEnvironment(){
                 
                 // Only make block if...
                 // (for 'degraded' effect)
-                if ((j > 1 && j < numberOfLayers) || Math.random()>0.1){
+                //if ((j > 1 && j < numberOfLayers) ||
+                if (
+                Math.random()>0.1){
                 
                 let procY = noise((i*100+k)*noiseResolution)*ledgeAmp;
                 

@@ -256,7 +256,10 @@ class antBot {
         //this.brain.setWayPoint(mouseX, mouseY);
         //this.brain.setWayPoint(RH_ants[0].myBod.bod.position.x,
         //RH_ants[0].myBod.bod.position.y)
+        if (this.brain.targetObj == null)
         this.brain.chaseWayPoint(false);
+        else
+        this.brain.chaseParent(true);
     }
     
     // Negative for left, positive right.
