@@ -11,6 +11,8 @@ var p1MovX;
 var p1MovY;
 var p2MovX;
 var p2MovY;
+var p1Emoji;
+var p2Emoji;
 
 // Game variables.
 var p1Score;
@@ -41,7 +43,7 @@ function setup(){
 function draw(){
     
     // With some cheeky alpha, for trail effect...
-    background(0,172, 172,72);
+    background(0,174, 0,72);
     
     DrawCourt();
     
@@ -271,18 +273,18 @@ function MovePuck(){
       makeExplosion(p1X, p1Y, 1);
       
         if (Math.abs(pMovX) > 0.2 || Math.abs(pMovY) > 0.2) // Ordinary collision response if paddle moving at fair speed.
-        {pMovX = p1MovX*2;
+        {pMovX = Math.abs(p1MovX)*2;
         pMovY = p1MovY*2;}
         else if (p1X < puckX) pMovX = 5;    // Else, always add speed of 5.
         else if (p1X >= puckX) pMovX  -5;
     }
     
     // Player 2 paddle collisions.
-    if (    pL < p2X - pSizeX && pR > p2X + pSizeX &&
+    if (    pL < p2X + pSizeX && pR > p2X - pSizeX &&
             pU < p2Y + pSizeY &&
             pB > p2Y - pSizeY){
         if (Math.abs(pMovX) > 0.1 || Math.abs(pMovY) > 0.1) // Ordinary collision response if paddle moving at fair speed.
-        {pMovX = p2MovX*2;
+        {pMovX = Math.abs(p2MovX)*-2;
         pMovY = p2MovY*2;}
         else if (p2X < puckX) pMovX = 5;    // Else, always add speed of 5.
         else if (p2X >= puckX) pMovX  -5;
@@ -334,7 +336,10 @@ function SetStartPositions(){
     aiTime = 1; // Ai does something every one seconds (default).
     aiTimeStamp = millis(); // Incipient time stamp.
     
+    // Emojis...
     puckEmoji = NewEmoji();
+    p1Emoji = NewEmoji();
+    p2Emoji = NewEmoji();
     
     // Setup new game.
     p1Score = 0;
@@ -351,16 +356,22 @@ function NewEmoji(){
 }
 
 function DrawPadle(_x, _y){
-    stroke(255);
-    strokeWeight(2);
-    fill(0,255,0, 101);
+  
+//    stroke(0);
+//    strokeWeight(3);
+//  
+//    if (_x < width/2)
+//    fill(255,0,255, 255);
+//  else fill(255, 255);
+//    
+//    rect(_x, _y, pSizeX, pSizeY);
     
-    rect(_x, _y, pSizeX, pSizeY);
+    paddleEmoji(_x, _y);
 }
 
 function DrawPuck(_x, _y){
     stroke(0);
-    strokeWeight(8);
+    strokeWeight(5);
     fill(0,0,12*(Math.abs(pMovX)+Math.abs(pMovY)), 101);
 
     ellipse(_x, _y, puckSize, puckSize);
@@ -373,9 +384,21 @@ function DrawPuck(_x, _y){
     text(puckEmoji, puckX-puckSize/2.5, puckY+puckSize/3);
 }
 
-function DisplayScore(){
+function paddleEmoji(_x, _y){
+    strokeWeight(1);
     stroke(255);
-    strokeWeight(4);
+    fill(255);
+    
+    //pop();
+    textSize(32);
+    if (_x < width/2)
+    text(p1Emoji, _x, _y);
+    else text(p2Emoji, _x, _y);
+}
+
+function DisplayScore(){
+    stroke(0);
+    strokeWeight(3);
     fill(0);
     textSize(32);
     text(p1Score + " : " + p2Score, (width/2)-32, (height/2)+10);
@@ -499,7 +522,7 @@ Gp.prototype.render = function(){
     //noStroke();
     strokeWeight(1);
     stroke(255);
-    fill(colF,0,colF,255);
+    fill(colF,0,colF,100);
     ellipse(this.pos.x,this.pos.y, this.radius, this.radius);
     
 }
