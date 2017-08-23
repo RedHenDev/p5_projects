@@ -47,7 +47,8 @@ class CloningOrb {
             // Clone paren'ts colour.
             RedHen_antBot.returnLastAntCreated().col =
                 _obj.col;
-            
+          
+            // This asks the newly cloned antBot to 'chase' it's clonic parent. This is not quite accurate -- but it's been more than a month I think since I coded this :)
             RedHen_antBot.returnLastAntCreated().brain.targetObj = _obj;
             
         }
