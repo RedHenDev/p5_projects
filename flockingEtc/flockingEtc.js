@@ -39,7 +39,7 @@ function draw(){
     
     checkInput();
     
-    background(0, 201, 222,2);
+    background(0, 201, 222);
     
     DrawCourt();
     
