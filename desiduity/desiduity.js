@@ -1,12 +1,26 @@
 
+var nodes = [];
+var numNodes = 0;
+
 function setup(){
     
     createCanvas(windowWidth, windowHeight);
     
     background(0,101,202);
     
+    
 }
 
+function draw(){
+    
+}
+
+function touchEnded(){
+    nodes[numNodes] = new Node(numNodes);
+    numNodes++;
+    nodes[nodes.length-1].placeMe(nodes[numNodes-2]);
+    nodes[nodes.length-1].renderNode();
+}
 
 function seedTree(){
     
@@ -41,10 +55,11 @@ class Node{
         this.pos = createVector(width/2,height);
         
         this.growthRate = 10;  // This many pixels up.
-        this.xGrowth = 10;     // Xaxis move, due to Perlin.
+        this.xGrowth = 12;     // Xaxis move, due to Perlin.
         
         this.perlinXpos = 0;
-        this.perlinRes = 0.1;
+        this.perlinRes = 10;
+        
     }
     
     seedMe(_seed){  
@@ -53,16 +68,22 @@ class Node{
     }
     
     iteratePerlin(){
-        
+        // Increase offset of Perlin.
         this.perlinXpos += this.perlinRes;
-        if (math.round(noise(this.perlinXpos) % 2) === 0)
-            {
-                this.pos.x -= this.xGrowth;
-            }
-        else {
-                this.pos.x += this.xGrowth;
-            }
         
+        // Apply Perlin 'path' to node's x pos.
+        this.pos.x +=   (-this.xGrowth/2) +
+                        (noise(this.perlinXpos) *
+                        this.xGrowth);
+    }
+    
+    renderNode(){
+        // Renders node itself.
+        stroke(255,100);
+        strokeWeight(8);
+        fill(0,200,0,101);
+        ellipse(this.pos.x, this.pos.y,
+               20,20);
     }
     
     placeMe(_previousNode){
@@ -71,7 +92,7 @@ class Node{
             {
                 // Must be first node!
                 // Do seedy things :)
-                seedMe(9);
+                this.seedMe(9);
             }
         else    {
                     // Just a normal node.
@@ -90,7 +111,7 @@ class Node{
                     this.xGrowth = _previousNode.xGrowth;
                     this.pos = _previousNode.pos;
                     this.pos.y -= this.growthRate;
-                    iteratePerlin();
+                    this.iteratePerlin();
                 }
     }
 }
