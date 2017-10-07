@@ -16,7 +16,7 @@ function draw(){
 }
 
 function touchEnded(){
-    nodes[numNodes] = new Node(numNodes);
+    nodes.push(new Node(numNodes));
     numNodes++;
     nodes[nodes.length-1].placeMe(nodes[numNodes-2]);
     nodes[nodes.length-1].renderNode();
@@ -54,7 +54,7 @@ class Node{
         this.index = _index;
         this.pos = createVector(width/2,height);
         
-        this.growthRate = 10;  // This many pixels up.
+        this.growthRate = 20;  // This many pixels up.
         this.xGrowth = 12;     // Xaxis move, due to Perlin.
         
         this.perlinXpos = 0;
