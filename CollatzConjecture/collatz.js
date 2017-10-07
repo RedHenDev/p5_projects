@@ -62,7 +62,7 @@ function setup(){
     wC = createInput("777");
     wC.position(width-120,12);
     wC.size(80,32);
-    wC.changed(callCollatz)
+    wC.changed(callCollatz);
     //collatzB.style("background-color", 'white');
     //collatzB.valueChanged(callCollatz); // Callback.
     
