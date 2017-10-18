@@ -6,20 +6,30 @@ function setup(){
     
     createCanvas(windowWidth, windowHeight);
     
-    background(0,101,202);
     
+    renderBG();
     
 }
 
 function draw(){
+    renderBG();
     
+    for (let i = 0; i<nodes.length; i++){
+        nodes[i].renderNode();
+    }
+}
+
+
+
+function renderBG(){
+    background(0,101,202);
 }
 
 function touchEnded(){
     nodes.push(new Node(numNodes));
     numNodes++;
     nodes[nodes.length-1].placeMe(nodes[numNodes-2]);
-    nodes[nodes.length-1].renderNode();
+    //nodes[nodes.length-1].renderNode();
 }
 
 function seedTree(){
@@ -54,11 +64,13 @@ class Node{
         this.index = _index;
         this.pos = createVector(width/2,height);
         
-        this.growthRate = 20;  // This many pixels up.
-        this.xGrowth = 12;     // Xaxis move, due to Perlin.
+        this.growthRate = 32;  // This many pixels up.
+        this.xGrowth = 24;     // Xaxis move, due to Perlin.
         
         this.perlinXpos = 0;
         this.perlinRes = 10;
+        
+        this.theta = 0;         // 'Clock point' rotation.
         
     }
     
@@ -84,6 +96,11 @@ class Node{
         fill(0,200,0,101);
         ellipse(this.pos.x, this.pos.y,
                20,20);
+        
+        // Draws a 'clock point.'
+        point(this.pos.x +                                       Math.sin(this.theta)*this.growthRate,
+            this.pos.y - Math.cos(this.theta)*this.growthRate);
+        this.theta+=0.01;
     }
     
     placeMe(_previousNode){
@@ -93,6 +110,7 @@ class Node{
                 // Must be first node!
                 // Do seedy things :)
                 this.seedMe(9);
+                console.log('First node!');
             }
         else    {
                     // Just a normal node.
@@ -106,11 +124,9 @@ class Node{
                         _previousNode.perlinXpos;
                     this.perlinRes = 
                         _previousNode.perlinRes;
-                    this.growthRate = 
-                        _previousNode.growthRate;
                     this.xGrowth = _previousNode.xGrowth;
-                    this.pos = _previousNode.pos;
-                    this.pos.y -= this.growthRate;
+                    this.pos.x = _previousNode.pos.x;
+                    this.pos.y = _previousNode.pos.y - this.growthRate;
                     this.iteratePerlin();
                 }
     }
