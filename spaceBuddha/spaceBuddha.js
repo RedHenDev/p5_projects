@@ -1,12 +1,8 @@
 // Global canvas element necessary!
 // This is to allow mouse/touch interaction to work.
-var canvas;
+let canvas;
 
-var canSpawn = true;// Not moving obj, so can spawn obj.
-
-var cloner;
-
-var tRods = [];
+let canSpawn = true;// Not moving obj, so can spawn obj.
 
 function setup(){
     // Remember to assign value of canvas like this :)
@@ -35,29 +31,43 @@ function draw(){
    // printInstructions();
     RedHen_2DPhysics.checkInputgGlobalMovement();
     RedHen_2DPhysics.updateObjs();
-    
-
-    
-   
 }
 
 // ***** INPUT and OTHER FUNCTIONS *****
 
 function mouseDragged(){
-    
     canSpawn = false;
 }
+
 function touchEnded(){
     if (canSpawn && mouseX < width/2){
-    RedHen_2DPhysics.newObj("box", mouseX, mouseY, 28);
-        RedHen_2DPhysics.lastObjectCreated().fill = color(0,(mouseY/height)*255,0);
+        spawnBlock(mouseX, mouseY, 28);
     }
     if (canSpawn && mouseX > width/2){
-        RedHen_2DPhysics.newObj("circle", mouseX, mouseY, 6);
-        RedHen_2DPhysics.lastObjectCreated().fill = color(0,(mouseY/height)*255,0);
+        spawnBall(mouseX, mouseY, 14);
     }
     
     canSpawn = true;
+}
+
+function spawnBlock(_x,_y,_sz){
+    RedHen_2DPhysics.newObj("box", _x, _y, _sz);
+    
+    RedHen_2DPhysics.lastObjectCreated().fill = 
+        color(0,(_y/(height/2))*255,0);
+    RedHen_2DPhysics.lastObjectCreated().stroke = 
+        color(0);
+    RedHen_2DPhysics.lastObjectCreated().strokeWeight(4);
+}
+
+function spawnBall(_x,_y,_sz){
+    RedHen_2DPhysics.newObj("circle", _x, _y, _sz);
+    
+    RedHen_2DPhysics.lastObjectCreated().fill = 
+        color(0,(_y/(height/2))*255,0);
+    RedHen_2DPhysics.lastObjectCreated().stroke = 
+        color(255);
+    RedHen_2DPhysics.lastObjectCreated().strokeWeight(4);
 }
 
 

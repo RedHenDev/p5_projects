@@ -4,10 +4,6 @@ let canvas;
 
 let canSpawn = true;// Not moving obj, so can spawn obj.
 
-let cloner;
-
-let tRods = [];
-
 function setup(){
     // Remember to assign value of canvas like this :)
     canvas = createCanvas(windowWidth,windowHeight);
