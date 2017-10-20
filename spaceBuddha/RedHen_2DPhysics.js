@@ -85,10 +85,10 @@ class RedHen_2DPhysics {
         bods[0].strokeWeight = 4;
         bods[0].OSR = false;
         // Edges.
-        RedHen_2DPhysics.newObj ("GhostRectangle",0-10,height/2,20,height);
+        this.newObj ("GhostRectangle",0-10,height/2,20,height);
         bods[bods.length-1].makeStatic();
         bods[bods.length-1].OSR = false;
-        RedHen_2DPhysics.newObj ("GhostRectangle",width+
+        this.newObj ("GhostRectangle",width+
         10,height/2,20,height);
         bods[bods.length-1].makeStatic();
         bods[bods.length-1].OSR = false;
