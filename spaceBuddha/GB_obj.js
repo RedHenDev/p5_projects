@@ -19,7 +19,7 @@ class GhostO {
         (_shape, _x, _y, _width, _height);
         // Grab a handle on the matter.js body.
         this.myBod = 
-        RedHen_2DPhysics.lastObjectCreated().bod;
+        RedHen_2DPhysics.lastObjectCreated();
         
         this.width = _width*4;
         this.height = _height;
@@ -43,8 +43,8 @@ class SpaceBuddha extends GhostO{
         fill(255,100);
         stroke(0,100,100,100);
         strokeWeight(2);
-        translate(this.myBod.position.x,
-                 this.myBod.position.y);
+        translate(this.myBod.bod.position.x,
+                 this.myBod.bod.position.y);
         ellipse(0,0,this.width);
         
         //Light spot.
@@ -52,5 +52,26 @@ class SpaceBuddha extends GhostO{
         noStroke();
         ellipse(-this.width/5, -this.width/4, this.width/8);
         pop();
+    }
+    
+    control(){
+        let yF = 0.08;
+        let xF = 0.03;
+        if (keyIsDown(UP_ARROW)){
+            let force = createVector(0,-yF);
+            this.myBod.addForce(force);
+        }
+         if (keyIsDown(DOWN_ARROW)){
+            let force = createVector(0,yF);
+            this.myBod.addForce(force);
+        }
+         if (keyIsDown(LEFT_ARROW)){
+            let force = createVector(-xF,0);
+            this.myBod.addForce(force);
+        }
+         if (keyIsDown(RIGHT_ARROW)){
+            let force = createVector(xF,0);
+            this.myBod.addForce(force);
+        }
     }
 }

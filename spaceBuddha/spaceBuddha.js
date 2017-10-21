@@ -11,6 +11,10 @@ function setup(){
     canvas = createCanvas(windowWidth,windowHeight);
     background(72);
     
+    // Correct for mouse positions.
+    mouseX = 0;
+    mouseY = 0;
+    
     // Set parameter to 'true' to create window bounds automatically.
     RedHen_2DPhysics.setupMatter();
     
@@ -26,10 +30,16 @@ function setup(){
 function draw(){ 
     background(0,111,222);
    // printInstructions();
-    RedHen_2DPhysics.checkInputgGlobalMovement();
-    RedHen_2DPhysics.updateObjs();
+     
     
+    //RedHen_2DPhysics.checkInputgGlobalMovement();
+    translate(  -boo.myBod.bod.position.x+width/2,
+                -boo.myBod.bod.position.y+height/2);
+    
+    RedHen_2DPhysics.updateObjs();
+    boo.control();
     boo.render();
+   
 }
 
 // ***** INPUT and OTHER FUNCTIONS *****
@@ -99,6 +109,8 @@ function makeGround(){
         strokeWeight = 4;
         RedHen_2DPhysics.lastObjectCreated().
         makeSleep(true);
+        RedHen_2DPhysics.lastObjectCreated().
+        OSR = false;
     }
     
 }
