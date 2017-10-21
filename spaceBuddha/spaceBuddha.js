@@ -4,6 +4,8 @@ let canvas;
 
 let canSpawn = true;// Not moving obj, so can spawn obj.
 
+let boo;
+
 function setup(){
     // Remember to assign value of canvas like this :)
     canvas = createCanvas(windowWidth,windowHeight);
@@ -14,6 +16,10 @@ function setup(){
     
         
     makeGround();
+    
+    // Test. Can we make our first Ghost Object?
+    boo = new SpaceBuddha(width/2, height/2, 32);
+    RedHen_2DPhysics.lastObjectCreated().OSR = false; 
 }
 
 // ***** UDPATE LOOP *****
@@ -22,6 +28,8 @@ function draw(){
    // printInstructions();
     RedHen_2DPhysics.checkInputgGlobalMovement();
     RedHen_2DPhysics.updateObjs();
+    
+    boo.render();
 }
 
 // ***** INPUT and OTHER FUNCTIONS *****
@@ -80,15 +88,15 @@ function makeGround(){
         bods[bods.length-1].makeStatic();
         bods[bods.length-1].OSR = false;
     
-    for (let i = 0; i < 202; i++){
-        let boxSize = Math.random()*24 + 4;
+    for (let i = 0; i < 42; i++){
+        let boxSize = Math.random()*64 + 32;
         
         RedHen_2DPhysics.newObj ('box', Math.random()*width, Math.random()*height-mySize*2, boxSize);
        
         RedHen_2DPhysics.lastObjectCreated().
         fill = color(0,Math.random()*255,0, 202);
         RedHen_2DPhysics.lastObjectCreated().
-        strokeWeight = 8;
+        strokeWeight = 4;
         RedHen_2DPhysics.lastObjectCreated().
         makeSleep(true);
     }

@@ -191,6 +191,9 @@ class RedHen_2DPhysics {
          else if (_requestedBody === "circle" || _requestedBody === "Circle")
         bods.push(new Circle(_x, _y, _size, _makeDirect));
         
+        else if (_requestedBody === "GhostCircle" || _requestedBody === "ghostCircle")
+        bods.push(new GhostCircle(_x, _y, _size, _makeDirect));
+        
         else if (_requestedBody === "GhostRectangle" || _requestedBody === "ghostRectangle" || _requestedBody === "ghostrectangle")
         bods.push(new GhostRectangle(_x, _y, _size, _makeDirect, _size2));
         
@@ -397,6 +400,27 @@ class GhostRectangle extends Obj{
             }
             
             this.bod = Matter.Bodies.rectangle(this.pos.x,this.pos.y,this.dia,this.height,options);  
+        this.id = bods.length-1;
+            // Add the body to the Physics World.
+            Matter.World.add(myWorld, this.bod);
+        }
+    }
+}
+
+// A permanently non-rendered circle.
+class GhostCircle extends Obj{
+    constructor(_x, _y, _radius, _ImakeBody){
+        super(_x, _y, _radius * 2, false);
+        
+        if (_ImakeBody){
+            
+            let options = {
+                isStatic: false,
+                restitution: 0.89,
+                friction: 0.04
+            }
+            
+            this.bod = Matter.Bodies.circle(this.pos.x,this.pos.y,this.rad,options);  
         this.id = bods.length-1;
             // Add the body to the Physics World.
             Matter.World.add(myWorld, this.bod);
