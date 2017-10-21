@@ -37,7 +37,7 @@ class SpaceBuddha extends GhostO{
     constructor(_x, _y, _radius){
         super(_x, _y, _radius, _radius, "GhostCircle");
         
-        this.maxV = 5;
+        this.maxV = 15;
     }
     
     render(){

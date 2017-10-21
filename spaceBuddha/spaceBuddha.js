@@ -6,6 +6,11 @@ let canSpawn = false;// Not moving obj, so can spawn obj.
 
 let boo;
 
+let oldestDroplet = 0;
+let droplets = [];
+
+//p5.disableFriendlyErrors = true;
+
 function setup(){
     // Remember to assign value of canvas like this :)
     canvas = createCanvas(windowWidth,windowHeight);
@@ -25,6 +30,9 @@ function setup(){
     boo = new SpaceBuddha(width/2, height/2, 32);
     RedHen_2DPhysics.lastObjectCreated().OSR = false;
     RedHen_2DPhysics.lastObjectCreated().bod.label = 'boo';
+    
+    // Tes. Can we create an objects pool?
+    setupObjectPool();
 }
 
 function myCollision(event){
@@ -54,9 +62,14 @@ function draw(){
    // printInstructions();
      
     
+    if (frameCount % 30 === 0) spawnDroplet (                       boo.myBod.bod.position.x,
+        boo.myBod.bod.position.y - height/2);
+    
     //RedHen_2DPhysics.checkInputgGlobalMovement();
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
+    
+      
     
     RedHen_2DPhysics.updateObjs();
     boo.control();
@@ -66,6 +79,53 @@ function draw(){
 }
 
 // ***** INPUT and OTHER FUNCTIONS *****
+
+function spawnDroplet(_x, _y, _size){
+    // First, grab an available droplet.
+    // If none available, then just grab...which one?
+    if (findSleeping()!=null){
+        let i = findSleeping();
+        droplets[i].makePosition(_x,_y);
+        droplets[i].makeSleep(false);
+        return;
+    }
+    else {
+        // Find 'oldest' droplet and grab him :)
+        let i = oldestDroplet;
+        oldestDroplet++;
+        if (oldestDroplet > droplets.length-1){
+            oldestDroplet = 0;
+        }
+        droplets[i].makePosition(_x,_y);
+        droplets[i].makeSleep(false);
+    }
+}
+
+function setupObjectPool(){
+    for (let i = 0; i < 32; i++){
+        spawnBall(-9999,-9999, 12);
+        // Grab this object.
+        droplets[i] = RedHen_2DPhysics.
+        lastObjectCreated();
+        // Time to sleep.
+        RedHen_2DPhysics.lastObjectCreated().
+        makeSleep(true);
+    }
+}
+
+function findSleeping(){
+    
+    let morpheus = null;
+    
+    for (let i = 0; i < droplets.length; i++){
+        if(droplets[i].bod.isSleeping){
+            morpheus = i;
+            break;
+        } else morpheus = null;
+    }
+    
+    return morpheus;
+}
 
 function mouseDragged(){
     canSpawn = false;
@@ -95,6 +155,7 @@ function spawnBlock(_x,_y,_sz){
 function spawnBall(_x,_y,_sz){
     RedHen_2DPhysics.newObj("circle", _x, _y, _sz);
     
+    RedHen_2DPhysics.lastObjectCreated().OSR = false;
     RedHen_2DPhysics.lastObjectCreated().fill = 
         color(0,Math.random()*255,0);
     RedHen_2DPhysics.lastObjectCreated().stroke = 
