@@ -35,7 +35,9 @@ class GhostO {
 
 class SpaceBuddha extends GhostO{
     constructor(_x, _y, _radius){
-        super(_x, _y, _radius, _radius, "GhostCircle")
+        super(_x, _y, _radius, _radius, "GhostCircle");
+        
+        this.maxV = 5;
     }
     
     render(){
@@ -54,7 +56,20 @@ class SpaceBuddha extends GhostO{
         pop();
     }
     
+    speedLimit(){
+        if (Math.abs(this.myBod.bod.velocity.x) + 
+            Math.abs(this.myBod.bod.velocity.y)
+            > this.maxV)
+            {
+                //this.myBod.bod.velocity.x * 0.8;
+                //this.myBod.bod.velocity.y * 0.8;
+                return true;
+            }
+        else return false;
+    }
+    
     control(){
+        if (this.speedLimit()) return;
         let yF = 0.08;
         let xF = 0.03;
         if (keyIsDown(UP_ARROW)){

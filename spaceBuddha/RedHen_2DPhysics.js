@@ -38,7 +38,7 @@ class RedHen_2DPhysics {
     
     // Main program calls this to begin using this wrapper class.
     // Sets up mouse contraint by default.
-    static setupMatter(_createWindowBounds){
+    static setupMatter(_createWindowBounds, _mouseCon){
         
         // Instantiate a matter.js world and begin physics.
         myEngine = Matter.Engine.create();
@@ -47,10 +47,9 @@ class RedHen_2DPhysics {
         // Start the engine!
         Matter.Engine.run(myEngine);
         
-        // Mouse constraint on as default.
-        // NB have to use this. keyword here
-        // to refer to static method of this
-        // class?!
+        // Mouse constraint.
+        // Default (null or false) is ON.
+        if (!_mouseCon)
         this.setupMouseConstraint();
         
         // We have functionality, but not yet implemented for general use.
@@ -106,12 +105,12 @@ class RedHen_2DPhysics {
     
     static setupCollisions(){
         
-    // The collision events function.
-    // Collision *events* may need to use the
-    // *indexID* of the body in order to 
-    // reference the wrapper object's variables.
-    // [This is not yet implemented!!!]
-    function collision(event){
+    // Turn on collision events.
+    // The third parameter 'myCollision' is a 
+    // call back to a custom function.
+        Matter.Events.on(myEngine, 'collisionStart', myCollision);
+        
+    function exampleCollision(event){
         // Ref to all pairs of bodies colliding.
         let pairs = event.pairs;
         // Iterate over the pairs to
@@ -125,31 +124,17 @@ class RedHen_2DPhysics {
             let bodB = pairs[i].bodyB;
             
             // E.g.
-             if (Math.abs(bodA.velocity.x *             bodA.velocity.y) > 4){
-                Matter.Body.setStatic(bodB, true);}
+            // Will swap sleeping mode of
+            // collided object if 'hitter'
+            // is labelled 'boo'.
+             if (bodB.label === 'boo' &&
+                 Math.abs(bodB.velocity.x *             bodB.velocity.y) > 4){
+                Matter.Sleeping.set(bodA, 
+                !bodA.isSleeping);}
             }   // End of forLoop.
-        }       // End of collision events function.
-        
-    // Turn on collision events.
-    // The third parameter 'collision' is a 
-    // call back to the function above.
-        // Comment this out, of course, when
-        // creating custom collision events
-        // with their own callbacks.
-        Matter.Events.on(myEngine, 'collisionStart', collision);
-        
-        // Might we pass in a function name to static events function in here?
-        // So that user can write custom
-        // collision functions in their js
-        // file, and to set this up, pass in
-        // the name of their function to a
-        // static method here?
-        
-        // Legacy hack to perform a custom
-        // collision event.
-       // Matter.Events.on(myEngine, 'collisionStart', hitPipe);
+        }       // End of example collision events function.
     
-    }
+    }   // End of setupCollisions.
     
     // ON as default. Bodies removed from world and array if having gone off-screen.
     static offscreenRemove(_trueIfOn){
