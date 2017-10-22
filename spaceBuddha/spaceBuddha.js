@@ -68,7 +68,7 @@ function myCollision(event){
              if (bodA.label === 'boo' &&
                  bodB.label !== 'boo' &&
                  bodB.label === 'digit' &&
-                 Math.abs(bodA.velocity.x *             bodA.velocity.y) > 0){
+                 Math.abs(bodA.velocity.x *             bodA.velocity.y) > 42){
                 Matter.Sleeping.set(bodB, 
                 !bodB.isSleeping);}
             }   // End of forLoop.
@@ -143,6 +143,9 @@ function setupObjectPool(){
         // Time to sleep.
         RedHen_2DPhysics.lastObjectCreated().
         makeSleep(true);
+        RedHen_2DPhysics.lastObjectCreated().
+        makeMass(20);
+        
     }
 }
 
@@ -197,8 +200,8 @@ function spawnBall(_x,_y,_sz){
 }
 
 let totalW = 0; // Total width so far.
-let maxWid = 9;
-let minWid = 9;
+let maxWid = 3;
+let minWid = 1;
 
 function makeGround(_originX){
         
@@ -210,9 +213,6 @@ function makeGround(_originX){
     gY = height * 2;    // Y position.
     
     totalW = 0; // Total width so far.
-    maxWid = 9;
-    minWid = 9;
-    
 
     noiseSeed(9);
     let ampl = height*3;
@@ -238,7 +238,7 @@ function makeGround(_originX){
         RedHen_2DPhysics.lastObjectCreated().
         makeStatic();
         RedHen_2DPhysics.lastObjectCreated().
-        fill = color(0,101,0);
+        fill = color(0,149,0);
         RedHen_2DPhysics.lastObjectCreated().
         stroke = RedHen_2DPhysics.lastObjectCreated().
         fill; 

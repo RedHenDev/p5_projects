@@ -328,6 +328,11 @@ class Obj {
         Matter.Body.scale(this.bod, _scale, _scale);
     }
 
+    // Set a new mass.
+    makeMass(_mass){
+        Matter.Body.setMass(this.bod, _mass);
+    }
+    
     // Makes the body (permanently) static.
     makeStatic(){
         Matter.Body.setStatic(this.bod, true);
