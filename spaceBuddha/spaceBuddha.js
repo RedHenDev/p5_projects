@@ -65,10 +65,12 @@ function myCollision(event){
             // Hmmmmm...should create boo first,
             // so that it is always first object
             // in pair, viz. 'boo'.
+            // Oh, also must be moving faster
+            // than specified velocity.
              if (bodA.label === 'boo' &&
                  bodB.label !== 'boo' &&
                  bodB.label === 'digit' &&
-                 Math.abs(bodA.velocity.x *             bodA.velocity.y) > 42){
+                 Math.abs(bodA.velocity.x) +             Math.abs(bodA.velocity.y) > 42){
                 Matter.Sleeping.set(bodB, 
                 !bodB.isSleeping);}
             }   // End of forLoop.
