@@ -14,6 +14,9 @@ let droplets = [];
 // Array to store each 'ground stalk'.
 let gStalk = [];
 let gY;
+let totalW = 0; // Total width so far.
+let maxWid = 14;
+let minWid = 1;
 
 //p5.disableFriendlyErrors = true;
 
@@ -70,7 +73,7 @@ function myCollision(event){
              if (bodA.label === 'boo' &&
                  bodB.label !== 'boo' &&
                  bodB.label === 'digit' &&
-                 Math.abs(bodA.velocity.x) +             Math.abs(bodA.velocity.y) > 42){
+                 Math.abs(bodA.velocity.x) +             Math.abs(bodA.velocity.y) > 9){
                 Matter.Sleeping.set(bodB, 
                 !bodB.isSleeping);}
             }   // End of forLoop.
@@ -85,9 +88,11 @@ function draw(){
     background(0,skyTint/2,skyTint);
     // printInstructions();
     
-    if (frameCount % 30 === 0) spawnDroplet (                       boo.myBod.bod.position.x + 
-            Math.random()*width-width/2,
-        boo.myBod.bod.position.y - height/2);
+    // Generate boo bubbles.
+    //if (frameCount % 1 === 0) 
+    spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
+                 boo.myBod.bod.velocity.x*22,
+         boo.myBod.bod.position.y + 101);
     
     // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
@@ -98,15 +103,14 @@ function draw(){
     boo.speedLimit();
     boo.render();
     
+    // Work out when to move the infinite terrain.
     boo.trackX = 
                 Math.abs(boo.myBod.bod.position.x - boo.oX);
     if (boo.trackX > width){
         boo.oX = boo.myBod.bod.position.x;
         moveGround(boo.oX-width);
     }
-    
-        
-   
+
 }
 
 // ***** INPUT and OTHER FUNCTIONS *****
@@ -135,18 +139,22 @@ function spawnDroplet(_x, _y, _size){
 
 function setupObjectPool(){
     
-    let numObjs = 44;
+    let numObjs = 222;
     
     for (let i = 0; i < numObjs; i++){
-        spawnBall(-999,-999, Math.random()*12+1);
+        spawnBall(-99,-99, Math.random()*8+5);
         // Grab this object.
         droplets[i] = RedHen_2DPhysics.
         lastObjectCreated();
         // Time to sleep.
         RedHen_2DPhysics.lastObjectCreated().
         makeSleep(true);
-        RedHen_2DPhysics.lastObjectCreated().
-        makeMass(20);
+        //RedHen_2DPhysics.lastObjectCreated().
+        //makeMass(10);
+        RedHen_2DPhysics.
+        lastObjectCreated().bod.restitution = 0.2;
+        RedHen_2DPhysics.
+        lastObjectCreated().bod.frictionAir = 0.8;
         
     }
 }
@@ -195,15 +203,13 @@ function spawnBall(_x,_y,_sz){
     
     RedHen_2DPhysics.lastObjectCreated().OSR = false;
     RedHen_2DPhysics.lastObjectCreated().fill = 
-        color(0,Math.random()*255,0);
+        color(255,69);
     RedHen_2DPhysics.lastObjectCreated().stroke = 
         color(255);
     RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
 }
 
-let totalW = 0; // Total width so far.
-let maxWid = 3;
-let minWid = 1;
+
 
 function makeGround(_originX){
         
@@ -242,8 +248,9 @@ function makeGround(_originX){
         RedHen_2DPhysics.lastObjectCreated().
         fill = color(0,149,0);
         RedHen_2DPhysics.lastObjectCreated().
-        stroke = RedHen_2DPhysics.lastObjectCreated().
-        fill; 
+        stroke = color(0,100);
+        //RedHen_2DPhysics.lastObjectCreated().
+        //fill; 
         
         totalW += thisWidth;
     }

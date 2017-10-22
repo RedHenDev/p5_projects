@@ -58,7 +58,8 @@ class SpaceBuddha extends GhostO{
         
         //Light spot.
         fill(255,240);
-        noStroke();
+        strokeWeight(1);
+        stroke(0);
         ellipse(-this.width/5, -this.width/4, this.width/8);
         pop();
     }
@@ -77,7 +78,7 @@ class SpaceBuddha extends GhostO{
     
     control(){
         if (this.speedLimit()) return;
-        let yF = 0.08;
+        let yF = 0.03;
         let xF = 0.03;
         if (keyIsDown(UP_ARROW)){
             let force = createVector(0,-yF);
