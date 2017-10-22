@@ -6,6 +6,8 @@ let canSpawn = false;// Not moving obj, so can spawn obj.
 
 let boo;
 
+let skyTint;
+
 let oldestDroplet = 0;
 let droplets = [];
 
@@ -24,15 +26,22 @@ function setup(){
     RedHen_2DPhysics.setupMatter(false, true);
     RedHen_2DPhysics.setupCollisions();
         
-    makeGround();
+    setupBoo();
     
+    makeGround();
+   
+    // Test. Can we create an objects pool?
+    // This will bypass the problem of the
+    // spawning of bodies taking too much time.
+    // Before, there was a real lag.
+    setupObjectPool();
+}
+
+function setupBoo(){
     // Test. Can we make our first Ghost Object?
     boo = new SpaceBuddha(width/2, height/2, 32);
     RedHen_2DPhysics.lastObjectCreated().OSR = false;
     RedHen_2DPhysics.lastObjectCreated().bod.label = 'boo';
-    
-    // Tes. Can we create an objects pool?
-    setupObjectPool();
 }
 
 function myCollision(event){
@@ -48,28 +57,36 @@ function myCollision(event){
             let bodA = pairs[i].bodyA;
             let bodB = pairs[i].bodyB;
             
-            // E.g.
-             if (bodB.label === 'boo' &&
-                 Math.abs(bodB.velocity.x *             bodB.velocity.y) > 4){
-                Matter.Sleeping.set(bodA, 
-                !bodA.isSleeping);}
+            // If boo hits another object.
+            // Hmmmmm...should create boo first,
+            // so that it is always first object
+            // in pair, viz. 'boo'.
+             if (bodA.label === 'boo' &&
+                 bodB.label !== 'boo' &&
+                 bodB.label === 'digit' &&
+                 Math.abs(bodA.velocity.x *             bodA.velocity.y) > 0){
+                Matter.Sleeping.set(bodB, 
+                !bodB.isSleeping);}
             }   // End of forLoop.
 }
 
 // ***** UDPATE LOOP *****
 function draw(){ 
-    background(0,111,222);
-   // printInstructions();
-     
     
-    if (frameCount % 30 === 0) spawnDroplet (                       boo.myBod.bod.position.x,
+    skyTint = map(  boo.myBod.bod.position.y,
+                    height*3, -height*5, 222, 0);
+    
+    // Orig tints = (0,111,222);
+    background(0,skyTint/2,skyTint);
+    // printInstructions();
+    
+    if (frameCount % 30 === 0) spawnDroplet (                       boo.myBod.bod.position.x + 
+            Math.random()*width-width/2,
         boo.myBod.bod.position.y - height/2);
     
     //RedHen_2DPhysics.checkInputgGlobalMovement();
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
-    
-      
     
     RedHen_2DPhysics.updateObjs();
     boo.control();
@@ -101,9 +118,13 @@ function spawnDroplet(_x, _y, _size){
     }
 }
 
+
 function setupObjectPool(){
-    for (let i = 0; i < 32; i++){
-        spawnBall(-9999,-9999, 12);
+    
+    let numObjs = 44;
+    
+    for (let i = 0; i < numObjs; i++){
+        spawnBall(-999,-999, Math.random()*12+1);
         // Grab this object.
         droplets[i] = RedHen_2DPhysics.
         lastObjectCreated();
@@ -182,19 +203,23 @@ function makeGround(){
         //bods[bods.length-1].makeStatic();
         //bods[bods.length-1].OSR = false;
     
-    for (let i = 0; i < 42; i++){
-        let boxSize = Math.random()*12 + 2;
+    // Create loads of balls in air.
+    for (let i = 0; i < 444; i++){
+        let oSize = Math.random()*12 + 2;
         
-        RedHen_2DPhysics.newObj ('circle', Math.random()*width, Math.random()*height-height/2, boxSize);
+        RedHen_2DPhysics.newObj ('circle', Math.random()*width*3 - width, Math.random()*height*2-height*3, oSize);
        
         RedHen_2DPhysics.lastObjectCreated().
         fill = color(0,Math.random()*255,0);
         RedHen_2DPhysics.lastObjectCreated().
         strokeWeight = 2;
         RedHen_2DPhysics.lastObjectCreated().
+        //makeStatic();
         makeSleep(true);
         RedHen_2DPhysics.lastObjectCreated().
         OSR = false;
+        RedHen_2DPhysics.lastObjectCreated().bod.
+        label = 'digit';
     }
     
 }
