@@ -11,6 +11,10 @@ let skyTint;
 let oldestDroplet = 0;
 let droplets = [];
 
+// Array to store each 'ground stalk'.
+let gStalk = [];
+let gY;
+
 //p5.disableFriendlyErrors = true;
 
 function setup(){
@@ -28,8 +32,8 @@ function setup(){
         
     setupBoo();
     
-    makeGround(0);
-    makeGround(width);
+    makeGround(-width);
+    moveGround(boo.oX-width);
     createDigitBalls();
    
     // Test. Can we create an objects pool?
@@ -92,10 +96,11 @@ function draw(){
     boo.speedLimit();
     boo.render();
     
-    boo.trackX = boo.myBod.bod.position.x - boo.oX;
+    boo.trackX = 
+                Math.abs(boo.myBod.bod.position.x - boo.oX);
     if (boo.trackX > width){
         boo.oX = boo.myBod.bod.position.x;
-        makeGround(boo.oX+width/2);
+        moveGround(boo.oX-width);
     }
     
         
@@ -191,6 +196,10 @@ function spawnBall(_x,_y,_sz){
     RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
 }
 
+let totalW = 0; // Total width so far.
+let maxWid = 9;
+let minWid = 9;
+
 function makeGround(_originX){
         
     // What we want to do is create, like,
@@ -198,16 +207,18 @@ function makeGround(_originX){
     // programmatically generates interesting,
     // beautiful, and unexpected features.
     
-    let totalW = 0; // Total width so far.
-    let maxWid = 9;
-    let minWid = 9;
-    let gY = height + height/2;    // Y position.
+    gY = height * 2;    // Y position.
+    
+    totalW = 0; // Total width so far.
+    maxWid = 9;
+    minWid = 9;
+    
 
     noiseSeed(9);
     let ampl = height*3;
     let res = height;
     
-    for (let i = 0; totalW < width; i++){
+    for (let i = 0; totalW < width * 3; i++){
         
         let thisWidth = maxWid;
     
@@ -218,22 +229,49 @@ function makeGround(_originX){
         ('rectangle', _originX + totalW + thisWidth/2, 
          gY + noiseF/2 - ampl/2, 
          thisWidth, height);
+        
+        gStalk[i] = RedHen_2DPhysics.lastObjectCreated();
+        
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
         //RedHen_2DPhysics.lastObjectCreated().
         //makeAngle(Math.random()*3);
         RedHen_2DPhysics.lastObjectCreated().
         makeStatic();
         RedHen_2DPhysics.lastObjectCreated().
-        fill = color(0,Math.random()*255,0);
+        fill = color(0,101,0);
         RedHen_2DPhysics.lastObjectCreated().
         stroke = RedHen_2DPhysics.lastObjectCreated().
         fill; 
         
         totalW += thisWidth;
     }
+}
     
+function moveGround(_originX){
+    // What we want to do is create, like,
+    // modular ground. A modular terrain that
+    // programmatically generates interesting,
+    // beautiful, and unexpected features.
     
+    let totalW = 0; // Total width so far.
+
+    noiseSeed(9);
+    let ampl = height*3;
+    let res = height;
     
+    for (let i = 0; i < gStalk.length; i++){
+        
+        let thisWidth = maxWid;
+    
+        let noiseF = noise((_originX + totalW + thisWidth/2)/res)
+        *ampl;
+        
+        gStalk[i].makePosition(
+            _originX - width/2 + totalW + thisWidth/2, 
+            gY + noiseF/2 - ampl/2);  
+        
+        totalW += thisWidth;
+    } 
 }
 
 function legacyGround(){
