@@ -28,7 +28,9 @@ function setup(){
         
     setupBoo();
     
-    makeGround();
+    makeGround(0);
+    makeGround(width);
+    createDigitBalls();
    
     // Test. Can we create an objects pool?
     // This will bypass the problem of the
@@ -40,8 +42,6 @@ function setup(){
 function setupBoo(){
     // Test. Can we make our first Ghost Object?
     boo = new SpaceBuddha(width/2, height/2, 32);
-    RedHen_2DPhysics.lastObjectCreated().OSR = false;
-    RedHen_2DPhysics.lastObjectCreated().bod.label = 'boo';
 }
 
 function myCollision(event){
@@ -75,7 +75,6 @@ function draw(){
     
     skyTint = map(  boo.myBod.bod.position.y,
                     height*3, -height*5, 222, 0);
-    
     // Orig tints = (0,111,222);
     background(0,skyTint/2,skyTint);
     // printInstructions();
@@ -84,7 +83,7 @@ function draw(){
             Math.random()*width-width/2,
         boo.myBod.bod.position.y - height/2);
     
-    //RedHen_2DPhysics.checkInputgGlobalMovement();
+    // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
     
@@ -92,6 +91,14 @@ function draw(){
     boo.control();
     boo.speedLimit();
     boo.render();
+    
+    boo.trackX = boo.myBod.bod.position.x - boo.oX;
+    if (boo.trackX > width){
+        boo.oX = boo.myBod.bod.position.x;
+        makeGround(boo.oX+width/2);
+    }
+    
+        
    
 }
 
@@ -184,8 +191,53 @@ function spawnBall(_x,_y,_sz){
     RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
 }
 
-function makeGround(){
-        // Ground.
+function makeGround(_originX){
+        
+    // What we want to do is create, like,
+    // modular ground. A modular terrain that
+    // programmatically generates interesting,
+    // beautiful, and unexpected features.
+    
+    let totalW = 0; // Total width so far.
+    let maxWid = 9;
+    let minWid = 9;
+    let gY = height + height/2;    // Y position.
+
+    noiseSeed(9);
+    let ampl = height*3;
+    let res = height;
+    
+    for (let i = 0; totalW < width; i++){
+        
+        let thisWidth = maxWid;
+    
+        let noiseF = noise((_originX + totalW + thisWidth/2)/res)
+        *ampl;
+        
+        RedHen_2DPhysics.newObj
+        ('rectangle', _originX + totalW + thisWidth/2, 
+         gY + noiseF/2 - ampl/2, 
+         thisWidth, height);
+        RedHen_2DPhysics.lastObjectCreated().OSR = false;
+        //RedHen_2DPhysics.lastObjectCreated().
+        //makeAngle(Math.random()*3);
+        RedHen_2DPhysics.lastObjectCreated().
+        makeStatic();
+        RedHen_2DPhysics.lastObjectCreated().
+        fill = color(0,Math.random()*255,0);
+        RedHen_2DPhysics.lastObjectCreated().
+        stroke = RedHen_2DPhysics.lastObjectCreated().
+        fill; 
+        
+        totalW += thisWidth;
+    }
+    
+    
+    
+}
+
+function legacyGround(){
+    // Ground.
         let mySize = height/4;
         RedHen_2DPhysics.newObj
         ("rectangle",width/2,height-mySize,width*1000,mySize);
@@ -194,16 +246,10 @@ function makeGround(){
         bods[bods.length-1].stroke = color(0,200,0);
         bods[bods.length-1].strokeWeight = 4;
         bods[bods.length-1].OSR = false;
-        // Invisible edges.
-        //RedHen_2DPhysics.newObj ("GhostRectangle",0-10,height/2,20,height);
-        //bods[bods.length-1].makeStatic();
-        //bods[bods.length-1].OSR = false;
-        //RedHen_2DPhysics.newObj ("GhostRectangle",width+
-        //10,height/2,20,height);
-        //bods[bods.length-1].makeStatic();
-        //bods[bods.length-1].OSR = false;
-    
-    // Create loads of balls in air.
+}
+
+function createDigitBalls(){
+    // Create loads of 'digit' balls in air.
     for (let i = 0; i < 444; i++){
         let oSize = Math.random()*12 + 2;
         
@@ -221,9 +267,7 @@ function makeGround(){
         RedHen_2DPhysics.lastObjectCreated().bod.
         label = 'digit';
     }
-    
 }
-
 
 function printInstructions(){
     textSize(20); stroke(0); fill(255);

@@ -21,8 +21,15 @@ class GhostO {
         this.myBod = 
         RedHen_2DPhysics.lastObjectCreated();
         
+        // Label him 'boo' and switch off OSR.
+        RedHen_2DPhysics.lastObjectCreated().OSR = false;
+        RedHen_2DPhysics.lastObjectCreated().bod.label = 'boo';
+        
         this.width = _width*4;
         this.height = _height;
+        
+        this.trackX = 0; // Movement relative to oX.
+        this.oX = this.myBod.bod.position.x;
     }
     
     render(){
