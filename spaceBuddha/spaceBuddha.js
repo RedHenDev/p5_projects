@@ -88,11 +88,15 @@ function draw(){
     background(0,skyTint/2,skyTint);
     // printInstructions();
     
+    if (frameCount % 60 === 0){
+        spawnBlock(width, 32, Math.random()*50+50);
+    } 
+    
     // Generate boo bubbles.
     //if (frameCount % 1 === 0) 
     spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
-                 boo.myBod.bod.velocity.x*22,
-         boo.myBod.bod.position.y + 101);
+                 boo.myBod.bod.velocity.x*12,
+         boo.myBod.bod.position.y + boo.height);
     
     // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
@@ -142,7 +146,7 @@ function setupObjectPool(){
     let numObjs = 222;
     
     for (let i = 0; i < numObjs; i++){
-        spawnBall(-99,-99, Math.random()*8+5);
+        spawnBall(-99,-99, Math.random()*8+2);
         // Grab this object.
         droplets[i] = RedHen_2DPhysics.
         lastObjectCreated();
@@ -196,6 +200,7 @@ function spawnBlock(_x,_y,_sz){
     RedHen_2DPhysics.lastObjectCreated().stroke = 
         color(0);
     RedHen_2DPhysics.lastObjectCreated().strokeWeight = 1;
+    RedHen_2DPhysics.lastObjectCreated().OSR = false;
 }
 
 function spawnBall(_x,_y,_sz){
@@ -203,7 +208,7 @@ function spawnBall(_x,_y,_sz){
     
     RedHen_2DPhysics.lastObjectCreated().OSR = false;
     RedHen_2DPhysics.lastObjectCreated().fill = 
-        color(255,69);
+        color(255,Math.random()*100+69);
     RedHen_2DPhysics.lastObjectCreated().stroke = 
         color(255);
     RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
