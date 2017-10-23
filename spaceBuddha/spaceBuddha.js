@@ -15,10 +15,13 @@ let droplets = [];
 let gStalk = [];
 let gY;
 let totalW = 0; // Total width so far.
-let maxWid = 14; // 9 is quite good. 14 also.
+let maxWid = 33; // 9 is quite good. 14 also.
 let minWid = 1; // Legacy...
 let ampl;       // Default is height*3.
 let res;        // Default is height.
+
+// Testing new terrain generator...
+let urizen;
 
 //p5.disableFriendlyErrors = true;
 
@@ -37,8 +40,12 @@ function setup(){
         
     setupBoo();
     
-    makeGround(-width);
-    moveGround(boo.oX-width);
+    //makeGround(-width);
+    //moveGround(boo.oX-width);
+    
+    // Here we goooooo...
+    urizen = new GSterrain(44);
+    
     createDigitBalls();
    
     // Test. Can we create an objects pool?
@@ -111,20 +118,27 @@ function draw(){
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
     
-   
+    // Work out when to move the infinite terrain.
+    // note that previous version of terrain generator
+    // use 'width' instead of 'urizen.width'.
+    // NB ***0.905*** -- to adjust for Perlin 'shift'.
+    boo.trackX = 
+                Math.abs(boo.myBod.bod.position.x - boo.oX);
+    if (boo.trackX > urizen.width){
+        //moveGround(boo.oX-width);
+        boo.oX = boo.myBod.bod.position.x;
+        urizen.moveTerrain(boo.myBod.bod.velocity.x > 0);
+        
+    }
     
     RedHen_2DPhysics.updateObjs();
     boo.control();// NB. contains speedlimiter.
     //boo.speedLimit();
     boo.render();
-  
-    // Work out when to move the infinite terrain.
-    boo.trackX = 
-                Math.abs(boo.myBod.bod.position.x - boo.oX);
-    if (boo.trackX > width){
-        boo.oX = boo.myBod.bod.position.x;
-        moveGround(boo.oX-width);
-    }
+    
+    urizen.renderTerrain();
+    
+   
 
 }
 

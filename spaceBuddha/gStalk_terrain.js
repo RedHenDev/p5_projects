@@ -1,13 +1,13 @@
 // Infinite 2D terrain using Perlin noise.
 
 // Each 'gStalk' will need to keep a track of two things:
-// who its neighbour(s) are. Oh, and position, shape, colour, etc.
+// who its neighbour(s) are. Oh, and colour, etc.
 
 // Additionally, then, we need a 'manager', whose job will simply enough be to keep a track of which two gStalks are the current 'edge stalks' -- left and right (negative and positive).
 
-
+// Width of each individual stalk.
 class GSterrain{
-    constructor(_wid, _span, _xBegin){
+    constructor(_width){
         // Constructor will have to
         // create then store how many
         // gStalks needed to fit across
@@ -21,63 +21,107 @@ class GSterrain{
         
         this.width = _width;    // Width of each gStalk.
         this.height = height*2; // Height of each gStalk.
-        this.xBegin = _xBegin;  // Where to start span. 
+        this.xBegin = 0;  // Where to start span. 
         this.yPos = height*3;      // Y position.
+        
         this.seed = 9;
+        this.amplitude = height*3;
+        this.resolution = height;
+        
+        this.span = width+_width*4;
         
         this.gStalks = [];      // Array of gStalks.
         
         this.lEdge = null;
         this.rEdge = null;
+        
+        // Generate terrain, which will include
+        // populating the gStalks arrary as well as
+        // determinging lEdge and rEdge.
+        this.genTerrain();
+        
+    }
+    
+    renderTerrain(){
+        for (let i = 0; i < this.gStalks.length; i++){
+            this.gStalks[i].render();
+        }
     }
     
     // Bool moving right?
     moveTerrain(_goingRight){
         if (_goingRight){
-            
+            console.log("Rainbows glimmer.");
+            // Current right edge gets new neighbour (r).
+            // New right edge gets new neighbour (l).
+            this.gStalks[this.rEdge].Rneighbour =
+            this.lEdge;
+            this.gStalks[this.lEdge].Lneighbour =
+            this.rEdge;
+            // Right edge is now, then, current left edge.
+            this.rEdge = this.lEdge;
+            this.gStalks[this.lEdge].moveMe
+            ('right');
+            // Left edge index is now current left edge's
+            // right neighbour (which is just its index).
+            // Will this cause self-referential prob?
+            // To fix, just use a third term.
+            this.lEdge =
+            this.gStalks[this.lEdge].Rneighbour;
         }
         else if (!_goingRight){
             console.log("Unicorns are fancy.");
+            // Current right edge gets new neighbour (l).
+            // New left edge gets new neighbour (r).
+            this.gStalks[this.lEdge].Lneighbour =
+            this.rEdge;
+            this.gStalks[this.rEdge].Rneighbour =
+            this.lEdge;
+            // Left edge will become current right edge.
+            this.lEdge = this.rEdge;
+            this.gStalks[this.lEdge].moveMe
+            ('left');
+            // Right edge index is now current right edge's
+            // left neighbour (which is just its index).
+            this.rEdge =
+            this.gStalks[this.rEdge].Lneighbour;
         }
+        
     }
     
     // Generate new terrain.
     genTerrain(){
     
-        let amplitude = height*3;
-        let resolution = height;
-    
+        // Individual stalk width.
+        // We use this here so as to be able
+        // to be variable at a later stage...
         let thisWidth = this.width;
         
         totalW = 0; // Total width so far.
 
         noiseSeed(this.seed);
     
-        for (let i = 0; totalW < width * 3; i++){
+        for (let i = 0; totalW < this.span; i++){
         
         let xOffset = this.xBegin + totalW + thisWidth/2;
         
-        let noiseF = noise(xOffset/resolution)
-        *amplitude;
+        let noiseF = noise(xOffset/this.resolution)
+        *this.amplitude;
         
         // Spawn a new stalk body with matter.js.
         RedHen_2DPhysics.newObj
-        ('rectangle', xOffset, 
-         this.yPos + noiseF/2 - amplitude/2, 
+        ('GhostRectangle', xOffset, 
+         this.yPos + noiseF/2 - this.amplitude/2, 
          thisWidth, this.height);
         // ...and grab this body.
-        this.gStalks[i] =
-            RedHen_2DPhysics.lastObjectCreated();
+        // Note here that we are for the
+        // first time populating this array.
+        this.gStalks. 
+            push(new Gstalk(i, this));
         
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
         RedHen_2DPhysics.lastObjectCreated().
         makeStatic();
-        RedHen_2DPhysics.lastObjectCreated().
-        fill = color(0,Math.random()*100+155,0);
-        RedHen_2DPhysics.lastObjectCreated().
-        stroke = color(255,100);
-        //RedHen_2DPhysics.lastObjectCreated().
-        //fill; 
         
         totalW += thisWidth;  
     }   // End of for loop.
@@ -86,31 +130,92 @@ class GSterrain{
         // Well, rEdge the only mystery.
         this.lEdge = 0;
         this.rEdge = this.gStalks.length-1;
+    }
     
 }   // End of GSterrain object.
 
 class Gstalk{
-    constructor(_Lneighbour, _Rneighbour,
-                _x, _y,
-                _width, _height,
-                _fill,
-                _matterBody){
-        this.Lneighbour = _Lneighbour;
-        this.Rneighbour = _Rneighbour;
+    constructor(_index, _parent){
         
-        this.x = _x;
-        this.y = _y;
+        // These are just indeces, not
+        // the objects themselves!
+        this.Lneighbour = _index -1;
+        this.Rneighbour = _index +1;
         
-        this.width = _width;
-        this.height = _height;
+        this.index = _index;
+        this.parent = _parent;
         
-        this.fill = _fill;
+        this.fill = color(0,Math.random()*100+155,0);
         
-        this.body = _matterBody;
+        this.myBody = 
+        RedHen_2DPhysics.lastObjectCreated();
     }
     
-    moveMe(_x, _y){
-        this.body.makePosition(_x, _y);
+    render(){
+        
+        push();
+        fill(this.fill);
+        stroke(color(255,42));
+        
+        translate(this.myBody.bod.position.x,
+                 this.myBody.bod.position.y);
+        
+        rect(0,0,   this.myBody.width,
+                    this.myBody.height);
+        pop();
+    }
+    
+    moveMe(_leftORright){
+        
+        if (_leftORright === 'right'){
+            // Calculate noise here.
+            
+            let xOffset = this.parent.gStalks[
+                    this.parent.gStalks[
+                    this.parent.rEdge].Lneighbour].
+            myBody.bod.position.x + 
+                this.parent.gStalks[
+                    this.parent.rEdge].
+            myBody.width/2;
+            
+            let noiseF = noise(
+                xOffset
+                /this.parent.resolution)
+                *this.parent.amplitude;
+        
+        this.myBody.makePosition(
+            xOffset + this.parent.gStalks[
+                    this.parent.rEdge].
+            myBody.width/2, 
+            this.parent.yPos + noiseF/2 - 
+            this.parent.amplitude/2); 
+            
+        }
+        else if (_leftORright === 'left'){
+            //this.myBody.makePosition(_x, _y);
+            console.log("Can't be doing anything yet like.");
+            
+             let xOffset = this.parent.gStalks[
+                    this.parent.gStalks[
+                    this.parent.lEdge].Rneighbour].
+            myBody.bod.position.x - 
+                this.parent.gStalks[
+                    this.parent.lEdge].
+            myBody.width/2;
+            
+            let noiseF = noise(
+                xOffset
+                /this.parent.resolution)
+                *this.parent.amplitude;
+        
+        this.myBody.makePosition(
+            xOffset - this.parent.gStalks[
+                    this.parent.lEdge].
+            myBody.width/2, 
+            this.parent.yPos + noiseF/2 - 
+            this.parent.amplitude/2); 
+            
+        }
     }
 }
 
