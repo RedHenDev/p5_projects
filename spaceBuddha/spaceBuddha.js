@@ -111,11 +111,13 @@ function draw(){
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
     
+   
+    
     RedHen_2DPhysics.updateObjs();
     boo.control();// NB. contains speedlimiter.
     //boo.speedLimit();
     boo.render();
-    
+  
     // Work out when to move the infinite terrain.
     boo.trackX = 
                 Math.abs(boo.myBod.bod.position.x - boo.oX);
@@ -125,6 +127,9 @@ function draw(){
     }
 
 }
+
+
+ 
 
 // ***** INPUT and OTHER FUNCTIONS *****
 
@@ -232,7 +237,7 @@ function makeGround(_originX){
     // programmatically generates interesting,
     // beautiful, and unexpected features.
     
-    gY = height * 2;    // Y position.
+    gY = height * 3;    // Y position.
     ampl = height*3;
     res = height;
     
