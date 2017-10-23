@@ -15,8 +15,10 @@ let droplets = [];
 let gStalk = [];
 let gY;
 let totalW = 0; // Total width so far.
-let maxWid = 14;
-let minWid = 1;
+let maxWid = 14; // 9 is quite good. 14 also.
+let minWid = 1; // Legacy...
+let ampl;       // Default is height*3.
+let res;        // Default is height.
 
 //p5.disableFriendlyErrors = true;
 
@@ -86,10 +88,17 @@ function draw(){
                     height*3, -height*5, 222, 0);
     // Orig tints = (0,111,222);
     background(0,skyTint/2,skyTint);
-    // printInstructions();
     
-    if (frameCount % 60 === 0){
+    // See frameCount etc.
+    printInstructions();
+    
+    if (frameCount % 60 === 0 &&
+       frameCount < 1024){
         spawnBlock(width, 32, Math.random()*50+50);
+         // Give him a little kick ;)
+        let force = createVector(-0.03,-0.1);
+    RedHen_2DPhysics.lastObjectCreated().
+        addForce(force);
     } 
     
     // Generate boo bubbles.
@@ -103,8 +112,8 @@ function draw(){
                 -boo.myBod.bod.position.y+height/2);
     
     RedHen_2DPhysics.updateObjs();
-    boo.control();
-    boo.speedLimit();
+    boo.control();// NB. contains speedlimiter.
+    //boo.speedLimit();
     boo.render();
     
     // Work out when to move the infinite terrain.
@@ -143,7 +152,7 @@ function spawnDroplet(_x, _y, _size){
 
 function setupObjectPool(){
     
-    let numObjs = 222;
+    let numObjs = 111;
     
     for (let i = 0; i < numObjs; i++){
         spawnBall(-99,-99, Math.random()*8+2);
@@ -156,7 +165,7 @@ function setupObjectPool(){
         //RedHen_2DPhysics.lastObjectCreated().
         //makeMass(10);
         RedHen_2DPhysics.
-        lastObjectCreated().bod.restitution = 0.2;
+        lastObjectCreated().bod.restitution = 0.9;
         RedHen_2DPhysics.
         lastObjectCreated().bod.frictionAir = 0.8;
         
@@ -218,30 +227,32 @@ function spawnBall(_x,_y,_sz){
 
 function makeGround(_originX){
         
-    // What we want to do is create, like,
+    // What we want to do is create is a
     // modular ground. A modular terrain that
     // programmatically generates interesting,
     // beautiful, and unexpected features.
     
     gY = height * 2;    // Y position.
+    ampl = height*3;
+    res = height;
     
     totalW = 0; // Total width so far.
 
     noiseSeed(9);
-    let ampl = height*3;
-    let res = height;
     
     for (let i = 0; totalW < width * 3; i++){
         
         let thisWidth = maxWid;
     
-        let noiseF = noise((_originX + totalW + thisWidth/2)/res)
+        let xOffset = _originX + totalW + thisWidth/2;
+        
+        let noiseF = noise(xOffset/res)
         *ampl;
         
         RedHen_2DPhysics.newObj
-        ('rectangle', _originX + totalW + thisWidth/2, 
+        ('rectangle', xOffset, 
          gY + noiseF/2 - ampl/2, 
-         thisWidth, height);
+         thisWidth, height*2);
         
         gStalk[i] = RedHen_2DPhysics.lastObjectCreated();
         
@@ -253,35 +264,33 @@ function makeGround(_originX){
         RedHen_2DPhysics.lastObjectCreated().
         fill = color(0,149,0);
         RedHen_2DPhysics.lastObjectCreated().
-        stroke = color(0,100);
-        //RedHen_2DPhysics.lastObjectCreated().
-        //fill; 
+        stroke = //color(0,100);
+        RedHen_2DPhysics.lastObjectCreated().
+        fill; 
         
         totalW += thisWidth;
     }
 }
     
 function moveGround(_originX){
-    // What we want to do is create, like,
+    // What we want to do is create a
     // modular ground. A modular terrain that
     // programmatically generates interesting,
     // beautiful, and unexpected features.
     
     let totalW = 0; // Total width so far.
-
-    noiseSeed(9);
-    let ampl = height*3;
-    let res = height;
     
     for (let i = 0; i < gStalk.length; i++){
         
         let thisWidth = maxWid;
     
-        let noiseF = noise((_originX + totalW + thisWidth/2)/res)
+        let xOffset = _originX + totalW + thisWidth/2;
+        
+        let noiseF = noise(xOffset/res)
         *ampl;
         
         gStalk[i].makePosition(
-            _originX - width/2 + totalW + thisWidth/2, 
+            xOffset - width/2, 
             gY + noiseF/2 - ampl/2);  
         
         totalW += thisWidth;
@@ -322,10 +331,14 @@ function createDigitBalls(){
 }
 
 function printInstructions(){
+    
     textSize(20); stroke(0); fill(255);
-    text("Tap left of screen for blocks, right for balls. Objects can also be moved around :)", 32,32);
-    fill(0,200,0);
-    text("Arrow keys to control Blinkie; use + or - to change size :D", 32,62);
-    fill(0,0,200);
-    text("WSAD to move environment; space-bar for zero-gravity; g for usual gravity :O", 32, 92);
+    text("Frame = " + frameCount, 32,32);
+    
+//    textSize(20); stroke(0); fill(255);
+//    text("Tap left of screen for blocks, right for balls. Objects can also be moved around :)", 32,32);
+//    fill(0,200,0);
+//    text("Arrow keys to control Blinkie; use + or - to change size :D", 32,62);
+//    fill(0,0,200);
+//    text("WSAD to move environment; space-bar for zero-gravity; g for usual gravity :O", 32, 92);
 }
