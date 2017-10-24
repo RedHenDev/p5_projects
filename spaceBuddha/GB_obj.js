@@ -45,19 +45,22 @@ class SpaceBuddha extends GhostO{
         super(_x, _y, _radius*2, _radius*2, "GhostCircle");
         
         // Maximum velocity.
-        this.maxV = 7;
+        this.maxV = 4;
         
         // Array of high airFriction 'bubbles'.
         this.bubbles = [];
+        this.bubblesON = false;
+        this.minB = 4;      // Min bubble size.
+        this.maxB = 12;     // Max bubble size.
         this.oldestBubble = 0;
-        this.setupBubblePool(44);
+        this.setupBubblePool(111);
     }
     
     render(){
         push();
         fill(255,72);
         stroke(255,200);
-        strokeWeight(4);
+        strokeWeight(2);
         translate(  this.myBod.bod.position.x,
                     this.myBod.bod.position.y);
         
@@ -74,11 +77,15 @@ class SpaceBuddha extends GhostO{
     }
     
     spawnBubbles(){
-        
+        if (this.bubblesON===false) return;
         // Where do we want bubbles to spawn?
         let _x = this.myBod.bod.position.x + 
-        Math.random()*this.width*2 - this.width;
-        let _y = this.myBod.bod.position.y + this.height;
+        Math.random()*this.width*2 - this.width +
+            this.myBod.bod.velocity.x*10;
+        let _y = this.myBod.bod.position.y + 
+        this.height*2 + Math.random()*this.width*2 -
+            this.width -
+            Math.abs(this.myBod.bod.velocity.x*10);
         
         // First, grab an available droplet.
         // If none available, then just grab...which one?
@@ -107,7 +114,8 @@ class SpaceBuddha extends GhostO{
     
         for (let i = 0; i < numObjs; i++){
             this.createBubble
-            (-99,-99, Math.random()*8+2);
+            (-99,-99, Math.random()*
+             (this.maxB-this.minB)+this.minB);
             // Grab this object.
             this.bubbles[i] = RedHen_2DPhysics.
             lastObjectCreated();
@@ -169,7 +177,7 @@ class SpaceBuddha extends GhostO{
     
     control(){
         let xF = 0.03;
-        let yF = 0.03;
+        let yF = 0.01;
         
         if (this.speedLimit('x')){
             xF = 0;

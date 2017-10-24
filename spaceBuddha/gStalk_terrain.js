@@ -21,8 +21,8 @@ class GSterrain{
         
         this.width = _width;    // Width of each gStalk.
         this.height = height*2; // Height of each gStalk.
-        this.xBegin = 0 - _width;  // Where to start span. 
-        this.yPos = height*3;      // Y position.
+        this.xBegin = 0 - _width*5;  // Where to start span. 
+        this.yPos = height*4;      // Y position.
         
 //        this.seed = 9;
 //        this.amplitude = height*3;
@@ -31,7 +31,7 @@ class GSterrain{
         this.amplitude = height*5;
         this.resolution = height;
         
-        this.span = width + _width * 2;
+        this.span = width + _width * 10;
         
         this.gStalks = [];      // Array of gStalks.
         
@@ -54,7 +54,7 @@ class GSterrain{
     // Bool moving right?
     moveTerrain(_goingRight){
         if (_goingRight){
-            console.log("Rainbows glimmer.");
+            //console.log("Rainbows glimmer.");
             // Current right edge gets new neighbour (r).
             // New right edge gets new neighbour (l).
             this.gStalks[this.rEdge].Rneighbour =
@@ -73,7 +73,7 @@ class GSterrain{
             this.gStalks[this.lEdge].Rneighbour;
         }
         else if (!_goingRight){
-            console.log("Unicorns are fancy.");
+            //console.log("Unicorns are fancy.");
             // Current right edge gets new neighbour (l).
             // New left edge gets new neighbour (r).
             this.gStalks[this.lEdge].Lneighbour =
@@ -169,6 +169,8 @@ class Gstalk{
                     this.myBody.height);
         
         // Pattern of 'boxes'.
+        // Number of levels = 4.
+        // For all layers, use nOb.
         let nOb = this.myBody.height/this.myBody.width;
         for (let i = 0; i < 4; i++){
             
@@ -217,7 +219,7 @@ class Gstalk{
         }
         else if (_leftORright === 'left'){
             //this.myBody.makePosition(_x, _y);
-            console.log("Can't be doing anything yet like.");
+            //console.log("Can't be doing anything yet like.");
             
              let xOffset = this.parent.gStalks[
                     this.parent.gStalks[

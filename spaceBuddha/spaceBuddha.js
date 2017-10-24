@@ -118,8 +118,8 @@ function draw(){
     
     RedHen_2DPhysics.updateObjs();
     boo.control();// NB. contains speedlimiter.
-    //boo.speedLimit();
-    //boo.render();
+    
+    boo.render();
     
     // Work out when to move the infinite terrain.
     // note that previous version of terrain generator
@@ -145,6 +145,9 @@ function mouseDragged(){
 }
 
 function touchEnded(){
+    
+    boo.bubblesON = !boo.bubblesON;
+    
     if (canSpawn && mouseX < width/2){
         spawnBlock(mouseX, mouseY, 28);
     }
@@ -201,7 +204,10 @@ function createDigitBalls(){
 function printInstructions(){
     
     textSize(20); stroke(0); fill(255);
-    text("Frame = " + frameCount, 32,32);
+    text("Position = " + 
+         Math.round(boo.myBod.bod.position.x), 32,32);
     text("FPS = " + Math.floor(frameRate()), 32,64);
+    
+    text("Tap/Click to toggle crash bubbles", width/2, 32);
     
 }
