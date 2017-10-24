@@ -32,7 +32,7 @@ function setup(){
     setupBoo();
     
     // Here we goooooo...
-    urizen = new GSterrain(32);
+    urizen = new GSterrain(51);
     
     // Celestial orbs that can be woken/put to sleep
     // depending on collision speed with boo.

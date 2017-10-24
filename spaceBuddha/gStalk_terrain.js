@@ -29,7 +29,7 @@ class GSterrain{
 //        this.resolution = height;
         this.seed = 9;
         this.amplitude = height*5;
-        this.resolution = height*5;
+        this.resolution = height;
         
         this.span = width + _width * 2;
         
@@ -147,7 +147,8 @@ class Gstalk{
         this.index = _index;
         this.parent = _parent;
         
-        this.fill = color(0,Math.random()*100+42,0);
+        //this.fill = color(0,Math.random()*100+42,0);
+        this.fill = color(0,22,0);
         
         this.myBody = 
         RedHen_2DPhysics.lastObjectCreated();
@@ -169,7 +170,7 @@ class Gstalk{
         
         // Pattern of 'boxes'.
         let nOb = this.myBody.height/this.myBody.width;
-        for (let i = 0; i < nOb/2; i++){
+        for (let i = 0; i < 4; i++){
             
             fill(0,i*12+100,0);
             if (i%2===0)

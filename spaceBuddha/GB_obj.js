@@ -140,8 +140,8 @@ class SpaceBuddha extends GhostO{
         RedHen_2DPhysics.newObj("circle", _x, _y, _sz);
 
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
-        RedHen_2DPhysics.lastObjectCreated().fill = 
-        color(255,Math.random()*100+69);
+        //RedHen_2DPhysics.lastObjectCreated().fill = 
+        //color(255,Math.random()*100+69);
         RedHen_2DPhysics.lastObjectCreated().
         stroke = color(0);
         RedHen_2DPhysics.lastObjectCreated().
