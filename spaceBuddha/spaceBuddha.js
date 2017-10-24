@@ -23,7 +23,7 @@ let res;        // Default is height.
 // Testing new terrain generator...
 let urizen;
 
-//p5.disableFriendlyErrors = true;
+p5.disableFriendlyErrors = true;
 
 function setup(){
     // Remember to assign value of canvas like this :)
@@ -44,7 +44,7 @@ function setup(){
     //moveGround(boo.oX-width);
     
     // Here we goooooo...
-    urizen = new GSterrain(32);
+    urizen = new GSterrain(99);
     
     createDigitBalls();
    
@@ -59,7 +59,7 @@ function setupBoo(){
     // Test. Can we make our first Ghost Object?
     boo = new SpaceBuddha(Math.round(width/2),
                           Math.round(height/2),
-                          32);
+                          22);
 }
 
 function myCollision(event){
@@ -115,7 +115,7 @@ function draw(){
     spawnDroplet (                       
         boo.myBod.bod.position.x + 
         Math.random()*boo.width*2 - boo.width,
-        boo.myBod.bod.position.y + boo.height/1.2);
+        boo.myBod.bod.position.y + boo.height);
     
 //    spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
 //                 boo.myBod.bod.velocity.x*12,
@@ -178,7 +178,7 @@ function spawnDroplet(_x, _y, _size){
 
 function setupObjectPool(){
     
-    let numObjs = 88;
+    let numObjs = 44;
     
     for (let i = 0; i < numObjs; i++){
         spawnBall(-99,-99, Math.random()*8+2);
@@ -191,9 +191,9 @@ function setupObjectPool(){
         //RedHen_2DPhysics.lastObjectCreated().
         //makeMass(10);
         RedHen_2DPhysics.
-        lastObjectCreated().bod.restitution = 0.9;
+        lastObjectCreated().bod.restitution = 0.8;
         RedHen_2DPhysics.
-        lastObjectCreated().bod.frictionAir = 0.8;
+        lastObjectCreated().bod.frictionAir = 0.9;
         
     }
 }
@@ -337,7 +337,7 @@ function legacyGround(){
 
 function createDigitBalls(){
     // Create loads of 'digit' balls in air.
-    for (let i = 0; i < 444; i++){
+    for (let i = 0; i < 111; i++){
         let oSize = Math.random()*12 + 2;
         
         RedHen_2DPhysics.newObj ('circle', Math.random()*width*3 - width, Math.random()*height*2-height*3, oSize);
@@ -360,6 +360,7 @@ function printInstructions(){
     
     textSize(20); stroke(0); fill(255);
     text("Frame = " + frameCount, 32,32);
+    text("FPS = " + Math.floor(frameRate()), 32,64);
     
 //    textSize(20); stroke(0); fill(255);
 //    text("Tap left of screen for blocks, right for balls. Objects can also be moved around :)", 32,32);
