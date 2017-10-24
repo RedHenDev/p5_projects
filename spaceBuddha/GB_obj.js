@@ -175,7 +175,10 @@ class SpaceBuddha extends GhostO{
         }
     }
     
-    control(){
+    // _WD is 'which direction'.
+    // To touch swipe can pass into this too from
+    // main .js file.
+    control(_WD){
         let xF = 0.03;
         let yF = 0.01;
         
@@ -186,19 +189,19 @@ class SpaceBuddha extends GhostO{
             yF = 0;
         }
        
-        if (keyIsDown(UP_ARROW)){
+        if (_WD === 'UP' || keyIsDown(UP_ARROW)){
             let force = createVector(0,-yF);
             this.myBod.addForce(force);
         }
-         if (keyIsDown(DOWN_ARROW)){
+         if (_WD === 'DOWN' || keyIsDown(DOWN_ARROW)){
             let force = createVector(0,yF);
             this.myBod.addForce(force);
         }
-         if (keyIsDown(LEFT_ARROW)){
+         if (_WD === 'LEFT' || keyIsDown(LEFT_ARROW)){
             let force = createVector(-xF,0);
             this.myBod.addForce(force);
         }
-         if (keyIsDown(RIGHT_ARROW)){
+         if (_WD === 'RIGHT' || keyIsDown(RIGHT_ARROW)){
             let force = createVector(xF,0);
             this.myBod.addForce(force);
         }

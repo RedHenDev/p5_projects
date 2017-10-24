@@ -51,9 +51,14 @@ class GSterrain{
         }
     }
     
-    // Bool moving right?
-    moveTerrain(_goingRight){
-        if (_goingRight){
+    // Bool moving right? RefPoint is subject's x.
+    moveTerrain(_goingRight, _refPointX){
+        // Will only move if will not
+        // remove a gStalk from screen.
+        if (_goingRight && 
+            Math.abs(this.gStalks[this.lEdge].
+            myBody.bod.position.x - _refPointX)
+           > width/2 + this.width){
             //console.log("Rainbows glimmer.");
             // Current right edge gets new neighbour (r).
             // New right edge gets new neighbour (l).
@@ -71,8 +76,16 @@ class GSterrain{
             // To fix, just use a third term.
             this.lEdge =
             this.gStalks[this.lEdge].Rneighbour;
+            
+            // Check to see if we need any more terrain.
+            if (Math.abs(this.gStalks[this.rEdge].
+            myBody.bod.position.x - _refPointX)
+           < width/2 + this.width/2)this.moveTerrain(true,_refPointX);
         }
-        else if (!_goingRight){
+        else if (!_goingRight && 
+            Math.abs(this.gStalks[this.rEdge].
+            myBody.bod.position.x - _refPointX)
+           > width/2 + this.width){
             //console.log("Unicorns are fancy.");
             // Current right edge gets new neighbour (l).
             // New left edge gets new neighbour (r).
@@ -88,6 +101,12 @@ class GSterrain{
             // left neighbour (which is just its index).
             this.rEdge =
             this.gStalks[this.rEdge].Lneighbour;
+            
+            // Check to see if we need any more terrain.
+            if (Math.abs(this.gStalks[this.lEdge].
+            myBody.bod.position.x - _refPointX)
+           < width/2 + this.width/2)this.moveTerrain(false,_refPointX);
+            
         }
         
     }

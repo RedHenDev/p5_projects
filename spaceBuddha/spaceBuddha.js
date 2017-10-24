@@ -2,10 +2,18 @@
 // This is to allow mouse/touch interaction to work.
 let canvas;
 
-let canSpawn = false;// Not moving obj, so can spawn obj.
+// Not moving obj, so can spawn obj.
+// See how this is handled in touchEnded() and
+// mouseDragged().
+let canSpawn = false;
+// For swiping.
+let mouseX_prev = 0;
+let mouseY_prev = 0;
 
 // Our subject.
 let boo;
+
+let blinkies = [];
 
 // To organise tint of sky.
 let skyTint;
@@ -30,6 +38,13 @@ function setup(){
         
     // Our subject.
     setupBoo();
+    
+    // AntBots!
+    for (let i = 0; i < 9; i++){
+        blinkies.push(new antBot(true,
+        Math.random()*width,
+        -height,Math.random()*4+0.8,true));
+    }
     
     // Here we goooooo...
     urizen = new GSterrain(51);
@@ -86,28 +101,9 @@ function draw(){
     // See frameCount etc.
     printInstructions();
     
-//    if (frameCount % 33 === 0 &&
-//       frameCount < 10240){
-//        spawnBlock(width, 32, Math.random()*50+9);
-//         // Give him a little kick ;)
-//        let force = createVector(-0.06,-0.1);
-//    RedHen_2DPhysics.lastObjectCreated().
-//        addForce(force);
-//    } 
-    
-    // Generate boo bubbles.
-    //if (frameCount % 2 === 0) 
-//    spawnDroplet (                       
-//        boo.myBod.bod.position.x + 
-//        Math.random()*boo.width*2 - boo.width,
-//        boo.myBod.bod.position.y + boo.height);
+    spitObjects();
     
     boo.spawnBubbles();
-    
-//    spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
-//                 boo.myBod.bod.velocity.x*12,
-//         boo.myBod.bod.position.y + boo.height/1.7);
-    
    
     
     // Move 'camera' to centre on boo.
@@ -115,6 +111,11 @@ function draw(){
                 -boo.myBod.bod.position.y+height/2);
     
     urizen.renderTerrain();
+    
+    for (let i = 0; i < blinkies.length; i++){
+        blinkies[i].think();
+        blinkies[i].render();
+    }
     
     RedHen_2DPhysics.updateObjs();
     boo.control();// NB. contains speedlimiter.
@@ -127,11 +128,16 @@ function draw(){
     // NB ***0.905*** -- to adjust for Perlin 'shift'.
     boo.trackX = 
                 Math.abs(boo.myBod.bod.position.x - boo.oX);
-    if (boo.trackX > urizen.width-
-        Math.abs(boo.myBod.bod.velocity.x/2)){
+    if (boo.trackX > urizen.width){
         //moveGround(boo.oX-width);
         boo.oX = boo.myBod.bod.position.x;
-        urizen.moveTerrain(boo.myBod.bod.velocity.x > 0);
+        // Loop a number of times, to make sure we
+        // have created enough terrain for the
+        // distance travelled.
+            urizen.moveTerrain(
+                boo.myBod.bod.velocity.x > 0,
+            boo.myBod.bod.position.x);
+        
     }
     
 }
@@ -142,20 +148,34 @@ function draw(){
 // ***** INPUT and OTHER FUNCTIONS *****
 function mouseDragged(){
     canSpawn = false;
+    
+    if (mouseX > mouseX_prev)
+        boo.control('RIGHT');
+    if (mouseX < mouseX_prev)
+        boo.control('LEFT');
+    
+    if (mouseY > mouseY_prev)
+        boo.control('DOWN');
+    if (mouseY < mouseY_prev)
+        boo.control('UP');
+    
+    mouseX_prev = mouseX;
+    mouseY_prev = mouseY;
 }
 
 function touchEnded(){
     
+    if (canSpawn)
     boo.bubblesON = !boo.bubblesON;
     
-    if (canSpawn && mouseX < width/2){
-        spawnBlock(mouseX, mouseY, 28);
-    }
-    if (canSpawn && mouseX > width/2){
-        spawnBall(mouseX, mouseY, 14);
-    }
+//    if (canSpawn && mouseX < width/2){
+//        spawnBlock(mouseX, mouseY, 28);
+//    }
+//    if (canSpawn && mouseX > width/2){
+//        spawnBall(mouseX, mouseY, 14);
+//    }
     
-    //canSpawn = true;
+    canSpawn = true;
 }
 
 function spawnBlock(_x,_y,_sz){
@@ -178,6 +198,17 @@ function spawnBall(_x,_y,_sz){
     RedHen_2DPhysics.lastObjectCreated().stroke = 
         color(0);
     RedHen_2DPhysics.lastObjectCreated().strokeWeight = 3;
+}
+
+function spitObjects(){
+        if (frameCount % 33 === 0 &&
+       frameCount < 10240){
+        spawnBlock(width/2, 32, Math.random()*50+9);
+         // Give him a little kick ;)
+        let force = createVector(-0.06,-0.1);
+    RedHen_2DPhysics.lastObjectCreated().
+        addForce(force);
+    } 
 }
 
 function createDigitBalls(){

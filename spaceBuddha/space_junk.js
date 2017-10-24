@@ -10,6 +10,21 @@ function setup(){
     //setupObjectPool();
 }
 
+//Legacy draw(){
+// Generate boo bubbles.
+    //if (frameCount % 2 === 0) 
+//    spawnDroplet (                       
+//        boo.myBod.bod.position.x + 
+//        Math.random()*boo.width*2 - boo.width,
+//        boo.myBod.bod.position.y + boo.height);
+    
+  
+    
+//    spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
+//                 boo.myBod.bod.velocity.x*12,
+//         boo.myBod.bod.position.y + boo.height/1.7);
+}
+
 let oldestDroplet = 0;
 let droplets = [];
 
