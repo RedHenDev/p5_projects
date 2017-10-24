@@ -129,8 +129,7 @@ class antBot {
         // NB This instantiation of
         // a matter-bod works with
         // the RedHen_2DPhysics class.
-        //RedHen_2DPhysics.newObj ("GhostRectangle", _x, _y, this.dm*this.scale,this.dm*this.scale*0.618);
-        RedHen_2DPhysics.newObj ("GhostRectangle", _x, _y+this.dm, this.dm*this.scale,this.dm*this.scale*1.1);
+        RedHen_2DPhysics.newObj ("GhostRectangle", _x, _y, this.dm*this.scale,this.dm*this.scale*0.618);
         // Switch off auto remove if
         // off-screen (OSR), since this can
         // cause mis-match between 

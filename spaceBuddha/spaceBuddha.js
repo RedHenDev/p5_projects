@@ -5,7 +5,7 @@ let canvas;
 // Not moving obj, so can spawn obj.
 // See how this is handled in touchEnded() and
 // mouseDragged().
-let canSpawn = false;
+let canSpawn = true;
 // For swiping.
 let mouseX_prev = 0;
 let mouseY_prev = 0;
@@ -40,10 +40,14 @@ function setup(){
     setupBoo();
     
     // AntBots!
-    for (let i = 0; i < 9; i++){
+    for (let i = 0; i < 3; i++){
         blinkies.push(new antBot(true,
         Math.random()*width,
         -height,Math.random()*4+0.8,true));
+        
+        // Bubbly air friction :)
+        RedHen_2DPhysics.
+        lastObjectCreated().bod.frictionAir = 0.3;
     }
     
     // Here we goooooo...
@@ -101,6 +105,9 @@ function draw(){
     // See frameCount etc.
     printInstructions();
     
+    // Spit blocks if boo in correct area.
+    if (boo.myBod.bod.position.x > -700 &&
+       boo.myBod.bod.position.x < 1000)
     spitObjects();
     
     boo.spawnBubbles();
@@ -113,6 +120,9 @@ function draw(){
     urizen.renderTerrain();
     
     for (let i = 0; i < blinkies.length; i++){
+        blinkies[i].brain.
+        setWayPoint(boo.myBod.bod.position.x,
+                    boo.myBod.bod.position.x)
         blinkies[i].think();
         blinkies[i].render();
     }
@@ -131,9 +141,7 @@ function draw(){
     if (boo.trackX > urizen.width){
         //moveGround(boo.oX-width);
         boo.oX = boo.myBod.bod.position.x;
-        // Loop a number of times, to make sure we
-        // have created enough terrain for the
-        // distance travelled.
+        
             urizen.moveTerrain(
                 boo.myBod.bod.velocity.x > 0,
             boo.myBod.bod.position.x);
@@ -141,9 +149,6 @@ function draw(){
     }
     
 }
-
-
- 
 
 // ***** INPUT and OTHER FUNCTIONS *****
 function mouseDragged(){
@@ -182,11 +187,11 @@ function spawnBlock(_x,_y,_sz){
     RedHen_2DPhysics.newObj("box", _x, _y, _sz);
     
     RedHen_2DPhysics.lastObjectCreated().fill = 
-        color(0,Math.random()*255,0);
+        color(Math.random()*205+50,101);
     RedHen_2DPhysics.lastObjectCreated().stroke = 
-        color(0);
+        color(255,0,255);
     RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
-    RedHen_2DPhysics.lastObjectCreated().OSR = false;
+    RedHen_2DPhysics.lastObjectCreated().OSR = true;
 }
 
 function spawnBall(_x,_y,_sz){
@@ -201,11 +206,12 @@ function spawnBall(_x,_y,_sz){
 }
 
 function spitObjects(){
-        if (frameCount % 33 === 0 &&
-       frameCount < 10240){
-        spawnBlock(width/2, 32, Math.random()*50+9);
+//        if (frameCount % 33 === 0 &&
+//       frameCount < 10240){
+    if (frameCount % 33 === 0){
+        spawnBlock(width/2, 32, Math.random()*40+10);
          // Give him a little kick ;)
-        let force = createVector(-0.06,-0.1);
+        let force = createVector(-0.01,-0.01);
     RedHen_2DPhysics.lastObjectCreated().
         addForce(force);
     } 
@@ -234,7 +240,8 @@ function createDigitBalls(){
 
 function printInstructions(){
     
-    textSize(20); stroke(0); fill(255);
+    textSize(14); stroke(0); fill(255);
+    //text("Swipe or use arrow keys to move.", 32, 32);
     text("Position = " + 
          Math.round(boo.myBod.bod.position.x), 32,32);
     text("FPS = " + Math.floor(frameRate()), 32,64);
