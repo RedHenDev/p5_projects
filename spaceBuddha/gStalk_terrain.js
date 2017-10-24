@@ -177,8 +177,10 @@ class Gstalk{
         
         push();
         fill(this.fill);
-        noStroke();
+        //noStroke();
         //stroke(color(255,42));
+        stroke(this.fill);
+        strokeWeight(2);
         
         translate(  this.myBody.bod.position.x,
                     this.myBody.bod.position.y);
@@ -191,7 +193,7 @@ class Gstalk{
         // Number of levels = 4.
         // For all layers, use nOb.
         let nOb = this.myBody.height/this.myBody.width;
-        for (let i = 0; i < 4; i++){
+        for (let i = 0; i < 8; i++){
             
             fill(0,i*12+100,0);
             if (i%2===0)

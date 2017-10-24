@@ -23,6 +23,8 @@ function setup(){
 //    spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
 //                 boo.myBod.bod.velocity.x*12,
 //         boo.myBod.bod.position.y + boo.height/1.7);
+
+//moveGround(boo.oX-width);
 }
 
 let oldestDroplet = 0;

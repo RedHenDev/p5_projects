@@ -40,7 +40,7 @@ function setup(){
     setupBoo();
     
     // AntBots!
-    for (let i = 0; i < 3; i++){
+    for (let i = 0; i < 4; i++){
         blinkies.push(new antBot(true,
         Math.random()*width,
         -height,Math.random()*4+0.8,true));
@@ -51,7 +51,8 @@ function setup(){
     }
     
     // Here we goooooo...
-    urizen = new GSterrain(51);
+    // 51 seems OK.
+    urizen = new GSterrain(12);
     
     // Celestial orbs that can be woken/put to sleep
     // depending on collision speed with boo.
@@ -134,8 +135,7 @@ function draw(){
     
     // Work out when to move the infinite terrain.
     // note that previous version of terrain generator
-    // use 'width' instead of 'urizen.width'.
-    // NB ***0.905*** -- to adjust for Perlin 'shift'.
+    // used 'width' instead of 'urizen.width'.
     boo.trackX = 
                 Math.abs(boo.myBod.bod.position.x - boo.oX);
     if (boo.trackX > urizen.width){
@@ -143,10 +143,11 @@ function draw(){
         boo.oX = boo.myBod.bod.position.x;
         
             urizen.moveTerrain(
-                boo.myBod.bod.velocity.x > 0,
+            boo.myBod.bod.velocity.x > 0,
             boo.myBod.bod.position.x);
         
     }
+    
     
 }
 
