@@ -44,7 +44,7 @@ function setup(){
     //moveGround(boo.oX-width);
     
     // Here we goooooo...
-    urizen = new GSterrain(44);
+    urizen = new GSterrain(32);
     
     createDigitBalls();
    
@@ -57,7 +57,9 @@ function setup(){
 
 function setupBoo(){
     // Test. Can we make our first Ghost Object?
-    boo = new SpaceBuddha(width/2, height/2, 32);
+    boo = new SpaceBuddha(Math.round(width/2),
+                          Math.round(height/2),
+                          32);
 }
 
 function myCollision(event){
@@ -99,24 +101,38 @@ function draw(){
     // See frameCount etc.
     printInstructions();
     
-    if (frameCount % 60 === 0 &&
-       frameCount < 1024){
-        spawnBlock(width, 32, Math.random()*50+50);
-         // Give him a little kick ;)
-        let force = createVector(-0.03,-0.1);
-    RedHen_2DPhysics.lastObjectCreated().
-        addForce(force);
-    } 
+//    if (frameCount % 33 === 0 &&
+//       frameCount < 10240){
+//        spawnBlock(width, 32, Math.random()*50+9);
+//         // Give him a little kick ;)
+//        let force = createVector(-0.06,-0.1);
+//    RedHen_2DPhysics.lastObjectCreated().
+//        addForce(force);
+//    } 
     
     // Generate boo bubbles.
-    //if (frameCount % 1 === 0) 
-    spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
-                 boo.myBod.bod.velocity.x*12,
-         boo.myBod.bod.position.y + boo.height);
+    //if (frameCount % 2 === 0) 
+    spawnDroplet (                       
+        boo.myBod.bod.position.x + 
+        Math.random()*boo.width*2 - boo.width,
+        boo.myBod.bod.position.y + boo.height/1.2);
+    
+//    spawnDroplet (                       boo.myBod.bod.position.x + Math.random()*32-16 +
+//                 boo.myBod.bod.velocity.x*12,
+//         boo.myBod.bod.position.y + boo.height/1.7);
+    
+   
     
     // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
+    
+    urizen.renderTerrain();
+    
+    RedHen_2DPhysics.updateObjs();
+    boo.control();// NB. contains speedlimiter.
+    //boo.speedLimit();
+    boo.render();
     
     // Work out when to move the infinite terrain.
     // note that previous version of terrain generator
@@ -124,22 +140,13 @@ function draw(){
     // NB ***0.905*** -- to adjust for Perlin 'shift'.
     boo.trackX = 
                 Math.abs(boo.myBod.bod.position.x - boo.oX);
-    if (boo.trackX > urizen.width){
+    if (boo.trackX > urizen.width-
+        Math.abs(boo.myBod.bod.velocity.x/2)){
         //moveGround(boo.oX-width);
         boo.oX = boo.myBod.bod.position.x;
         urizen.moveTerrain(boo.myBod.bod.velocity.x > 0);
-        
     }
     
-    RedHen_2DPhysics.updateObjs();
-    boo.control();// NB. contains speedlimiter.
-    //boo.speedLimit();
-    boo.render();
-    
-    urizen.renderTerrain();
-    
-   
-
 }
 
 
@@ -171,7 +178,7 @@ function spawnDroplet(_x, _y, _size){
 
 function setupObjectPool(){
     
-    let numObjs = 111;
+    let numObjs = 88;
     
     for (let i = 0; i < numObjs; i++){
         spawnBall(-99,-99, Math.random()*8+2);
@@ -227,7 +234,7 @@ function spawnBlock(_x,_y,_sz){
         color(0,Math.random()*255,0);
     RedHen_2DPhysics.lastObjectCreated().stroke = 
         color(0);
-    RedHen_2DPhysics.lastObjectCreated().strokeWeight = 1;
+    RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
     RedHen_2DPhysics.lastObjectCreated().OSR = false;
 }
 
@@ -238,8 +245,8 @@ function spawnBall(_x,_y,_sz){
     RedHen_2DPhysics.lastObjectCreated().fill = 
         color(255,Math.random()*100+69);
     RedHen_2DPhysics.lastObjectCreated().stroke = 
-        color(255);
-    RedHen_2DPhysics.lastObjectCreated().strokeWeight = 2;
+        color(0);
+    RedHen_2DPhysics.lastObjectCreated().strokeWeight = 3;
 }
 
 

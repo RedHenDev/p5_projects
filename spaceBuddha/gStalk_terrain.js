@@ -21,14 +21,14 @@ class GSterrain{
         
         this.width = _width;    // Width of each gStalk.
         this.height = height*2; // Height of each gStalk.
-        this.xBegin = 0;  // Where to start span. 
+        this.xBegin = 0 - _width;  // Where to start span. 
         this.yPos = height*3;      // Y position.
         
         this.seed = 9;
         this.amplitude = height*3;
         this.resolution = height;
         
-        this.span = width+_width*4;
+        this.span = width + _width * 2;
         
         this.gStalks = [];      // Array of gStalks.
         
@@ -101,9 +101,9 @@ class GSterrain{
 
         noiseSeed(this.seed);
     
-        for (let i = 0; totalW < this.span; i++){
+        for (let i = 0; totalW <= this.span; i++){
         
-        let xOffset = this.xBegin + totalW + thisWidth/2;
+        let xOffset = this.xBegin + totalW - thisWidth/2;
         
         let noiseF = noise(xOffset/this.resolution)
         *this.amplitude;
@@ -113,15 +113,14 @@ class GSterrain{
         ('GhostRectangle', xOffset, 
          this.yPos + noiseF/2 - this.amplitude/2, 
          thisWidth, this.height);
+            RedHen_2DPhysics.lastObjectCreated().OSR = false;
+            RedHen_2DPhysics.lastObjectCreated().
+        makeStatic();
         // ...and grab this body.
         // Note here that we are for the
         // first time populating this array.
         this.gStalks. 
             push(new Gstalk(i, this));
-        
-        RedHen_2DPhysics.lastObjectCreated().OSR = false;
-        RedHen_2DPhysics.lastObjectCreated().
-        makeStatic();
         
         totalW += thisWidth;  
     }   // End of for loop.
@@ -145,7 +144,7 @@ class Gstalk{
         this.index = _index;
         this.parent = _parent;
         
-        this.fill = color(0,Math.random()*100+155,0);
+        this.fill = color(0,Math.random()*100+42,0);
         
         this.myBody = 
         RedHen_2DPhysics.lastObjectCreated();
@@ -155,13 +154,32 @@ class Gstalk{
         
         push();
         fill(this.fill);
-        stroke(color(255,42));
+        noStroke();
+        //stroke(color(255,42));
         
-        translate(this.myBody.bod.position.x,
-                 this.myBody.bod.position.y);
+        translate(  this.myBody.bod.position.x,
+                    this.myBody.bod.position.y);
         
+        // Main stalk green body.
         rect(0,0,   this.myBody.width,
                     this.myBody.height);
+        
+        // Pattern of 'boxes'.
+        let nOb = this.myBody.height/this.myBody.width;
+        for (let i = 0; i < nOb/2; i++){
+            
+            fill(0,i*12+100,0);
+            if (i%2===0)
+            stroke(255,100);
+            else stroke(0);
+            
+            rect(0,-((nOb/2)*this.myBody.width) + 
+            this.myBody.width*i+this.myBody.width/2,
+                                this.myBody.width,
+                                this.myBody.width); 
+        }
+        
+        
         pop();
     }
     
@@ -182,13 +200,15 @@ class Gstalk{
                 xOffset
                 /this.parent.resolution)
                 *this.parent.amplitude;
-        
+            
         this.myBody.makePosition(
             xOffset + this.parent.gStalks[
                     this.parent.rEdge].
             myBody.width/2, 
             this.parent.yPos + noiseF/2 - 
             this.parent.amplitude/2); 
+            
+            
             
         }
         else if (_leftORright === 'left'){
