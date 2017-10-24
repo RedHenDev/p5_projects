@@ -44,16 +44,25 @@ class SpaceBuddha extends GhostO{
     constructor(_x, _y, _radius){
         super(_x, _y, _radius*2, _radius*2, "GhostCircle");
         
-        this.maxV = 4;
+        // Maximum velocity.
+        this.maxV = 7;
+        
+        // Array of high airFriction 'bubbles'.
+        this.bubbles = [];
+        this.oldestBubble = 0;
+        this.setupBubblePool(44);
     }
     
     render(){
         push();
-        fill(255,100);
-        stroke(255,100);
+        fill(255,72);
+        stroke(255,200);
         strokeWeight(4);
-        translate(this.myBod.bod.position.x,
-                 this.myBod.bod.position.y);
+        translate(  this.myBod.bod.position.x,
+                    this.myBod.bod.position.y);
+        
+        rotate(this.myBod.bod.angle);
+        
         ellipse(0,0,this.width);
         
         //Light spot.
@@ -64,22 +73,111 @@ class SpaceBuddha extends GhostO{
         pop();
     }
     
-    speedLimit(){
-        if (Math.abs(this.myBod.bod.velocity.x) + 
-            Math.abs(this.myBod.bod.velocity.y)
+    spawnBubbles(){
+        
+        // Where do we want bubbles to spawn?
+        let _x = this.myBod.bod.position.x + 
+        Math.random()*this.width*2 - this.width;
+        let _y = this.myBod.bod.position.y + this.height;
+        
+        // First, grab an available droplet.
+        // If none available, then just grab...which one?
+        if (this.findSleeping()!=null){
+            let i = this.findSleeping();
+            this.bubbles[i].makePosition(_x,_y);
+            this.bubbles[i].makeSleep(false);
+            return;
+        }
+        else {
+            // Find 'oldest' droplet and grab him :)
+            let i = this.oldestBubble;
+            this.oldestBubble++;
+            if (this.oldestBubble > this.bubbles.length-1){
+                this.oldestBubble = 0;
+            }
+        // Move into position and wake up.    
+        this.bubbles[i].makePosition(_x,_y);
+        this.bubbles[i].makeSleep(false);
+        }
+    }
+    
+    // Create a pool of bubbles with matter.js.
+    setupBubblePool(_numBubbles){
+        let numObjs = _numBubbles;
+    
+        for (let i = 0; i < numObjs; i++){
+            this.createBubble
+            (-99,-99, Math.random()*8+2);
+            // Grab this object.
+            this.bubbles[i] = RedHen_2DPhysics.
+            lastObjectCreated();
+            // Time to sleep.
+            RedHen_2DPhysics.lastObjectCreated().
+            makeSleep(true);
+            //RedHen_2DPhysics.lastObjectCreated().
+            //makeMass(10);
+            RedHen_2DPhysics.
+            lastObjectCreated().bod.restitution = 0.5;
+            RedHen_2DPhysics.
+            lastObjectCreated().bod.frictionAir = 0.8;
+        }
+    }
+    
+    findSleeping(){
+        let morpheus = null;
+    
+        for (let i = 0; i < this.bubbles.length; i++){
+            if(this.bubbles[i].bod.isSleeping){
+                morpheus = i;
+                break;
+            } else morpheus = null;
+        }
+    
+        return morpheus;
+    }
+    
+    createBubble(_x,_y,_sz){
+        RedHen_2DPhysics.newObj("circle", _x, _y, _sz);
+
+        RedHen_2DPhysics.lastObjectCreated().OSR = false;
+        RedHen_2DPhysics.lastObjectCreated().fill = 
+        color(255,Math.random()*100+69);
+        RedHen_2DPhysics.lastObjectCreated().
+        stroke = color(0);
+        RedHen_2DPhysics.lastObjectCreated().
+        strokeWeight = 3;
+    }
+    
+    speedLimit(_xORy){
+        if (_xORy==='x'){
+        if (Math.abs(this.myBod.bod.velocity.x)
             > this.maxV)
             {
-                //this.myBod.bod.velocity.x * 0.8;
-                //this.myBod.bod.velocity.y * 0.8;
                 return true;
             }
-        else return false;
+            else return false;
+        }
+        else if (_xORy==='y'){
+            if (Math.abs(this.myBod.bod.velocity.y)
+            > this.maxV)
+            {
+                return true;
+            }
+            else return false;
+        }
     }
     
     control(){
-        if (this.speedLimit()) return;
-        let yF = 0.06;
-        let xF = 0.06;
+        let xF = 0.03;
+        let yF = 0.03;
+        
+        if (this.speedLimit('x')){
+            xF = 0;
+        }
+        if (this.speedLimit('y')){
+            yF = 0;
+        }
+       
         if (keyIsDown(UP_ARROW)){
             let force = createVector(0,-yF);
             this.myBod.addForce(force);

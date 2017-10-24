@@ -24,9 +24,12 @@ class GSterrain{
         this.xBegin = 0 - _width;  // Where to start span. 
         this.yPos = height*3;      // Y position.
         
+//        this.seed = 9;
+//        this.amplitude = height*3;
+//        this.resolution = height;
         this.seed = 9;
-        this.amplitude = height*3;
-        this.resolution = height;
+        this.amplitude = height*5;
+        this.resolution = height*5;
         
         this.span = width + _width * 2;
         
@@ -97,7 +100,7 @@ class GSterrain{
         // to be variable at a later stage...
         let thisWidth = this.width;
         
-        totalW = 0; // Total width so far.
+        let totalW = 0; // Total width so far.
 
         noiseSeed(this.seed);
     
