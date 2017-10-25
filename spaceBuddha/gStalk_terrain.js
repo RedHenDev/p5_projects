@@ -20,16 +20,22 @@ class GSterrain{
         // stalk object itself :)
         
         this.width = _width;    // Width of each gStalk.
-        this.height = height*2; // Height of each gStalk.
+        this.height = height*3; // Height of each gStalk.
         this.xBegin = 0 - _width*5;  // Where to start span. 
-        this.yPos = height*4;      // Y position.
+        this.yPos = height*2;      // Y position.
         
 //        this.seed = 9;
 //        this.amplitude = height*3;
 //        this.resolution = height;
         this.seed = 9;
-        this.amplitude = height*5;
-        this.resolution = height;
+//        this.amplitude = height*5;
+//        this.resolution = height;
+        // Jungle Mountain Gothica:
+        this.amplitude = height*2;
+        this.resolution = height/3;
+        // Bumpy road:
+//        this.amplitude = height/2;
+//        this.resolution = height/2;
         
         this.span = width + _width * 10;
         
@@ -89,6 +95,13 @@ class GSterrain{
             //console.log("Unicorns are fancy.");
             // Current right edge gets new neighbour (l).
             // New left edge gets new neighbour (r).
+            
+            // EXPERIMENT!!!
+            if (this.amplitude >= 612){
+                this.amplitude-= 80;
+                this.resolution+= 2;
+            }
+            
             this.gStalks[this.lEdge].Lneighbour =
             this.rEdge;
             this.gStalks[this.rEdge].Rneighbour =
@@ -133,7 +146,7 @@ class GSterrain{
         // Spawn a new stalk body with matter.js.
         RedHen_2DPhysics.newObj
         ('GhostRectangle', xOffset, 
-         this.yPos + noiseF/2 - this.amplitude/2, 
+         this.yPos + noiseF, 
          thisWidth, this.height);
             RedHen_2DPhysics.lastObjectCreated().OSR = false;
             RedHen_2DPhysics.lastObjectCreated().
@@ -232,8 +245,7 @@ class Gstalk{
             xOffset + this.parent.gStalks[
                     this.parent.rEdge].
             myBody.width/2, 
-            this.parent.yPos + noiseF/2 - 
-            this.parent.amplitude/2); 
+            this.parent.yPos + noiseF); 
             
             
             
@@ -259,8 +271,7 @@ class Gstalk{
             xOffset - this.parent.gStalks[
                     this.parent.lEdge].
             myBody.width/2, 
-            this.parent.yPos + noiseF/2 - 
-            this.parent.amplitude/2); 
+            this.parent.yPos + noiseF); 
             
         }
     }

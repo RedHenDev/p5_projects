@@ -40,10 +40,10 @@ function setup(){
     setupBoo();
     
     // AntBots!
-    for (let i = 0; i < 4; i++){
+    for (let i = 0; i < 12; i++){
         blinkies.push(new antBot(true,
-        Math.random()*width,
-        -height,Math.random()*4+0.8,true));
+        Math.random()*width*4-width*2,
+        -height,Math.random()*8+0.8,true));
         
         // Bubbly air friction :)
         RedHen_2DPhysics.
@@ -52,6 +52,7 @@ function setup(){
     
     // Here we goooooo...
     // 51 seems OK.
+    // Nah, 12 is where it's at.
     urizen = new GSterrain(12);
     
     // Celestial orbs that can be woken/put to sleep
