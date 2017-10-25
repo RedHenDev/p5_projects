@@ -184,7 +184,8 @@ class Gstalk{
         this.parent = _parent;
         
         //this.fill = color(0,Math.random()*100+42,0);
-        this.fill = color(0,22,0);
+        //this.fill = color(0,22,0);
+        this.fill = color(0,100,0);
         
         this.myBody = 
         RedHen_2DPhysics.lastObjectCreated();
@@ -197,7 +198,7 @@ class Gstalk{
         //noStroke();
         //stroke(color(255,42));
         stroke(this.fill);
-        strokeWeight(2);
+        strokeWeight(1);
         
         translate(  this.myBody.bod.position.x,
                     this.myBody.bod.position.y);
@@ -209,6 +210,7 @@ class Gstalk{
         // Pattern of 'boxes'.
         // Number of levels = 4.
         // For all layers, use nOb.
+        strokeWeight(2);
         let nOb = this.myBody.height/this.myBody.width;
         for (let i = 0; i < 8; i++){
             
@@ -257,21 +259,44 @@ class Gstalk{
         }
         
         // Comment this out to stop 'biomic increment'.
-//        if (changedDirection) _negORpos *= 
-//            this.parent.gStalks.length-3;
-//        this.parent.amplitude += _negORpos;
+//        let incFactor = 1;
+//        if (changedDirection) {_negORpos *= 
+//            (this.parent.gStalks.length-3) * incFactor;
+//        this.parent.resolution -= _negORpos * incFactor;
+//        this.parent.amplitude += _negORpos * incFactor;
+        
+        
+//        let Octave1 = noise(
+//                _xOffset
+//                /this.parent.resolution)
+//                *this.parent.amplitude*0.5;
+//        
+//        let Octave2 = noise(
+//                _xOffset
+//                /(this.parent.resolution*100))
+//                *this.parent.amplitude*0.001;
+//        
+//        let Octave3 = noise(
+//                _xOffset
+//                /(this.parent.resolution*200))
+//                *this.parent.amplitude*0.01;
         
         let Octave1 = noise(
                 _xOffset
-                /this.parent.resolution)
-                *this.parent.amplitude*0.5;
+                /2000)
+                *2000;
         
         let Octave2 = noise(
                 _xOffset
-                /(this.parent.resolution*100))
-                *this.parent.amplitude*0.001;
+                /800)
+                *1000;
         
-        return Octave1 + Octave2;
+        let Octave3 = noise(
+                _xOffset
+                /7)
+                *30;
+        
+        return Octave1 + Octave2 + Octave3;
         
 //        return noise(
 //                _xOffset

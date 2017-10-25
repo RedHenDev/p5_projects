@@ -214,8 +214,12 @@ function spitObjects(){
 //        if (frameCount % 33 === 0 &&
 //       frameCount < 10240){
     if (frameCount % 5 === 0 && frameCount < 1024){
-        spawnBlock(width/2 + 340, height/2+180, Math.random()*3+10);
+        spawnBlock(width/2 + 340, height/2+180, Math.random()*3+12);
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
+        RedHen_2DPhysics.lastObjectCreated().
+        makeAngle(Math.random()*360);
+        RedHen_2DPhysics.lastObjectCreated().
+        makeMass(10);
         
         // Lava colour...
         RedHen_2DPhysics.lastObjectCreated().fill = 
@@ -225,7 +229,7 @@ function spitObjects(){
         
         // Give him a little kick ;)
         let force = createVector(
-        Math.random()*0.002 - 0.001,-0.01);
+        Math.random()*0.002 - 0.01,-0.4);
         RedHen_2DPhysics.lastObjectCreated().
         addForce(force);
     } 
@@ -261,7 +265,7 @@ function printInstructions(){
     ((width/2)+ 30 * Math.cos(radians(frameCount*3)),
      height/4,
      0),
-    "Bubble altitude: " + -(Math.round(boo.myBod.bod.position.y) - 900) +
+    "Bubble altitude: " + -(Math.round(boo.myBod.bod.position.y) - 800) +
             "m > sea.");
     
     textSize(14); stroke(0); fill(255);
