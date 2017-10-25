@@ -21,7 +21,21 @@ let skyTint;
 // Testing new terrain generator...
 let urizen;
 
+// Testing voice...
+// This is our speech object.
+let robot;
+
 p5.disableFriendlyErrors = true;
+
+function preload(){
+    robot = new p5.Speech();
+    // Pick a random voice!
+//function setupVoices(){
+//  let voices = robot.voices;
+//  let voice = random(1,voices.name);
+//  robot.setVoice(voice.name);
+//}
+}
 
 function setup(){
     // Remember to assign value of canvas like this :)
@@ -66,6 +80,7 @@ function setupBoo(){
     boo = new SpaceBuddha(Math.round(width/2),
                           Math.round(height/2),
                           22);
+    robot.speak("Bubble boo is ready.");
 }
 
 function myCollision(event){
@@ -184,8 +199,13 @@ function mouseDragged(){
 
 function touchEnded(){
     
-    if (canSpawn)
-    boo.bubblesON = !boo.bubblesON;
+    if (canSpawn){
+        boo.bubblesON = !boo.bubblesON;
+        if (boo.bubblesON)
+        robot.speak("Crash bubbles engaged!");
+        else
+        robot.speak("Crash bubbles disengaged...and whatever!");
+    }
     
 //    if (canSpawn && mouseX < width/2){
 //        spawnBlock(mouseX, mouseY, 28);

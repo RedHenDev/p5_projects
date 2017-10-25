@@ -79,7 +79,11 @@ class SpaceBuddha extends GhostO{
     // Sets frictionAir according to altitude (i.e.)
     // whether underwater.
     hitWaterCheck(){
-        if (this.getAltitude() < 0) this.myBod.bod.frictionAir = 0.5;
+        if (this.getAltitude() < 0) { 
+            if (this.myBod.bod.frictionAir !== 0.5)
+            robot.speak("PLOP");
+            this.myBod.bod.frictionAir = 0.5;}
+        
     else this.myBod.bod.frictionAir = 0.01;
     }
     
@@ -135,6 +139,7 @@ class SpaceBuddha extends GhostO{
             RedHen_2DPhysics.lastObjectCreated().
             makeSleep(true);
         }
+        
     }
     
     findSleeping(){
