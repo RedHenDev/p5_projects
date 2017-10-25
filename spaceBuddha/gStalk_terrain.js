@@ -133,28 +133,36 @@ class GSterrain{
         noiseSeed(this.seed);
     
         for (let i = 0; totalW <= this.span; i++){
+            
+            let xOffset = this.xBegin + 
+            totalW - thisWidth/2;
         
-        let xOffset = this.xBegin + totalW - thisWidth/2;
-        
-        let noiseF = noise(xOffset/this.resolution)
-        *this.amplitude;
-        
-        // Spawn a new stalk body with matter.js.
-        RedHen_2DPhysics.newObj
-        ('GhostRectangle', xOffset, 
-         this.yPos + noiseF, 
-         thisWidth, this.height);
-            RedHen_2DPhysics.lastObjectCreated().OSR = false;
+            // Spawn a new stalk body with matter.js.
+            RedHen_2DPhysics.newObj
+            ('GhostRectangle', 0, 0, this.width,
+            this.height);
+            RedHen_2DPhysics.lastObjectCreated().OSR =
+            false;
             RedHen_2DPhysics.lastObjectCreated().
-        makeStatic();
-        // ...and grab this body.
-        // Note here that we are for the
-        // first time populating this array.
-        this.gStalks. 
+            makeStatic();
+            // ...and grab this body.
+            // Note here that we are for the
+            // first time populating this array.
+            this.gStalks. 
             push(new Gstalk(i, this));
         
-        totalW += thisWidth;  
-    }   // End of for loop.
+            // Use gStalk's own method to calc
+            // noise. So as to be consistent
+            // in terms of generating terrain.
+            let nF = this.gStalks[this.gStalks.length-1].
+            calcNoise(1, xOffset);
+            
+            this.gStalks[this.gStalks.length-
+            1].myBody.makePosition(xOffset, 
+            this.yPos + nF);
+            
+            totalW += thisWidth;  
+        }   // End of for loop.
         
         // So, now we can find our 'edge stalks'.
         // Well, rEdge the only mystery.
@@ -248,14 +256,27 @@ class Gstalk{
                 this.parent.lEdge);
         }
         
-        if (changedDirection) _negORpos *= 
-            this.parent.gStalks.length-3;
-        this.parent.amplitude += _negORpos;
+        // Comment this out to stop 'biomic increment'.
+//        if (changedDirection) _negORpos *= 
+//            this.parent.gStalks.length-3;
+//        this.parent.amplitude += _negORpos;
         
-        return noise(
+        let Octave1 = noise(
                 _xOffset
                 /this.parent.resolution)
-                *this.parent.amplitude;
+                *this.parent.amplitude*0.5;
+        
+        let Octave2 = noise(
+                _xOffset
+                /(this.parent.resolution*100))
+                *this.parent.amplitude*0.001;
+        
+        return Octave1 + Octave2;
+        
+//        return noise(
+//                _xOffset
+//                /this.parent.resolution)
+//                *this.parent.amplitude;
     }
     
     moveMe(_leftORright){

@@ -45,7 +45,7 @@ class SpaceBuddha extends GhostO{
         super(_x, _y, _radius*2, _radius*2, "GhostCircle");
         
         // Maximum velocity.
-        this.maxV = 4;
+        this.maxV = 14;
         
         // Array of high airFriction 'bubbles'.
         this.bubbles = [];
@@ -159,7 +159,7 @@ class SpaceBuddha extends GhostO{
     speedLimit(_xORy){
         if (_xORy==='x'){
         if (Math.abs(this.myBod.bod.velocity.x)
-            > this.maxV)
+            >= this.maxV)
             {
                 return true;
             }
@@ -167,7 +167,7 @@ class SpaceBuddha extends GhostO{
         }
         else if (_xORy==='y'){
             if (Math.abs(this.myBod.bod.velocity.y)
-            > this.maxV)
+            >= this.maxV)
             {
                 return true;
             }
@@ -179,8 +179,8 @@ class SpaceBuddha extends GhostO{
     // To touch swipe can pass into this too from
     // main .js file.
     control(_WD){
-        let xF = 0.03;
-        let yF = 0.01;
+        let xF = 0.01;
+        let yF = 0.004;
         
         if (this.speedLimit('x')){
             xF = 0;

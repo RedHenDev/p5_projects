@@ -40,10 +40,10 @@ function setup(){
     setupBoo();
     
     // AntBots!
-    for (let i = 0; i < 12; i++){
+    for (let i = 0; i < 3; i++){
         blinkies.push(new antBot(true,
         Math.random()*width*4-width*2,
-        -height,Math.random()*8+0.8,true));
+        -height,Math.random()*4+0.3,true));
         
         // Bubbly air friction :)
         RedHen_2DPhysics.
@@ -109,12 +109,11 @@ function draw(){
     
     // Spit blocks if boo in correct area.
     if (boo.myBod.bod.position.x > -700 &&
-       boo.myBod.bod.position.x < 1000)
-    spitObjects();
+        boo.myBod.bod.position.x < 1000)
+        spitObjects();
     
     boo.spawnBubbles();
    
-    
     // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
@@ -156,6 +155,7 @@ function draw(){
 function mouseDragged(){
     canSpawn = false;
     
+    // Swipe controls.
     if (mouseX > mouseX_prev)
         boo.control('RIGHT');
     if (mouseX < mouseX_prev)
@@ -166,6 +166,7 @@ function mouseDragged(){
     if (mouseY < mouseY_prev)
         boo.control('UP');
     
+    // For swipe controls.
     mouseX_prev = mouseX;
     mouseY_prev = mouseY;
 }
@@ -210,11 +211,20 @@ function spawnBall(_x,_y,_sz){
 function spitObjects(){
 //        if (frameCount % 33 === 0 &&
 //       frameCount < 10240){
-    if (frameCount % 33 === 0){
-        spawnBlock(width/2, 32, Math.random()*40+10);
-         // Give him a little kick ;)
-        let force = createVector(-0.01,-0.01);
-    RedHen_2DPhysics.lastObjectCreated().
+    if (frameCount % 5 === 0 && frameCount < 1024){
+        spawnBlock(width/2 + 340, height/2+180, Math.random()*3+10);
+        RedHen_2DPhysics.lastObjectCreated().OSR = false;
+        
+        // Lava colour...
+        RedHen_2DPhysics.lastObjectCreated().fill = 
+        color(Math.random()*205+50,0,0,255);
+        RedHen_2DPhysics.lastObjectCreated().stroke = 
+        color(255,0,0);
+        
+        // Give him a little kick ;)
+        let force = createVector(
+        Math.random()*0.002 - 0.001,-0.01);
+        RedHen_2DPhysics.lastObjectCreated().
         addForce(force);
     } 
 }
