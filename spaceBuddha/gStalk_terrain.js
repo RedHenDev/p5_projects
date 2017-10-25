@@ -59,6 +59,7 @@ class GSterrain{
     
     // Bool moving right? RefPoint is subject's x.
     moveTerrain(_goingRight, _refPointX){
+        
         // Will only move if will not
         // remove a gStalk from screen.
         if (_goingRight && 
@@ -68,12 +69,6 @@ class GSterrain{
             //console.log("Rainbows glimmer.");
             // Current right edge gets new neighbour (r).
             // New right edge gets new neighbour (l).
-            
-             // EXPERIMENT!!!
-            if (this.amplitude >= 40){
-                this.amplitude-= 20;
-                this.resolution+= 2;
-            }
             
             this.gStalks[this.rEdge].Rneighbour =
             this.lEdge;
@@ -102,12 +97,6 @@ class GSterrain{
             //console.log("Unicorns are fancy.");
             // Current right edge gets new neighbour (l).
             // New left edge gets new neighbour (r).
-            
-           // EXPERIMENT!!!
-            if (this.amplitude <= height){
-                this.amplitude+= 20;
-                this.resolution-= 2;
-            }
             
             this.gStalks[this.lEdge].Lneighbour =
             this.rEdge;
@@ -230,6 +219,45 @@ class Gstalk{
         pop();
     }
     
+    // Moving left (-1) or right (+1).
+    // Returns output of noise calculation.
+    calcNoise(_negORpos, _xOffset){
+        // Here we can affect the Perlin.
+        // Problem -- when we change direction,
+        // the new amplitude has not taken account
+        // of the sum of intervening gStalks.
+        // So, first we have to take account of this.
+        // Can I do it by looking at neighbour index?
+        // Yes, if moving from right to left edge,
+        // then this.Left neighbour will still be
+        // current right edge index. Nice! Else,
+        // left neighbour will be previous r edge index.
+        
+        let changedDirection = false;
+        
+        if (_negORpos === -1){
+            // If moving left...
+            changedDirection =
+                (this.Lneighbour ===
+                this.parent.rEdge);
+        }
+        if (_negORpos === 1){
+            // If moving right...
+            changedDirection =
+                (this.Rneighbour ===
+                this.parent.lEdge);
+        }
+        
+        if (changedDirection) _negORpos *= 
+            this.parent.gStalks.length-3;
+        this.parent.amplitude += _negORpos;
+        
+        return noise(
+                _xOffset
+                /this.parent.resolution)
+                *this.parent.amplitude;
+    }
+    
     moveMe(_leftORright){
         
         if (_leftORright === 'right'){
@@ -243,16 +271,11 @@ class Gstalk{
                     this.parent.rEdge].
             myBody.width/2;
             
-            let noiseF = noise(
-                xOffset
-                /this.parent.resolution)
-                *this.parent.amplitude;
-            
         this.myBody.makePosition(
             xOffset + this.parent.gStalks[
                     this.parent.rEdge].
             myBody.width/2, 
-            this.parent.yPos + noiseF); 
+            this.parent.yPos + this.calcNoise(1, xOffset)); 
             
             
             
@@ -269,16 +292,13 @@ class Gstalk{
                     this.parent.lEdge].
             myBody.width/2;
             
-            let noiseF = noise(
-                xOffset
-                /this.parent.resolution)
-                *this.parent.amplitude;
+          // Where noise calc used to be.
         
         this.myBody.makePosition(
             xOffset - this.parent.gStalks[
                     this.parent.lEdge].
             myBody.width/2, 
-            this.parent.yPos + noiseF); 
+            this.parent.yPos + this.calcNoise(-1, xOffset)); 
             
         }
     }
