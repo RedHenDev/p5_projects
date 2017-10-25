@@ -80,7 +80,7 @@ function setupBoo(){
     boo = new SpaceBuddha(Math.round(width/2),
                           Math.round(height/2),
                           22);
-    robot.speak("Bubble boo is ready.");
+    //robot.speak("Bubble boo is ready.");
 }
 
 function myCollision(event){
