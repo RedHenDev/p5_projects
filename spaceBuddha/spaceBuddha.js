@@ -107,6 +107,7 @@ function draw(){
     // See frameCount etc.
     printInstructions();
     
+    
     // Spit blocks if boo in correct area.
     if (boo.myBod.bod.position.x > -700 &&
         boo.myBod.bod.position.x < 1000)
@@ -114,6 +115,7 @@ function draw(){
     
     boo.spawnBubbles();
    
+    push();
     // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
@@ -144,10 +146,9 @@ function draw(){
         
             urizen.moveTerrain(
             boo.myBod.bod.velocity.x > 0,
-            boo.myBod.bod.position.x);
-        
+            boo.myBod.bod.position.x);   
     }
-    
+    pop();
     
 }
 
@@ -230,9 +231,9 @@ function spitObjects(){
 }
 
 function createDigitBalls(){
-    // Create loads of 'digit' balls in air.
-    for (let i = 0; i < 111; i++){
-        let oSize = Math.random()*12 + 2;
+    // Create 'digit' balls in air.
+    for (let i = 0; i < 12; i++){
+        let oSize = Math.random()*12 + 20;
         
         RedHen_2DPhysics.newObj ('circle', Math.random()*width*3 - width, Math.random()*height*2-height*3, oSize);
        
@@ -250,7 +251,49 @@ function createDigitBalls(){
     }
 }
 
+// OK. So -- can we do this in a functional way?
+// Functions that return functions...
+// Immutable data. Hmm.
+
+// Uses vector3 for x,y, and rotation.
+function renderTB(_posR, _message){
+  push();
+  translate(_posR.x, _posR.y);
+  rotate(_posR.z)
+  
+  let tbWidth = width/2;
+  let tbHeight = height/4;
+  let tSize = 20;
+  
+  fill(255,0,255);
+  strokeWeight(2);
+  stroke(0);
+  rect(0,0,width/2,
+      height/4);
+  
+    // Before printing text to screen,
+    // we need to 'wrap' it inside the
+    // available area.
+    // So, this will involve organising
+    // the _message into appropriately
+    // sized lines of text.
+    
+  fill(255);
+  stroke(255);
+  noStroke();
+  textSize(tSize);
+  text(_message, 5-tbWidth/2, tSize-tbHeight/2);
+  pop();
+}
+
 function printInstructions(){
+    
+    // TextBox test.
+    renderTB(createVector
+    ((width/2)+ 30 * Math.cos(radians(frameCount*3)),
+     height/2,
+     frameCount/100),
+    "Hello");
     
     textSize(14); stroke(0); fill(255);
     //text("Swipe or use arrow keys to move.", 32, 32);
