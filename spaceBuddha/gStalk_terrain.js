@@ -68,6 +68,13 @@ class GSterrain{
             //console.log("Rainbows glimmer.");
             // Current right edge gets new neighbour (r).
             // New right edge gets new neighbour (l).
+            
+             // EXPERIMENT!!!
+            if (this.amplitude >= 40){
+                this.amplitude-= 20;
+                this.resolution+= 2;
+            }
+            
             this.gStalks[this.rEdge].Rneighbour =
             this.lEdge;
             this.gStalks[this.lEdge].Lneighbour =
@@ -96,10 +103,10 @@ class GSterrain{
             // Current right edge gets new neighbour (l).
             // New left edge gets new neighbour (r).
             
-            // EXPERIMENT!!!
-            if (this.amplitude >= 612){
-                this.amplitude-= 80;
-                this.resolution+= 2;
+           // EXPERIMENT!!!
+            if (this.amplitude <= height){
+                this.amplitude+= 20;
+                this.resolution-= 2;
             }
             
             this.gStalks[this.lEdge].Lneighbour =
