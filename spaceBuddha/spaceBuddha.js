@@ -104,10 +104,6 @@ function draw(){
     // Orig tints = (0,111,222);
     background(0,skyTint/2,skyTint);
     
-    // See frameCount etc.
-    printInstructions();
-    
-    
     // Spit blocks if boo in correct area.
     if (boo.myBod.bod.position.x > -700 &&
         boo.myBod.bod.position.x < 1000)
@@ -149,6 +145,11 @@ function draw(){
             boo.myBod.bod.position.x);   
     }
     pop();
+    
+    // These things, if rendered to canvas,
+    // will appear over the top of other things.
+    // See frameCount etc.
+    printInstructions();
     
 }
 
@@ -251,49 +252,17 @@ function createDigitBalls(){
     }
 }
 
-// OK. So -- can we do this in a functional way?
-// Functions that return functions...
-// Immutable data. Hmm.
 
-// Uses vector3 for x,y, and rotation.
-function renderTB(_posR, _message){
-  push();
-  translate(_posR.x, _posR.y);
-  rotate(_posR.z)
-  
-  let tbWidth = width/2;
-  let tbHeight = height/4;
-  let tSize = 20;
-  
-  fill(255,0,255);
-  strokeWeight(2);
-  stroke(0);
-  rect(0,0,width/2,
-      height/4);
-  
-    // Before printing text to screen,
-    // we need to 'wrap' it inside the
-    // available area.
-    // So, this will involve organising
-    // the _message into appropriately
-    // sized lines of text.
-    
-  fill(255);
-  stroke(255);
-  noStroke();
-  textSize(tSize);
-  text(_message, 5-tbWidth/2, tSize-tbHeight/2);
-  pop();
-}
 
 function printInstructions(){
     
     // TextBox test.
     renderTB(createVector
     ((width/2)+ 30 * Math.cos(radians(frameCount*3)),
-     height/2,
-     frameCount/100),
-    "Hello");
+     height/4,
+     0),
+    "Bubble altitude: " + -(Math.round(boo.myBod.bod.position.y) - 900) +
+            "m > sea.");
     
     textSize(14); stroke(0); fill(255);
     //text("Swipe or use arrow keys to move.", 32, 32);
