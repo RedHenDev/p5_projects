@@ -22,7 +22,7 @@ class GSterrain{
         this.width = _width;    // Width of each gStalk.
         this.height = height*3; // Height of each gStalk.
         this.xBegin = 0 - _width*5;  // Where to start span. 
-        this.yPos = height*2;      // Y position.
+        this.yPos = height;      // Y position.
         
 //        this.seed = 9;
 //        this.amplitude = height*3;
@@ -194,6 +194,7 @@ class Gstalk{
     render(){
         
         push();
+        rectMode(CENTER);
         fill(this.fill);
         //noStroke();
         //stroke(color(255,42));
@@ -280,6 +281,9 @@ class Gstalk{
 //                _xOffset
 //                /(this.parent.resolution*200))
 //                *this.parent.amplitude*0.01;
+        
+        // To avoid Divine Symmetry.
+        _xOffset += 100000000;
         
         let Octave1 = noise(
                 _xOffset

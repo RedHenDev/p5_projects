@@ -110,18 +110,26 @@ function draw(){
         spitObjects();
     
     boo.spawnBubbles();
-   
+    
     push();
     // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
+    
+    // Test sea...
+    rectMode(CORNER);
+    let seaWobble = Math.sin(radians(frameCount));
+    fill(0,0,map(seaWobble,0,100,100,255));
+    noStroke();
+    rect(boo.myBod.bod.position.x-width,
+    height*2 + 32 * seaWobble,width*2,70000);
     
     urizen.renderTerrain();
     
     for (let i = 0; i < blinkies.length; i++){
         blinkies[i].brain.
         setWayPoint(boo.myBod.bod.position.x,
-                    boo.myBod.bod.position.x)
+                    boo.myBod.bod.position.y)
         blinkies[i].think();
         blinkies[i].render();
     }
@@ -214,7 +222,7 @@ function spitObjects(){
 //        if (frameCount % 33 === 0 &&
 //       frameCount < 10240){
     if (frameCount % 5 === 0 && frameCount < 1024){
-        spawnBlock(width/2 + 340, height/2+180, Math.random()*3+12);
+        spawnBlock(width/2+200, height/2-200, Math.random()*3+12);
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
         RedHen_2DPhysics.lastObjectCreated().
         makeAngle(Math.random()*360);
@@ -261,11 +269,14 @@ function createDigitBalls(){
 function printInstructions(){
     
     // TextBox test.
+    let seaLevel = -(Math.round(boo.myBod.bod.position.y)-height*2);
+    if (seaLevel < 0) boo.myBod.bod.frictionAir = 0.5;
+    else boo.myBod.bod.frictionAir = 0.01;
     renderTB(createVector
     ((width/2)+ 30 * Math.cos(radians(frameCount*3)),
      height/4,
      0),
-    "Bubble altitude: " + -(Math.round(boo.myBod.bod.position.y) - 800) +
+    "Bubble altitude: " + seaLevel +
             "m > sea.");
     
     textSize(14); stroke(0); fill(255);
