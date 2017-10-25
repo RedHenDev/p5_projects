@@ -47,7 +47,7 @@ function setup(){
         
         // Bubbly air friction :)
         RedHen_2DPhysics.
-        lastObjectCreated().bod.frictionAir = 0.3;
+        lastObjectCreated().bod.frictionAir = 0.1;
     }
     
     // Here we goooooo...
@@ -105,9 +105,9 @@ function draw(){
     background(0,skyTint/2,skyTint);
     
     // Spit blocks if boo in correct area.
-    if (boo.myBod.bod.position.x > -700 &&
-        boo.myBod.bod.position.x < 1000)
-        spitObjects();
+//    if (boo.myBod.bod.position.x > -700 &&
+//        boo.myBod.bod.position.x < 1000)
+//        spitObjects();
     
     boo.spawnBubbles();
     
@@ -119,8 +119,9 @@ function draw(){
     // Test sea...
     rectMode(CORNER);
     let seaWobble = Math.sin(radians(frameCount));
-    fill(0,0,map(seaWobble,0,100,100,255));
-    noStroke();
+    fill(0,0,200,128);
+    strokeWeight(6*Math.abs(seaWobble)+3);
+    stroke(255,160);
     rect(boo.myBod.bod.position.x-width,
     height*2 + 32 * seaWobble,width*2,70000);
     
@@ -136,7 +137,7 @@ function draw(){
     
     RedHen_2DPhysics.updateObjs();
     boo.control();// NB. contains speedlimiter.
-    
+    boo.hitWaterCheck();
     boo.render();
     
     // Work out when to move the infinite terrain.
@@ -269,22 +270,20 @@ function createDigitBalls(){
 function printInstructions(){
     
     // TextBox test.
-    let seaLevel = -(Math.round(boo.myBod.bod.position.y)-height*2);
-    if (seaLevel < 0) boo.myBod.bod.frictionAir = 0.5;
-    else boo.myBod.bod.frictionAir = 0.01;
     renderTB(createVector
-    ((width/2)+ 30 * Math.cos(radians(frameCount*3)),
-     height/4,
+    ((width-200)+ 30 * Math.cos(radians(frameCount*3)),
+     64,
      0),
-    "Bubble altitude: " + seaLevel +
-            "m > sea.");
+    "Bubble alt: " + boo.getAltitude() +
+            "m > SEA");
     
-    textSize(14); stroke(0); fill(255);
-    //text("Swipe or use arrow keys to move.", 32, 32);
+    strokeWeight(2);
+    textSize(14); stroke(0); fill(255); 
+    text("Swipe or use arrow keys to move", 32, 100);
     text("Position = " + 
          Math.round(boo.myBod.bod.position.x), 32,32);
-    text("FPS = " + Math.floor(frameRate()), 32,64);
+    text("FPS = " + Math.floor(frameRate()), 32,height-32);
     
-    text("Tap/Click to toggle crash bubbles", width/2, 32);
+    text("Tap/Click to toggle crash bubbles", 32, 64);
     
 }

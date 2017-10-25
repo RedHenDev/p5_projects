@@ -8,14 +8,15 @@ function renderTB(_posR, _message){
   translate(_posR.x, _posR.y);
   rotate(_posR.z)
   
-  let tbWidth = width/5;
-  let tbHeight = height/10;
+  let tbWidth = 240;
+  let tbHeight = 80;
   let tSize = 20;
   
   fill(255,0,255,128);
   strokeWeight(2);
-  stroke(0);
-  rect(0,0,tbWidth,
+  stroke(255);
+  //noStroke();
+    rect(0,0,tbWidth,
       tbHeight);
   
     // Before printing text to screen,
@@ -26,8 +27,8 @@ function renderTB(_posR, _message){
     // sized lines of text.
     
   fill(255);
-  stroke(255);
-  noStroke();
+  stroke(0);
+  strokeWeight(2);
   textSize(tSize);
   text(_message, 5-tbWidth/2, tbHeight/2-tSize*1.5);
   pop();

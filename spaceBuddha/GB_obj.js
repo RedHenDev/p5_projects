@@ -76,16 +76,28 @@ class SpaceBuddha extends GhostO{
         pop();
     }
     
+    // Sets frictionAir according to altitude (i.e.)
+    // whether underwater.
+    hitWaterCheck(){
+        if (this.getAltitude() < 0) this.myBod.bod.frictionAir = 0.5;
+    else this.myBod.bod.frictionAir = 0.01;
+    }
+    
+    // Relative to seaLevel.
+    getAltitude(){
+        return -(Math.round(this.myBod.bod.position.y)-height*2);
+    }
+    
     spawnBubbles(){
         if (this.bubblesON===false) return;
         // Where do we want bubbles to spawn?
         let _x = this.myBod.bod.position.x + 
         Math.random()*this.width*2 - this.width +
-            this.myBod.bod.velocity.x*10;
+            this.myBod.bod.velocity.x;
         let _y = this.myBod.bod.position.y + 
         this.height*2 + Math.random()*this.width*2 -
             this.width -
-            Math.abs(this.myBod.bod.velocity.x*10);
+            Math.abs(this.myBod.bod.velocity.x);
         
         // First, grab an available droplet.
         // If none available, then just grab...which one?
@@ -122,12 +134,6 @@ class SpaceBuddha extends GhostO{
             // Time to sleep.
             RedHen_2DPhysics.lastObjectCreated().
             makeSleep(true);
-            //RedHen_2DPhysics.lastObjectCreated().
-            //makeMass(10);
-            RedHen_2DPhysics.
-            lastObjectCreated().bod.restitution = 0.5;
-            RedHen_2DPhysics.
-            lastObjectCreated().bod.frictionAir = 0.8;
         }
     }
     
@@ -148,12 +154,18 @@ class SpaceBuddha extends GhostO{
         RedHen_2DPhysics.newObj("circle", _x, _y, _sz);
 
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
-        //RedHen_2DPhysics.lastObjectCreated().fill = 
-        //color(255,Math.random()*100+69);
+        RedHen_2DPhysics.lastObjectCreated().fill = 
+        color(255,0,255,Math.random()*100+69);
         RedHen_2DPhysics.lastObjectCreated().
         stroke = color(0);
         RedHen_2DPhysics.lastObjectCreated().
         strokeWeight = 3;
+        //RedHen_2DPhysics.lastObjectCreated().
+        //makeMass(10);
+        RedHen_2DPhysics.
+        lastObjectCreated().bod.restitution = 0.08;
+        RedHen_2DPhysics.
+        lastObjectCreated().bod.frictionAir = 0.2;
     }
     
     speedLimit(_xORy){
