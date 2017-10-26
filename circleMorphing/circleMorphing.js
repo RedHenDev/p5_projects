@@ -16,7 +16,7 @@ function draw(){
     
 }
 
-function mousePressed(){
+function mouseMoved(){
     morph.interpolate(step+=1);
 }
 
@@ -65,12 +65,13 @@ class Morph{
             this.nodes[i].idPos.y = this.nodes[i].pos.y; 
         
             // Triangle.
-
             angleScalar *= this.nodeNum/this.edges;
             this.nodes[i].esPos.x = this.radius *
             Math.cos(radians(angleScalar*i));
             this.nodes[i].esPos.y = this.radius *
             Math.sin(radians(angleScalar*i));
+            angleScalar *= this.nodeNum/this.edges;
+        
         }
         
     }
@@ -78,7 +79,7 @@ class Morph{
     interpolate(_step){
         //this.nodes.splice(this.nodes.length/3,1);
         for (let i = this.nodeNum-1; i >= 0; i--){
-            //this.nodes[i].interpolate(_step);
+            this.nodes[i].interpolate(_step);
             
         }
     }

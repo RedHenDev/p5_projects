@@ -25,6 +25,8 @@ let urizen;
 // This is our speech object.
 let robot;
 
+let clouds = [];
+
 p5.disableFriendlyErrors = true;
 
 function preload(){
@@ -52,6 +54,12 @@ function setup(){
         
     // Our subject.
     setupBoo();
+    
+    // Setup clouds.
+    for (let i = 0; i < 177; i++){
+        clouds.push(new Cloud(Math.random()*width*32-width*16, Math.random()*height*2-height*0.8,
+                   Math.random()*100+200));
+    }
     
     // AntBots!
     for (let i = 0; i < 3; i++){
@@ -140,6 +148,12 @@ function draw(){
     rect(boo.myBod.bod.position.x-width,
     height*2 + 32 * seaWobble,width*2,70000);
     
+    // Test clouds...
+    drawCloud(width/2, 300,200);
+    for (let i = 0; i < clouds.length; i++){
+        clouds[i].drawMe();
+    }
+    
     urizen.renderTerrain();
     
     for (let i = 0; i < blinkies.length; i++){
@@ -215,6 +229,53 @@ function touchEnded(){
 //    }
     
     canSpawn = true;
+}
+
+class Cloud{
+    constructor(_x, _y, _s){
+        this.x = _x;
+        this.y = _y;
+        this.s = _s;
+        
+        this.wobble = Math.random()*100+20;
+    }
+    
+    drawMe(){
+        push();
+        fill(255);
+        noStroke();
+
+        translate(this.x,this.y);
+        rotate(10*radians(Math.sin(frameCount/this.wobble)));
+
+        ellipse(-this.s*0.618/2,0-this.s*0.1,this.s*0.618*0.618,this.s*0.618*0.618);
+        ellipse(this.s*0.618/2,0-this.s*0.1,this.s*0.618*0.618,this.s*0.618*0.618);
+        ellipse(0,-this.s*0.15,this.s*0.618,this.s*0.618);
+
+        pop();
+        
+        this.x -= 0.001 * this.y;
+        
+    }
+}
+
+function drawCloud(_x,_y,_s){
+    push();
+    fill(255);
+    noStroke();
+    //stroke(0);
+    
+    translate(_x,_y);
+    rotate(30*radians(Math.sin(frameCount/20)));
+    
+    ellipse(-_s*0.618/2,0-_s*0.1,_s*0.618*0.618,_s*0.618*0.618);
+    ellipse(_s*0.618/2,0-_s*0.1,_s*0.618*0.618,_s*0.618*0.618);
+    ellipse(0,-_s*0.15,_s*0.618,_s*0.618);
+    //stroke(0);
+    //ellipse(0,-_s*0.05,_s,_s*0.618);
+    
+    
+    pop();
 }
 
 function spawnBlock(_x,_y,_sz){
