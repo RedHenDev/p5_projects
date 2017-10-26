@@ -56,7 +56,7 @@ function setup(){
     setupBoo();
     
     // Setup clouds.
-    for (let i = 0; i < 177; i++){
+    for (let i = 0; i < 88; i++){
         clouds.push(new Cloud(Math.random()*width*32-width*16, Math.random()*height*2-height*0.8,
                    Math.random()*100+200));
     }
@@ -149,7 +149,7 @@ function draw(){
     height*2 + 32 * seaWobble,width*2,70000);
     
     // Test clouds...
-    drawCloud(width/2, 300,200);
+    //drawCloud(width/2, 300,200);
     for (let i = 0; i < clouds.length; i++){
         clouds[i].drawMe();
     }
@@ -259,24 +259,6 @@ class Cloud{
     }
 }
 
-function drawCloud(_x,_y,_s){
-    push();
-    fill(255);
-    noStroke();
-    //stroke(0);
-    
-    translate(_x,_y);
-    rotate(30*radians(Math.sin(frameCount/20)));
-    
-    ellipse(-_s*0.618/2,0-_s*0.1,_s*0.618*0.618,_s*0.618*0.618);
-    ellipse(_s*0.618/2,0-_s*0.1,_s*0.618*0.618,_s*0.618*0.618);
-    ellipse(0,-_s*0.15,_s*0.618,_s*0.618);
-    //stroke(0);
-    //ellipse(0,-_s*0.05,_s,_s*0.618);
-    
-    
-    pop();
-}
 
 function spawnBlock(_x,_y,_sz){
     RedHen_2DPhysics.newObj("box", _x, _y, _sz);

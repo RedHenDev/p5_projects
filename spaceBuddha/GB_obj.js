@@ -59,7 +59,7 @@ class SpaceBuddha extends GhostO{
     render(){
         push();
         fill(255,72);
-        stroke(255,200);
+        stroke(0,255);
         strokeWeight(2);
         translate(  this.myBod.bod.position.x,
                     this.myBod.bod.position.y);
