@@ -16,7 +16,7 @@ function draw(){
     
 }
 
-function mouseMoved(){
+function mousePressed(){
     morph.interpolate(step+=1);
 }
 
@@ -65,22 +65,21 @@ class Morph{
             this.nodes[i].idPos.y = this.nodes[i].pos.y; 
         
             // Triangle.
-//            this.nodes[i].esPos.x = this.radius *
-//                Math.cos(radians(4*i*angleScalar));
-//            this.nodes[i].esPos.y = this.radius *
-//                Math.sin(radians(4*i*angleScalar));
+
             angleScalar *= this.nodeNum/this.edges;
             this.nodes[i].esPos.x = this.radius *
-                Math.cos(radians(i*angleScalar));
+            Math.cos(radians(angleScalar*i));
             this.nodes[i].esPos.y = this.radius *
-                Math.sin(radians(i*angleScalar));
+            Math.sin(radians(angleScalar*i));
         }
         
     }
     
     interpolate(_step){
-        for (let i = 0; i < this.nodeNum; i++){
-            this.nodes[i].interpolate(_step);
+        //this.nodes.splice(this.nodes.length/3,1);
+        for (let i = this.nodeNum-1; i >= 0; i--){
+            //this.nodes[i].interpolate(_step);
+            
         }
     }
     
@@ -99,18 +98,18 @@ class Morph{
         beginShape(CLOSE);
             
         
-            for (let i = 0; i < this.nodeNum; i++){
-                curveVertex(this.nodes[i].pos.x,
-                            this.nodes[i].pos.y);
-            }
-        
-//                for (let i = 0; i < this.nodeNum; i++){
-//                    vertex( this.nodes[i].pos.x,
+//            for (let i = 0; i < this.nodeNum; i++){
+//                curveVertex(this.nodes[i].pos.x,
 //                            this.nodes[i].pos.y);
-//                }
-//        
-//                vertex( this.nodes[0].pos.x,
-//                        this.nodes[0].pos.y);
+//            }
+        
+                for (let i = 0; i < this.nodes.length; i++){
+                    vertex( this.nodes[i].pos.x,
+                            this.nodes[i].pos.y);
+                }
+        
+                vertex( this.nodes[0].pos.x,
+                        this.nodes[0].pos.y);
         
         endShape();
         pop();
@@ -126,7 +125,7 @@ class Morph{
         fill(100,200);
         stroke(0);
         beginShape(CLOSE);
-            for (let i = 0; i < this.nodeNum; i++){
+            for (let i = 0; i < this.nodes.length; i++){
                     vertex( this.nodes[i].esPos.x,
                             this.nodes[i].esPos.y);
                 }
