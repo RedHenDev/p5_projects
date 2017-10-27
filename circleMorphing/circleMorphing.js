@@ -65,12 +65,20 @@ class Morph{
             this.nodes[i].idPos.y = this.nodes[i].pos.y; 
         
             // Triangle.
-            angleScalar *= this.nodeNum/this.edges;
+//            angleScalar *= this.nodeNum/this.edges;
+//            this.nodes[i].esPos.x = this.radius *
+//            Math.cos(radians(angleScalar*i));
+//            this.nodes[i].esPos.y = this.radius *
+//            Math.sin(radians(angleScalar*i));
+
+            angleScalar = 360/this.nodeNum;
+      
             this.nodes[i].esPos.x = this.radius *
-            Math.cos(radians(angleScalar*i));
+            Math.sin(radians((angleScalar*i)*60));
             this.nodes[i].esPos.y = this.radius *
-            Math.sin(radians(angleScalar*i));
-            angleScalar *= this.nodeNum/this.edges;
+            Math.cos(radians((angleScalar*i)*60));
+           
+    
         
         }
         
@@ -114,6 +122,20 @@ class Morph{
         
         endShape();
         pop();
+        
+        push();
+        translate(this.pos.x, this.pos.y);
+         rotate(radians(-90));
+        for (let i = 0; i < this.nodes.length; i++){
+      
+            stroke(0);
+            fill(255);
+            textSize(20);
+            text(i, this.nodes[i].pos.x,
+                    this.nodes[i].pos.y);
+            
+        }
+        pop();
     }
     
     renderEs(){
@@ -136,9 +158,28 @@ class Morph{
         
         endShape();
         
+        
+        
+        pop();
+        
+        
+       push();
+        translate(this.pos.x, this.pos.y);
+         rotate(radians(-90));
+        for (let i = 0; i < this.nodes.length; i++){
+      
+            stroke(0);
+            fill(255);
+            textSize(20);
+            text(i, this.nodes[i].esPos.x,
+                    this.nodes[i].esPos.y);
+            
+        }
         pop();
     } 
-        
+    
+   
+    
     
 }
 
@@ -150,6 +191,7 @@ class Node{
         this.parent = _parent;
         this.index = _index;
     }
+
     
     interpolate(_step){
         // Find unit vector.

@@ -26,6 +26,7 @@ let urizen;
 let robot;
 
 let clouds = [];
+let cloudTimer = 0;
 
 p5.disableFriendlyErrors = true;
 
@@ -152,6 +153,15 @@ function draw(){
     //drawCloud(width/2, 300,200);
     for (let i = 0; i < clouds.length; i++){
         clouds[i].drawMe();
+    } 
+    // If 10 seconds elapsed, reset positions of clouds.
+    if (millis()-cloudTimer > 6000){
+        cloudTimer = millis();
+        for (let i = 0; i < clouds.length; i++){
+            clouds[i].x = boo.myBod.bod.position.x + Math.random()*width*32-width*16;
+            
+            clouds[i].y = Math.random()*height*2-height*0.8;
+        }
     }
     
     urizen.renderTerrain();
