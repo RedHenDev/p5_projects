@@ -149,33 +149,7 @@ function draw(){
     rect(boo.myBod.bod.position.x-width,
     height*2 + 32 * seaWobble,width*2,70000);
     
-    // Test clouds...
-    //drawCloud(width/2, 300,200);
-    for (let i = 0; i < clouds.length; i++){
-        clouds[i].drawMe();
-    } 
-    // If 10 seconds elapsed, reset positions of clouds.
-    if (millis()-cloudTimer > 500){
-        cloudTimer = millis();
-        for (let i = 0; i < clouds.length; i++){
-            
-            // First, check distance of cloud from
-            // boo's position. I *think* we could
-            // do this via x only?
-            if (Math.abs(clouds[i].x - boo.myBod.bod.position.x) > width*2){
-                // Place left or right of screen.
-                if (frameCount%2===0)
-                clouds[i].x = boo.myBod.bod.position.x +
-                Math.random()*width*2+width;
-                else
-                clouds[i].x = boo.myBod.bod.position.x -
-                Math.random()*width*2-width;
-                // Random height.
-                clouds[i].y = Math.random()*height*2-
-                height/3;
-            }
-        }
-    }
+    updateClouds();
     
     urizen.renderTerrain();
     
@@ -252,6 +226,36 @@ function touchEnded(){
 //    }
     
     canSpawn = true;
+}
+
+function updateClouds(){
+    // Test clouds...
+    //drawCloud(width/2, 300,200);
+    for (let i = 0; i < clouds.length; i++){
+        clouds[i].drawMe();
+    } 
+    // If 10 seconds elapsed, reset positions of clouds.
+    if (millis()-cloudTimer > 500){
+        cloudTimer = millis();
+        for (let i = 0; i < clouds.length; i++){
+            
+            // First, check distance of cloud from
+            // boo's position. I *think* we could
+            // do this via x only?
+            if (Math.abs(clouds[i].x - boo.myBod.bod.position.x) > width*2){
+                // Place left or right of screen.
+                if (frameCount%2===0)
+                clouds[i].x = boo.myBod.bod.position.x +
+                Math.random()*width*2+width;
+                else
+                clouds[i].x = boo.myBod.bod.position.x -
+                Math.random()*width*2-width;
+                // Random height.
+                clouds[i].y = Math.random()*height*2-
+                height/3;
+            }
+        }
+    }
 }
 
 class Cloud{
