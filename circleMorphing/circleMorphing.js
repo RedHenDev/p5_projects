@@ -1,5 +1,6 @@
 
 let step = 1;
+let displayNodes = false;
 
 function setup(){
     createCanvas(400,400);
@@ -11,9 +12,14 @@ function setup(){
 function draw(){
     background(200,0,200);
     
+    //morph.rotation+=0.1;
     morph.renderEs();
     morph.render();
     
+}
+
+function mousePressed(){
+    displayNodes = !displayNodes;
 }
 
 function mouseMoved(){
@@ -31,7 +37,8 @@ class Morph{
         // cTt = circle to triangle.
         this.transition = 'cTt';
         
-        this.radius = width/2.5;
+        this.radius = 200;
+        // width/2.5;
         
         this.nodeNum = 40;
         
@@ -71,12 +78,37 @@ class Morph{
 //            this.nodes[i].esPos.y = this.radius *
 //            Math.sin(radians(angleScalar*i));
 
-            angleScalar = 360/this.nodeNum;
-      
-            this.nodes[i].esPos.x = this.radius *
-            Math.sin(radians((angleScalar*i)*60));
-            this.nodes[i].esPos.y = this.radius *
-            Math.cos(radians((angleScalar*i)*60));
+            //angleScalar = 360/this.nodeNum;
+            if (i ===0){
+                this.nodes[i].esPos.x = this.radius;
+                this.nodes[i].esPos.y = 0;
+            }
+            if (i > 0 && i < this.nodeNum/3){
+                this.nodes[i].esPos.x = 
+                this.nodes[i-1].esPos.x -
+                i*2/angleScalar*this.radius/10;
+                this.nodes[i].esPos.y = 
+                this.nodes[i-1].esPos.y +
+                i*1/angleScalar*this.radius/10;
+            }
+            if (i >= this.nodeNum/3 && i < this.nodeNum/3 + this.nodeNum/3){
+                this.nodes[i].esPos.x = 
+                this.nodes[i-1].esPos.x;
+                this.nodes[i].esPos.y = 
+                this.nodes[i-1].esPos.y-i/angleScalar*this.radius/14;
+            }
+            if (i >= this.nodeNum/3 + this.nodeNum/3 && i < this.nodeNum){
+               this.nodes[i].esPos.x = 
+                this.nodes[i-1].esPos.x +
+                ((i)*this.radius/180);
+                this.nodes[i].esPos.y = 
+                this.nodes[i-1].esPos.y +
+                ((i)*this.radius/180)*0.5;
+            }
+             if (i ===this.nodes.length-1){
+                this.nodes[i].esPos.x = this.radius;
+                this.nodes[i].esPos.y = 0;
+            }
            
     
         
@@ -131,6 +163,7 @@ class Morph{
             stroke(0);
             fill(255);
             textSize(20);
+            if (displayNodes)
             text(i, this.nodes[i].pos.x,
                     this.nodes[i].pos.y);
             
@@ -171,6 +204,7 @@ class Morph{
             stroke(0);
             fill(255);
             textSize(20);
+            if (displayNodes)
             text(i, this.nodes[i].esPos.x,
                     this.nodes[i].esPos.y);
             
