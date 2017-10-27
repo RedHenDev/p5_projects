@@ -57,8 +57,8 @@ function setup(){
     setupBoo();
     
     // Setup clouds.
-    for (let i = 0; i < 88; i++){
-        clouds.push(new Cloud(Math.random()*width*32-width*16, Math.random()*height*2-height*0.8,
+    for (let i = 0; i < 24; i++){
+        clouds.push(new Cloud(Math.random()*width*4-width*2, Math.random()*height*2-height*0.8,
                    Math.random()*100+200));
     }
     
@@ -155,12 +155,25 @@ function draw(){
         clouds[i].drawMe();
     } 
     // If 10 seconds elapsed, reset positions of clouds.
-    if (millis()-cloudTimer > 6000){
+    if (millis()-cloudTimer > 500){
         cloudTimer = millis();
         for (let i = 0; i < clouds.length; i++){
-            clouds[i].x = boo.myBod.bod.position.x + Math.random()*width*32-width*16;
             
-            clouds[i].y = Math.random()*height*2-height*0.8;
+            // First, check distance of cloud from
+            // boo's position. I *think* we could
+            // do this via x only?
+            if (Math.abs(clouds[i].x - boo.myBod.bod.position.x) > width*2){
+                // Place left or right of screen.
+                if (frameCount%2===0)
+                clouds[i].x = boo.myBod.bod.position.x +
+                Math.random()*width*2+width;
+                else
+                clouds[i].x = boo.myBod.bod.position.x -
+                Math.random()*width*2-width;
+                // Random height.
+                clouds[i].y = Math.random()*height*2-
+                height/3;
+            }
         }
     }
     
