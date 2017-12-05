@@ -72,43 +72,49 @@ class Morph{
             this.nodes[i].idPos.y = this.nodes[i].pos.y; 
         
             // Triangle.
+            let y = a*x +b; // cartesian coords.
+            let x = b/(Math.sqrt(1+(a*a))*Math.sin(i-Math.atan(a)));// polar representation.
+            
+            
+            
+            
 //            angleScalar *= this.nodeNum/this.edges;
 //            this.nodes[i].esPos.x = this.radius *
 //            Math.cos(radians(angleScalar*i));
 //            this.nodes[i].esPos.y = this.radius *
 //            Math.sin(radians(angleScalar*i));
 
-            //angleScalar = 360/this.nodeNum;
-            if (i ===0){
-                this.nodes[i].esPos.x = this.radius;
-                this.nodes[i].esPos.y = 0;
-            }
-            if (i > 0 && i < this.nodeNum/3){
-                this.nodes[i].esPos.x = 
-                this.nodes[i-1].esPos.x -
-                i*2/angleScalar*this.radius/10;
-                this.nodes[i].esPos.y = 
-                this.nodes[i-1].esPos.y +
-                i*1/angleScalar*this.radius/10;
-            }
-            if (i >= this.nodeNum/3 && i < this.nodeNum/3 + this.nodeNum/3){
-                this.nodes[i].esPos.x = 
-                this.nodes[i-1].esPos.x;
-                this.nodes[i].esPos.y = 
-                this.nodes[i-1].esPos.y-i/angleScalar*this.radius/14;
-            }
-            if (i >= this.nodeNum/3 + this.nodeNum/3 && i < this.nodeNum){
-               this.nodes[i].esPos.x = 
-                this.nodes[i-1].esPos.x +
-                ((i)*this.radius/180);
-                this.nodes[i].esPos.y = 
-                this.nodes[i-1].esPos.y +
-                ((i)*this.radius/180)*0.5;
-            }
-             if (i ===this.nodes.length-1){
-                this.nodes[i].esPos.x = this.radius;
-                this.nodes[i].esPos.y = 0;
-            }
+           
+//            if (i ===0){
+//                this.nodes[i].esPos.x = this.radius;
+//                this.nodes[i].esPos.y = 0;
+//            }
+//            if (i > 0 && i < this.nodeNum/3){
+//                this.nodes[i].esPos.x = 
+//                this.nodes[i-1].esPos.x -
+//                i*2/angleScalar*this.radius/10;
+//                this.nodes[i].esPos.y = 
+//                this.nodes[i-1].esPos.y +
+//                i*1/angleScalar*this.radius/10;
+//            }
+//            if (i >= this.nodeNum/3 && i < this.nodeNum/3 + this.nodeNum/3){
+//                this.nodes[i].esPos.x = 
+//                this.nodes[i-1].esPos.x;
+//                this.nodes[i].esPos.y = 
+//                this.nodes[i-1].esPos.y-i/angleScalar*this.radius/14;
+//            }
+//            if (i >= this.nodeNum/3 + this.nodeNum/3 && i < this.nodeNum){
+//               this.nodes[i].esPos.x = 
+//                this.nodes[i-1].esPos.x +
+//                ((i)*this.radius/180);
+//                this.nodes[i].esPos.y = 
+//                this.nodes[i-1].esPos.y +
+//                ((i)*this.radius/180)*0.5;
+//            }
+//             if (i ===this.nodes.length-1){
+//                this.nodes[i].esPos.x = this.radius;
+//                this.nodes[i].esPos.y = 0;
+//            }
            
     
         
