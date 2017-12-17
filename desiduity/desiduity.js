@@ -1,11 +1,10 @@
 
-var nodes = [];
-var numNodes = 0;
+let nodes = [];
+let numNodes = 0;
 
 function setup(){
     
     createCanvas(windowWidth, windowHeight);
-    
     
     renderBG();
     
@@ -14,9 +13,14 @@ function setup(){
 function draw(){
     renderBG();
     
-    for (let i = 0; i<nodes.length; i++){
-        nodes[i].renderNode();
+//    for (let i = 0; i<nodes.length; i++){
+//        nodes[i].renderNode();
+//    }
+    
+    for (let n of nodes){
+        n.renderNode();
     }
+    
 }
 
 
@@ -29,6 +33,11 @@ function touchEnded(){
     nodes.push(new Node(numNodes));
     numNodes++;
     nodes[nodes.length-1].placeMe(nodes[numNodes-2]);
+    
+    nodes.push(new Node(numNodes));
+    numNodes++;
+    nodes[nodes.length-1].placeMe(nodes[numNodes-2]);
+    
     //nodes[nodes.length-1].renderNode();
 }
 
@@ -68,7 +77,7 @@ class Node{
         this.xGrowth = 24;     // Xaxis move, due to Perlin.
         
         this.perlinXpos = 0;
-        this.perlinRes = 10;
+        this.perlinRes = 20;
         
         this.theta = 0;         // 'Clock point' rotation.
         
@@ -100,7 +109,7 @@ class Node{
         // Draws a 'clock point.'
         point(this.pos.x +                                       Math.sin(this.theta)*this.growthRate,
             this.pos.y - Math.cos(this.theta)*this.growthRate);
-        this.theta+=0.01;
+        this.theta+=0.1;
     }
     
     placeMe(_previousNode){
@@ -110,7 +119,7 @@ class Node{
                 // Must be first node!
                 // Do seedy things :)
                 this.seedMe(9);
-                console.log('First node!');
+                //console.log('First node!');
             }
         else    {
                     // Just a normal node.
