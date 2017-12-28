@@ -326,9 +326,7 @@ class Gstalk{
                     this.parent.rEdge].
             myBody.width/2, 
             this.parent.yPos + this.calcNoise(1, xOffset)); 
-            
-            
-            
+              
         }
         else if (_leftORright === 'left'){
             //this.myBody.makePosition(_x, _y);
@@ -350,7 +348,25 @@ class Gstalk{
             myBody.width/2, 
             this.parent.yPos + this.calcNoise(-1, xOffset)); 
             
+            
+            
         }
+        
+        // I think here is where we might
+            // generate trees etc.
+            // For, here we have decided to move
+            // the terrain 'stalk' either left or
+            // right and have just calculated and
+            // positioned this 'stalk' according to
+            // Perlin noise. So...we might take the
+            // value of its new position, or even
+            // the raw noise value, with which to 
+            // decide to place a tree, a rock, etc.
+        if(this.myBody.bod.position.y < height*3){
+            RedHen_2DPhysics.newObj('circle', this.myBody.bod.position.x, this.myBody.bod.position.y - height*2, 12);
+            RedHen_2DPhysics.lastObjectCreated().OSR = false;
+            RedHen_2DPhysics.lastObjectCreated().makeStatic(true);
+            }
     }
 }
 

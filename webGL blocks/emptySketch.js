@@ -2,6 +2,7 @@
 p5.disableFriendlyErrors = true;
 
 let rotY = 0;
+let rotX = 0;
 let stars = [];
 let starNum = 400;
 
@@ -41,7 +42,6 @@ function touchEnded(){
 }
 
 function mousePressed(){
-    
     fighters[0].forward(1);
     
 }
@@ -54,29 +54,33 @@ function draw(){
   //pointLight(width/3, height, 100);
   //ambientMaterial(255);
   
-  //mouseX += Math.sin(frameCount/200);
-   //mouseY += Math.cos(frameCount/200);
-  
-    //tf.rY += Math.sin(frameCount/200);
-    //tf.rX += Math.cos(frameCount/200);
-  
-    tf.rY += frameCount/2000;
+    if (!drive){   
+        rotX += Math.sin(frameCount/200);
+        rotY += Math.cos(frameCount/200);
+        
+    }
     
-  let rotX = map(mouseY, 0, height, 360, 0);
-  //rotateX(radians(-rotX));
-  rotY = map(mouseX, 0, width, 360,0);
-  //rotateY(radians(rotY));
+    
+    if (!drive){
+        rotateX(radians(-rotX));
+        rotateY(radians(rotY));
+    }
   
-  
+    //tf.rZ += 1;
+    if (drive){
+        // Mouse controls for rotation of scene.
+    rotX = map(mouseY, 0, height, 360, 0);
+    rotY = map(mouseX, 0, width, 360,0);
     tf.rY = rotY;
     tf.rX = rotX;
-    
-    
+    }
+      
+    // Draw the stars.
   starWars();
   
   tf.render();
   
-    if (drive) tf.forward(1);
+    if (drive) tf.forward(3);
     
   for(let i = 0; i < fighters.length; i++){
     fighters[i].render();
@@ -114,30 +118,27 @@ class TieFighter{
         // This will be based on rotation
         // and using 3D vector maths.
         
-//        this.pos.z += _f * Math.cos(radians(this.rY));
-//        this.pos.x += _f * Math.sin(radians(this.rY));
-//        
-//        this.pos.y += _f * Math.sin(radians(this.rX));
-//        
-//        this.pos.x += _f * Math.cos(radians(this.rX));
-//        this.pos.y += _f * Math.sin(radians(this.rX));
-        
-        
-        this.pos.x += _f * Math.sin(radians(this.rY)) *
-            Math.cos(radians(this.rX));
-        
-        this.pos.y += _f * Math.sin(radians(this.rY))* 
-            Math.sin(radians(this.rX));
-        
         this.pos.z += _f * Math.cos(radians(this.rY));
+        this.pos.x += _f * Math.sin(radians(this.rY));
+        
+        this.pos.y += _f * Math.sin(radians(this.rX));
+        
+        //this.pos.x += _f * Math.cos(radians(this.rX));
+        //this.pos.y += _f * Math.sin(radians(this.rX));
+        
+        
+//        this.pos.x += _f * Math.sin(radians(this.rY)) *
+//            Math.cos(radians(this.rX));
+//        
+//        this.pos.y += _f * Math.sin(radians(this.rY))* 
+//            Math.sin(radians(this.rX));
+//        
+//        this.pos.z += _f * Math.cos(radians(this.rY));
         
     }
     
   render(){
-    
-    
-    
-    
+
     push();
   translate(this.pos);
     

@@ -1,6 +1,6 @@
 // Generic object that will take a ghost shape
 // from my matter.js wrapper, but will crucially
-// have its own rederer.
+// have its own renderer.
 
 // Perhaps a member constant should be type of
 // matter.js body to take on -- held as a string
@@ -28,6 +28,11 @@ class GhostO {
         this.width = _width;
         this.height = _height;
         
+        // These for tracking movement relative to
+        // the infinite terrain. oX = origin, which
+        // is reset each time this movement
+        // tracked to set measure (which then asks
+        // for more terrain to be generated).
         this.trackX = 0; // Movement relative to oX.
         this.oX = this.myBod.bod.position.x;
     }
@@ -81,7 +86,7 @@ class SpaceBuddha extends GhostO{
     hitWaterCheck(){
         if (this.getAltitude() < 0) { 
             if (this.myBod.bod.frictionAir !== 0.5)
-            robot.speak("PLOP");
+            //robot.speak("PLOP");
             this.myBod.bod.frictionAir = 0.5;}
         
     else this.myBod.bod.frictionAir = 0.01;
@@ -97,7 +102,7 @@ class SpaceBuddha extends GhostO{
         // Where do we want bubbles to spawn?
         let _x = this.myBod.bod.position.x + 
         Math.random()*this.width*2 - this.width +
-            this.myBod.bod.velocity.x;
+            this.myBod.bod.velocity.x * 20;
         let _y = this.myBod.bod.position.y + 
         this.height*2 + Math.random()*this.width*2 -
             this.width -
@@ -168,9 +173,9 @@ class SpaceBuddha extends GhostO{
         //RedHen_2DPhysics.lastObjectCreated().
         //makeMass(10);
         RedHen_2DPhysics.
-        lastObjectCreated().bod.restitution = 0.08;
+        lastObjectCreated().bod.restitution = 0.9;
         RedHen_2DPhysics.
-        lastObjectCreated().bod.frictionAir = 0.2;
+        lastObjectCreated().bod.frictionAir = 0.9;
     }
     
     speedLimit(_xORy){

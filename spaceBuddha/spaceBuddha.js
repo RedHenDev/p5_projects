@@ -31,7 +31,7 @@ let cloudTimer = 0;
 p5.disableFriendlyErrors = true;
 
 function preload(){
-    robot = new p5.Speech();
+    //robot = new p5.Speech();
     // Pick a random voice!
 //function setupVoices(){
 //  let voices = robot.voices;
@@ -76,7 +76,7 @@ function setup(){
     // Here we goooooo...
     // 51 seems OK.
     // Nah, 12 is where it's at.
-    urizen = new GSterrain(12);
+    urizen = new GSterrain(22);
     
     // Celestial orbs that can be woken/put to sleep
     // depending on collision speed with boo.
@@ -90,6 +90,8 @@ function setupBoo(){
                           Math.round(height/2),
                           22);
     //robot.speak("Bubble boo is ready.");
+    boo.bubblesON = true;
+    boo.maxV = 14;
 }
 
 function myCollision(event){
@@ -116,7 +118,7 @@ function myCollision(event){
                  bodB.label === 'digit' &&
                  Math.abs(bodA.velocity.x) +             Math.abs(bodA.velocity.y) > 9){
                 Matter.Sleeping.set(bodB, 
-                !bodB.isSleeping);}
+                !bodB.isSleeping);}    
             }   // End of forLoop.
 }
 
@@ -162,6 +164,7 @@ function draw(){
     }
     
     RedHen_2DPhysics.updateObjs();
+    
     boo.control();// NB. contains speedlimiter.
     boo.hitWaterCheck();
     boo.render();
@@ -212,12 +215,14 @@ function touchEnded(){
     
     if (canSpawn){
         boo.bubblesON = !boo.bubblesON;
-        if (boo.bubblesON)
-        robot.speak("Crash bubbles engaged!");
-        else
-        robot.speak("Crash bubbles disengaged...and whatever!");
+//        if (boo.bubblesON)
+//        robot.speak("Crash bubbles engaged!");
+//        else
+//        robot.speak("Crash bubbles disengaged...and whatever!");
     }
     
+    // Legacy spawning. Might come in useful
+    // for creating blocks etc.
 //    if (canSpawn && mouseX < width/2){
 //        spawnBlock(mouseX, mouseY, 28);
 //    }
