@@ -5,6 +5,17 @@
 
 // Additionally, then, we need a 'manager', whose job will simply enough be to keep a track of which two gStalks are the current 'edge stalks' -- left and right (negative and positive).
 
+
+
+// Array of 'object slots'.
+// Primary function of these slots is to
+// record whether an object has been placed,
+// therewith permitting or denying the placement
+// of an object on request (see 'placeObject()',
+// called by moveMe()).
+let objectSlots = [];
+
+
 // Width of each individual stalk.
 class GSterrain{
     constructor(_width){
@@ -298,7 +309,7 @@ class Gstalk{
         let Octave3 = noise(
                 _xOffset
                 /7)
-                *30;
+                *3;
         
         return Octave1 + Octave2 + Octave3;
         
@@ -310,10 +321,14 @@ class Gstalk{
     
     moveMe(_leftORright){
         
+        // To record xOffset value to be passed
+        // into placeObject().
+        let xOffset;
+        
         if (_leftORright === 'right'){
             // Calculate noise here.
             
-            let xOffset = this.parent.gStalks[
+            xOffset = this.parent.gStalks[
                     this.parent.gStalks[
                     this.parent.rEdge].Lneighbour].
             myBody.bod.position.x + 
@@ -327,12 +342,14 @@ class Gstalk{
             myBody.width/2, 
             this.parent.yPos + this.calcNoise(1, xOffset)); 
               
+            
+            
         }
         else if (_leftORright === 'left'){
             //this.myBody.makePosition(_x, _y);
             //console.log("Can't be doing anything yet like.");
             
-             let xOffset = this.parent.gStalks[
+             xOffset = this.parent.gStalks[
                     this.parent.gStalks[
                     this.parent.lEdge].Rneighbour].
             myBody.bod.position.x - 
@@ -348,8 +365,6 @@ class Gstalk{
             myBody.width/2, 
             this.parent.yPos + this.calcNoise(-1, xOffset)); 
             
-            
-            
         }
         
         // I think here is where we might
@@ -362,11 +377,25 @@ class Gstalk{
             // value of its new position, or even
             // the raw noise value, with which to 
             // decide to place a tree, a rock, etc.
+        this.placeObject(xOffset);
+    }
+    
+    placeObject(_xOffset){
+        
+        // Determine slot id by looking at xOffset pos.
+        let id = Math.floor(_xOffset);
+        
+        // First, see if slot is empty (null).
+        if (objectSlots[id] == null){
+        
         if(this.myBody.bod.position.y < height*3){
-            RedHen_2DPhysics.newObj('circle', this.myBody.bod.position.x, this.myBody.bod.position.y - height*2, 12);
+            RedHen_2DPhysics.newObj('circle', this.myBody.bod.position.x, this.myBody.bod.position.y - 32 - height*1.5, 12);
             RedHen_2DPhysics.lastObjectCreated().OSR = false;
-            RedHen_2DPhysics.lastObjectCreated().makeStatic(true);
+            RedHen_2DPhysics.lastObjectCreated().makeSleep(true);
             }
+            // Delcate this slot as filled.
+            objectSlots[id] = 1;
+        }
     }
 }
 

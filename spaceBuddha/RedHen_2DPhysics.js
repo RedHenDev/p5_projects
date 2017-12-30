@@ -495,6 +495,7 @@ class Box extends Obj {
         // Render rotation?
         if (this.roll){
             push();
+            
             //this.pos.x = this.bod.position.x;
             //this.pos.y = this.bod.position.y;
             translate(this.bod.position.x, this.bod.position.y);

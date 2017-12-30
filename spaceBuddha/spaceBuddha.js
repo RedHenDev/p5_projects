@@ -81,6 +81,8 @@ function setup(){
     // Celestial orbs that can be woken/put to sleep
     // depending on collision speed with boo.
     createDigitBalls();
+    
+    rectMode(CENTER);
    
 }
 
@@ -90,7 +92,7 @@ function setupBoo(){
                           Math.round(height/2),
                           22);
     //robot.speak("Bubble boo is ready.");
-    boo.bubblesON = true;
+    boo.bubblesON = false;
     boo.maxV = 14;
 }
 
@@ -131,9 +133,9 @@ function draw(){
     background(0,skyTint/2,skyTint);
     
     // Spit blocks if boo in correct area.
-//    if (boo.myBod.bod.position.x > -700 &&
-//        boo.myBod.bod.position.x < 1000)
-//        spitObjects();
+    if (boo.myBod.bod.position.x > -700 &&
+        boo.myBod.bod.position.x < 1000)
+        spitObjects();
     
     boo.spawnBubbles();
     
@@ -150,6 +152,7 @@ function draw(){
     stroke(255,160);
     rect(boo.myBod.bod.position.x-width,
     height*2 + 32 * seaWobble,width*2,70000);
+    rectMode(CENTER);
     
     updateClouds();
     
@@ -318,7 +321,7 @@ function spitObjects(){
 //        if (frameCount % 33 === 0 &&
 //       frameCount < 10240){
     if (frameCount % 5 === 0 && frameCount < 1024){
-        spawnBlock(width/2+200, height/2-200, Math.random()*3+12);
+        spawnBlock(width/3 - 50, height*0.6, Math.random()*3+12);
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
         RedHen_2DPhysics.lastObjectCreated().
         makeAngle(Math.random()*360);
