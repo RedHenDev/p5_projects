@@ -201,6 +201,7 @@ class RedHen_2DPhysics {
                     bods[i].bod.position.y - bods[i].dia > height+9
                     )
                 ){this.removeObj(i);}
+           
         }
     }
     

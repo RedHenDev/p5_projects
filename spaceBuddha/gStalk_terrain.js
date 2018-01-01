@@ -378,6 +378,7 @@ class Gstalk{
             // the raw noise value, with which to 
             // decide to place a tree, a rock, etc.
         this.placeObject(xOffset);
+        
     }
     
     placeObject(_xOffset){
@@ -388,13 +389,16 @@ class Gstalk{
         // First, see if slot is empty (null).
         if (objectSlots[id] == null){
         
-        if(this.myBody.bod.position.y < height*3){
+        if(this.myBody.bod.position.y < height*3 &&
+          id % 5 === 0) {
             RedHen_2DPhysics.newObj('circle', this.myBody.bod.position.x, this.myBody.bod.position.y - 32 - height*1.5, 12);
             RedHen_2DPhysics.lastObjectCreated().OSR = false;
-            RedHen_2DPhysics.lastObjectCreated().makeSleep(true);
-            }
-            // Delcate this slot as filled.
+            //RedHen_2DPhysics.lastObjectCreated().makeSleep(true);
+            
+            // Delcare this slot as filled.
             objectSlots[id] = 1;
+            }
+            
         }
     }
 }
