@@ -22,6 +22,8 @@ function setup(){
     mouseX = 0;
     mouseY = 0;
 
+    translate(0,0,10);
+    
 }
 
 function setupSun(){
