@@ -13,6 +13,18 @@ class Quad{
         this.b = this.y + this.rY;
     }
     
+    // NB the 'range' is a quad object.
+    intersects (_range){
+        if (_range.l > this.r ||
+           _range.r < this.l){
+            return false;
+        } else if (_range.t > this.b ||
+                  _range.b < this.t ){
+            return false;
+        }
+        return true;
+    }
+    
     contains(_p){
         if (_p.x <= this.l ||
            _p.x > this.r ||
@@ -29,13 +41,50 @@ class QTree{
         this.capacity = 4;
         this.points = [];
         this.divided = false;
+        
+        this.color = color(Math.random()*255,
+                           Math.random()*255,
+                           Math.random()*255);
+    }
+    
+    // NB the 'range' is a quad object.
+    // 'found' is an (empty) array of points.
+    query(_range, _found){
+       if (!this.boundary.intersects(_range)) {
+           return;
+       }
+        else {
+            for (let p of this.points){
+                if (_range.contains(p)){
+                    _found.push(p);
+                }
+            }
+            
+            if (this.divided){
+                this.qNE.query(_range, _found);
+                this.qNW.query(_range, _found);
+                this.qSE.query(_range, _found);
+                this.qSW.query(_range, _found);
+            } 
+        }
+        return _found;
+        
     }
     
     render(){
+        
+        strokeWeight(1);
+        stroke(255);
         rect(this.boundary.x,
             this.boundary.y,
             this.boundary.rX*2,
             this.boundary.rY*2);
+        
+        strokeWeight(8);
+        stroke(this.color);
+        for (let p of this.points){
+            point(p.x, p.y);
+        }
         
         if (this.divided){
             this.qNE.render();
