@@ -1,7 +1,12 @@
+p5.disableFriendlyErrors = true;
+
+// Our first QuadTree.
 let qt;
 
+let pointCount = 0;
+
 function setup(){
-    createCanvas(400,400);
+    createCanvas(512,512);
     background(100,100,100);
     
     // Setup the root quadtree (over whole area).
@@ -16,12 +21,14 @@ function setup(){
 }
 
 function mousePressed(){
-    for (let i = 0; i < 500; i++){
+    let amount = 512;
+    for (let i = 0; i < amount; i++){
         let x = randomGaussian(width/2, width/6);
         let y = randomGaussian(height/2, height/6);
         let np = new Point(x,y);
         qt.insert(np);
     }
+    pointCount+=amount;
 }
 
 function mouseMoved(){
@@ -30,9 +37,10 @@ function mouseMoved(){
 }
 
 function draw(){
+
     background(100,100,100);
     
-    qt.render();  
+    qt.render();
     
     dangerZone();
 }

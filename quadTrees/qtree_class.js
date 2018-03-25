@@ -67,7 +67,7 @@ class QTree{
                 this.qSW.query(_range, _found);
             } 
         }
-        return _found;
+        //return _found;
         
     }
     
@@ -152,4 +152,6 @@ class Point{
         this.x = _x;
         this.y = _y;
     }
+    
+    
 }
