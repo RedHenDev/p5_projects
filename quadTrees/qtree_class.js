@@ -38,7 +38,7 @@ class Quad{
 class QTree{
     constructor(_boundary){
         this.boundary = _boundary;
-        this.capacity = 3;
+        this.capacity = 8;
         this.points = [];
         this.divided = false;
         
@@ -71,6 +71,7 @@ class QTree{
     
     render(){
         
+        noFill();
         strokeWeight(1);
         stroke(255);
         rect(this.boundary.x,
@@ -92,20 +93,6 @@ class QTree{
             this.qSW.render();
         }
     }
-    
-//    physics(){
-//        for (let pp of this.points){
-//            pp.update();
-//        }
-//        
-//        if (this.divided){
-//            this.qNE.physics();
-//            this.qSE.physics();
-//            this.qNW.physics();
-//            this.qSW.physics();
-//        }
-//        
-//    }
     
     subdivide(){
         let nw = new Quad(
@@ -134,8 +121,7 @@ class QTree{
         this.qSW = new QTree(sw);
         this.qSE = new QTree(se);
         
-        this.divided = true;
-        
+        this.divided = true;  
     }
     
     reset(){
@@ -165,8 +151,7 @@ class QTree{
                 this.qNW.insert(_point);
                 this.qSE.insert(_point);
                 this.qSW.insert(_point);
-            }
-            
+            }       
     }
 }
 
@@ -186,9 +171,12 @@ class Point{
     }
     
     render(){
-        strokeWeight(this.r*1.3);
-        stroke(this.colour);
-        point(this.x, this.y);
+//        strokeWeight(this.r*1.3);
+//        stroke(this.colour);
+//        point(this.x, this.y);
+        stroke(255);
+        fill(this.colour);
+        ellipse(this.x, this.y, this.r*2);
     }
     
     update(){
@@ -223,7 +211,7 @@ class Point{
         
         vChord = p5.Vector.sub(_p, _thisp);
         vChord.normalize();
-        _thisp.add(vChord.mult(-1));
+        _thisp.add(vChord.mult(-this.r*1.01));
         //_p.add(-vChord);
         
         this.x = _thisp.x;

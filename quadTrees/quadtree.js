@@ -16,7 +16,7 @@ function setup(){
     qt = new QTree(ra);
     
     rectMode(CENTER);
-    noFill();
+    
     stroke(255);
 }
 
@@ -25,12 +25,13 @@ let thePoints = [];
 function mousePressed(){
     let amount = 32;
     for (let i = 0; i < amount; i++){
-        let x = randomGaussian(mouseX, width/16);
-        let y = randomGaussian(mouseY, height/16);
+        let x = randomGaussian(mouseX, width/12);
+        let y = randomGaussian(mouseY, height/12);
         let np = new Point(x,y);
         np.colour = color(Math.random()*255,
-                           Math.random()*255,
-                           Math.random()*255);
+                          Math.random()*255,
+                          Math.random()*255);
+        np.r = 3;
         thePoints.push(np);
         qt.insert(thePoints[i]);
     }
@@ -46,6 +47,36 @@ function draw(){
 
     background(100,100,100);
     
+    checkCollisions();
+    //oldStyleCheck();
+    
+    qt.render();
+    dangerZone();
+    
+    qt.reset();
+}
+
+function oldStyleCheck(){
+     for (let i = 0; i < thePoints.length; i++){
+      
+        for (let j = 0; j < thePoints.length; j++){
+           if (i !== j && thePoints[i].
+           checkBump(thePoints[j])){
+                let temp_p = createVector(thePoints[i].v.x, thePoints[i].v.y);
+                thePoints[i].v.x = thePoints[j].v.x;
+                thePoints[i].v.y = thePoints[j].v.y;
+                thePoints[j].v.x = temp_p.x;
+                thePoints[j].v.y = temp_p.y;
+            
+           } 
+        }
+        
+        thePoints[i].update();
+        qt.insert(thePoints[i]);
+    }
+}
+
+function checkCollisions(){
     for (let ps of thePoints){
         
         // For each point, I want to
@@ -54,7 +85,7 @@ function draw(){
         // a certain range of it.
         let cps = [];
         let range = new Quad(ps.x, ps.y,
-                            12,12);
+                            ps.r*2,ps.r*2);
         qt.query(range, cps);
         for (let cp of cps){
             if (ps != cp && ps.checkBump(cp)){
@@ -63,34 +94,37 @@ function draw(){
                 cp.v.y = ps.v.y;
                 ps.v.x = temp_p.x;
                 ps.v.y = temp_p.y;
-                
+                if (cp.r < 8)
+                cp.r *= 1.01;
             }
         }
         ps.update();
         qt.insert(ps);
     }
-    
-    qt.render();
-    dangerZone();
-    
-    qt.reset();
 }
 
 let dzX = 100;
 let dzY = dzX * 0.618;
 
 function dangerZone(){
+    noFill();
     stroke(0,255,0);
     strokeWeight(3);
     rect(mouseX, mouseY, dzX, dzY);
     
-    stroke(0);
-    strokeWeight(3);
+    stroke(0,200,0);
+    strokeWeight(2);
     let ps = [];
     qt.query(new Quad(mouseX, mouseY, 
                       dzX/2, dzY/2), ps);
     for (let p of ps){
         ellipse(p.x,p.y,p.r);
-        //point(p.x, p.y);
+        line(mouseX, mouseY, p.x, p.y);
     }
+    
+    fill(0,0,0);
+    textSize(18);
+    stroke(255);
+    text("FPS = " + Math.floor(frameRate()),mouseX-42, mouseY-dzY/1.75);
+    text("Objects = " + pointCount, mouseX-42, mouseY+dzY);
 }
