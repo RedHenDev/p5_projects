@@ -38,11 +38,11 @@ class Quad{
 class QTree{
     constructor(_boundary){
         this.boundary = _boundary;
-        this.capacity = 4;
+        this.capacity = 3;
         this.points = [];
         this.divided = false;
         
-        this.color = color(Math.random()*255,
+        this.colour = color(Math.random()*255,
                            Math.random()*255,
                            Math.random()*255);
     }
@@ -66,9 +66,7 @@ class QTree{
                 this.qSE.query(_range, _found);
                 this.qSW.query(_range, _found);
             } 
-        }
-        //return _found;
-        
+        } 
     }
     
     render(){
@@ -80,10 +78,11 @@ class QTree{
             this.boundary.rX*2,
             this.boundary.rY*2);
         
-        strokeWeight(8);
-        stroke(this.color);
+//        strokeWeight(8);
+//        stroke(this.color);
         for (let p of this.points){
-            point(p.x, p.y);
+            //point(p.x, p.y);
+            p.render();
         }
         
         if (this.divided){
@@ -93,6 +92,20 @@ class QTree{
             this.qSW.render();
         }
     }
+    
+//    physics(){
+//        for (let pp of this.points){
+//            pp.update();
+//        }
+//        
+//        if (this.divided){
+//            this.qNE.physics();
+//            this.qSE.physics();
+//            this.qNW.physics();
+//            this.qSW.physics();
+//        }
+//        
+//    }
     
     subdivide(){
         let nw = new Quad(
@@ -125,6 +138,15 @@ class QTree{
         
     }
     
+    reset(){
+        this.points = [];
+        this.qNE = null;
+        this.qNW = null;
+        this.qSE = null;
+        this.qSW = null;
+        this.divided = false;
+    }
+    
     insert(_point){
         
         if (!this.boundary.contains(_point)){
@@ -132,7 +154,8 @@ class QTree{
         }
         
         if (this.points.length < this.capacity){
-            this.points.push(_point); 
+            this.points.push(_point);
+            //_point.colour = this.colour;
         } else if (!this.divided){
             this.subdivide();
         }
@@ -151,7 +174,61 @@ class Point{
     constructor(_x, _y){
         this.x = _x;
         this.y = _y;
+        
+        this.v = createVector(Math.random()*4-2,
+                              Math.random()*4-2);
+        this.a = createVector(0,0);
+        
+        // Radius of each point.
+        this.r = 12;
+        
+        this.colour = color(0,0,200);
     }
     
+    render(){
+        strokeWeight(this.r*1.3);
+        stroke(this.colour);
+        point(this.x, this.y);
+    }
     
+    update(){
+        this.v.add(this.a);
+        this.x += this.v.x;
+        this.y += this.v.y;
+        
+        this.a.mult(0);
+        
+        // Screen-wrap.
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+        if (this.y < 0) this.y = height;
+        if (this.y > height) this.y = 0;
+    }
+    
+    checkBump(_point){
+        if (_point.x - _point.r > 
+            this.x + this.r ||
+           _point.x + _point.r <
+           this.x - this.r)
+            return false;
+        else if (_point.y - _point.r > 
+            this.y + this.r ||
+           _point.y + _point.r <
+           this.y - this.r)
+            return false;
+        
+        let vChord = createVector();
+        let _p = createVector(_point.x, _point.y);
+        let _thisp = createVector(this.x, this.y);
+        
+        vChord = p5.Vector.sub(_p, _thisp);
+        vChord.normalize();
+        _thisp.add(vChord.mult(-1));
+        //_p.add(-vChord);
+        
+        this.x = _thisp.x;
+        this.y = _thisp.y;
+    
+        return true;
+    }
 }

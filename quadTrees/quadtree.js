@@ -20,15 +20,21 @@ function setup(){
     stroke(255);
 }
 
+let thePoints = [];
+
 function mousePressed(){
-    let amount = 512;
+    let amount = 32;
     for (let i = 0; i < amount; i++){
-        let x = randomGaussian(width/2, width/6);
-        let y = randomGaussian(height/2, height/6);
+        let x = randomGaussian(mouseX, width/16);
+        let y = randomGaussian(mouseY, height/16);
         let np = new Point(x,y);
-        qt.insert(np);
+        np.colour = color(Math.random()*255,
+                           Math.random()*255,
+                           Math.random()*255);
+        thePoints.push(np);
+        qt.insert(thePoints[i]);
     }
-    pointCount+=amount;
+        pointCount+=amount;
 }
 
 function mouseMoved(){
@@ -40,9 +46,34 @@ function draw(){
 
     background(100,100,100);
     
-    qt.render();
+    for (let ps of thePoints){
+        
+        // For each point, I want to
+        // call checkBump only for
+        // the points that are in
+        // a certain range of it.
+        let cps = [];
+        let range = new Quad(ps.x, ps.y,
+                            12,12);
+        qt.query(range, cps);
+        for (let cp of cps){
+            if (ps != cp && ps.checkBump(cp)){
+                let temp_p = createVector(cp.v.x, cp.v.y);
+                cp.v.x = ps.v.x;
+                cp.v.y = ps.v.y;
+                ps.v.x = temp_p.x;
+                ps.v.y = temp_p.y;
+                
+            }
+        }
+        ps.update();
+        qt.insert(ps);
+    }
     
+    qt.render();
     dangerZone();
+    
+    qt.reset();
 }
 
 let dzX = 100;
@@ -53,11 +84,13 @@ function dangerZone(){
     strokeWeight(3);
     rect(mouseX, mouseY, dzX, dzY);
     
-    stroke(255);
-    strokeWeight(8);
+    stroke(0);
+    strokeWeight(3);
     let ps = [];
-    qt.query(new Quad(mouseX, mouseY, dzX/2, dzY/2), ps);
+    qt.query(new Quad(mouseX, mouseY, 
+                      dzX/2, dzY/2), ps);
     for (let p of ps){
-        point(p.x, p.y);
+        ellipse(p.x,p.y,p.r);
+        //point(p.x, p.y);
     }
 }
