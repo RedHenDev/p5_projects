@@ -1,5 +1,3 @@
-
-
 class Quad{
     constructor(_x, _y, _rX, _rY){
         this.x = _x;
@@ -38,7 +36,7 @@ class Quad{
 class QTree{
     constructor(_boundary){
         this.boundary = _boundary;
-        this.capacity = 8;
+        this.capacity = 3;
         this.points = [];
         this.divided = false;
         
@@ -81,10 +79,10 @@ class QTree{
         
 //        strokeWeight(8);
 //        stroke(this.color);
-        for (let p of this.points){
-            //point(p.x, p.y);
-            p.render();
-        }
+//        for (let p of this.points){
+//            //point(p.x, p.y);
+//            p.render();
+//        }
         
         if (this.divided){
             this.qNE.render();
@@ -171,7 +169,7 @@ class Point{
     }
     
     render(){
-//        strokeWeight(this.r*1.3);
+        strokeWeight(this.r*0.33);
 //        stroke(this.colour);
 //        point(this.x, this.y);
         stroke(255);

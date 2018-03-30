@@ -6,7 +6,7 @@ let qt;
 let pointCount = 0;
 
 function setup(){
-    createCanvas(512,512);
+    createCanvas(windowWidth,windowHeight);
     background(100,100,100);
     
     // Setup the root quadtree (over whole area).
@@ -23,7 +23,7 @@ function setup(){
 let thePoints = [];
 
 function mousePressed(){
-    let amount = 32;
+    let amount = 400;
     for (let i = 0; i < amount; i++){
         let x = randomGaussian(mouseX, width/12);
         let y = randomGaussian(mouseY, height/12);
@@ -38,19 +38,20 @@ function mousePressed(){
         pointCount+=amount;
 }
 
-function mouseMoved(){
-    //let np = new Point(mouseX, mouseY);
-    //qt.insert(np);
-}
+//function mouseMoved(){
+//    let np = new Point(mouseX, mouseY);
+//    qt.insert(np);
+//}
 
 function draw(){
 
     background(100,100,100);
     
+    
     checkCollisions();
     //oldStyleCheck();
     
-    qt.render();
+    //qt.render();
     dangerZone();
     
     qt.reset();
@@ -59,6 +60,8 @@ function draw(){
 function oldStyleCheck(){
      for (let i = 0; i < thePoints.length; i++){
       
+         thePoints[i].render();
+         
         for (let j = 0; j < thePoints.length; j++){
            if (i !== j && thePoints[i].
            checkBump(thePoints[j])){
@@ -79,16 +82,19 @@ function oldStyleCheck(){
 function checkCollisions(){
     for (let ps of thePoints){
         
+        ps.render();
+        
+        
         // For each point, I want to
         // call checkBump only for
         // the points that are in
         // a certain range of it.
         let cps = [];
         let range = new Quad(ps.x, ps.y,
-                            ps.r*2,ps.r*2);
+                            ps.r+ps.r,ps.r+ps.r);
         qt.query(range, cps);
         for (let cp of cps){
-            if (ps != cp && ps.checkBump(cp)){
+            if (ps !== cp && ps.checkBump(cp)){
                 let temp_p = createVector(cp.v.x, cp.v.y);
                 cp.v.x = ps.v.x;
                 cp.v.y = ps.v.y;
@@ -98,6 +104,8 @@ function checkCollisions(){
                 cp.r *= 1.01;
             }
         }
+        
+            
         ps.update();
         qt.insert(ps);
     }
