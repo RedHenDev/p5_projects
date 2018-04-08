@@ -165,7 +165,7 @@ class SpaceBuddha extends GhostO{
 
         RedHen_2DPhysics.lastObjectCreated().OSR = false;
         RedHen_2DPhysics.lastObjectCreated().fill = 
-        color(255,0,255,Math.random()*100+69);
+        color(100,100,255,Math.random()*100+69);
         RedHen_2DPhysics.lastObjectCreated().
         stroke = color(0);
         RedHen_2DPhysics.lastObjectCreated().
@@ -228,4 +228,55 @@ class SpaceBuddha extends GhostO{
             this.myBod.addForce(force);
         }
     }
+}
+
+class Pac extends SpaceBuddha{
+    constructor(_x, _y, _rad){
+        super(_x, _y, _rad);
+        
+        // Pac gape.
+        // render function changes.
+        this.gape = 12;
+    }
+    
+    render(){
+        push();
+        fill(255,255,0);
+        stroke(0,255);
+        strokeWeight(4);
+        translate(  this.myBod.bod.position.x,
+                    this.myBod.bod.position.y);
+        
+       // rotate(this.myBod.bod.angle);
+        
+        //ellipse(0,0,this.width);
+//        arc(0,0,this.width,this.width*1.01, 
+//           radians(15),
+//           radians(-15),
+//           PIE);
+        
+        this.gape +=
+        Math.sin(frameCount/6)
+      if (this.gape < 0)
+        this.gape = 0;
+      if (this.gape > 51)
+        this.gape = 51;
+ 
+        let orientation = 0;
+        if (this.myBod.bod.velocity.x < 0){
+            orientation = PI;
+        }
+        
+        
+      // Pac-mouth.
+      arc(0,0,this.width, this.width, radians(this.gape)-orientation, radians(-this.gape)-orientation,PIE);
+        
+        // Eye.
+        fill(0);
+        strokeWeight(1);
+        stroke(255,255);
+        ellipse(0, -this.width/4, this.width/6);
+        pop();
+    }
+    
 }

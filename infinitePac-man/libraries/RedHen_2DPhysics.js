@@ -173,6 +173,9 @@ class RedHen_2DPhysics {
            _requestedBody === "box")
         bods.push(new Box(_x, _y, _size, _makeDirect));
         
+        else if (_requestedBody === "square" || _requestedBody === "Square")
+        bods.push(new Box(_x, _y, _size, _makeDirect));
+        
          else if (_requestedBody === "circle" || _requestedBody === "Circle")
         bods.push(new Circle(_x, _y, _size, _makeDirect));
         
@@ -201,7 +204,6 @@ class RedHen_2DPhysics {
                     bods[i].bod.position.y - bods[i].dia > height+9
                     )
                 ){this.removeObj(i);}
-           
         }
     }
     
@@ -316,6 +318,16 @@ class Obj {
         // Add the body to the Physics World.
        Matter.World.add(myWorld, this.bod);
         }
+        
+        // Designate id.
+        // With this, the bods array can map to
+        // the matter bod array, and vice-versa.
+        // Handy for finding bods via the 
+        // matter collisions pairs reporting,
+        // which returns the bod, not the bods.
+        //this.id = bods[length-1];
+       // this.bod.bodsID = bods.length-1;
+        
     }
     
     // Just in case this is called by
@@ -327,6 +339,7 @@ class Obj {
     // (I think according to new area).
     makeScale(_scale){
         Matter.Body.scale(this.bod, _scale, _scale);
+        this.dia *= _scale;
     }
 
     // Set a new mass.
@@ -370,6 +383,13 @@ class Obj {
     // Applies force from centre of the matter.js body.
     addForce(_vector){
         Matter.Body.applyForce(this.bod, this.bod.position, _vector)
+    }
+    
+    // Add or change the label of an object.
+    // So that we can write 'obj.label(...)'
+    // instead of 'obj.bod.label = ...'
+    label(_label){
+        this.bod.label = _label;
     }
 
 }
@@ -496,7 +516,6 @@ class Box extends Obj {
         // Render rotation?
         if (this.roll){
             push();
-            
             //this.pos.x = this.bod.position.x;
             //this.pos.y = this.bod.position.y;
             translate(this.bod.position.x, this.bod.position.y);

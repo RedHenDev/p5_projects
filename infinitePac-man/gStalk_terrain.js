@@ -391,9 +391,32 @@ class Gstalk{
         
         if(this.myBody.bod.position.y < height*3 &&
           id % 5 === 0) {
-            RedHen_2DPhysics.newObj('circle', this.myBody.bod.position.x, this.myBody.bod.position.y - 32 - height*1.5, 12);
-            RedHen_2DPhysics.lastObjectCreated().OSR = false;
-            //RedHen_2DPhysics.lastObjectCreated().makeSleep(true);
+            RedHen_2DPhysics.newObj('circle', this.myBody.bod.position.x, this.myBody.bod.position.y - 
+            (64 - Math.random()*32) 
+            - height*1.5, 12);
+           
+            // Switch OFF 'off-screen-remove'.
+        RedHen_2DPhysics.lastObjectCreated().OSR = false;
+           
+            // Label for collisions...
+            RedHen_2DPhysics.lastObjectCreated().
+            label('pellet');
+            
+            // Colour of pellet.
+            RedHen_2DPhysics.lastObjectCreated().
+            fill = color(255,255,0);
+            
+            RedHen_2DPhysics.lastObjectCreated().
+            stroke = color(0);
+            
+            RedHen_2DPhysics.lastObjectCreated().
+            strokeWeight = 3;
+            
+            // Freeze position of object.
+//            RedHen_2DPhysics.lastObjectCreated().
+//            makeStatic();
+            RedHen_2DPhysics.lastObjectCreated().makeMass(0);
+            RedHen_2DPhysics.lastObjectCreated().makeSleep(true);
             
             // Delcare this slot as filled.
             objectSlots[id] = 1;

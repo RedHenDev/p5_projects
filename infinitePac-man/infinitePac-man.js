@@ -13,6 +13,10 @@ let mouseY_prev = 0;
 // Our subject.
 let boo;
 
+// Variable used in collisions, storing
+// bod to be removed in draw().
+let toRemove = null;
+
 let blinkies = [];
 
 // To organise tint of sky.
@@ -29,6 +33,8 @@ let clouds = [];
 let cloudTimer = 0;
 
 p5.disableFriendlyErrors = true;
+
+//const RP = require('RedHen_2DPhysics');
 
 function preload(){
     //robot = new p5.Speech();
@@ -87,8 +93,8 @@ function setup(){
 }
 
 function setupBoo(){
-    // Test. Can we make our first Ghost Object?
-    boo = new SpaceBuddha(Math.round(width/2),
+    
+    boo = new Pac(Math.round(width/2),
                           Math.round(height/2),
                           22);
     //robot.speak("Bubble boo is ready.");
@@ -120,8 +126,23 @@ function myCollision(event){
                  bodB.label === 'digit' &&
                  Math.abs(bodA.velocity.x) +             Math.abs(bodA.velocity.y) > 9){
                 Matter.Sleeping.set(bodB, 
-                !bodB.isSleeping);}    
+                !bodB.isSleeping);} 
+            
+            // If pac eats pellet...
+            if (bodA.label === 'boo' &&
+                bodB.label === 'pellet'){
+                
+                toRemove = bodB.id;
+              //  console.log('Nom ' + bodB.id
+                //            + ' @ '+ toRemove);
+                
+            }
+            
+            
             }   // End of forLoop.
+    
+            
+                
 }
 
 // ***** UDPATE LOOP *****
@@ -133,9 +154,24 @@ function draw(){
     background(0,skyTint/2,skyTint);
     
     // Spit blocks if boo in correct area.
-    if (boo.myBod.bod.position.x > -700 &&
-        boo.myBod.bod.position.x < 1000)
-        spitObjects();
+//    if (boo.myBod.bod.position.x > -700 &&
+//        boo.myBod.bod.position.x < 1000)
+//        spitObjects();
+    
+    // After collisions, do we need to
+    // remove anything?
+    if (toRemove !== null){
+        for (let i = 0; i < bods.length; i++){
+            if (bods[i].bod.id === toRemove){
+            RedHen_2DPhysics.removeObj(i);
+            break;
+            }
+        }
+        
+        toRemove = null;
+    }
+    
+  
     
     boo.spawnBubbles();
     
@@ -143,6 +179,8 @@ function draw(){
     // Move 'camera' to centre on boo.
     translate(  -boo.myBod.bod.position.x+width/2,
                 -boo.myBod.bod.position.y+height/2);
+    
+     
     
     // Test sea...
     rectMode(CORNER);
@@ -167,6 +205,15 @@ function draw(){
     }
     
     RedHen_2DPhysics.updateObjs();
+    
+     // Pellet sine bob.
+//    for (p of bods){
+//        if (p.bod.label === 'pellet'){
+//            let newY = p.bod.position.y + Math.sin(frameCount*10/(p.id*2))*2.3;
+//            p.makePosition(p.bod.position.x,
+//            newY);
+//        }
+//    }
     
     boo.control();// NB. contains speedlimiter.
     boo.hitWaterCheck();
