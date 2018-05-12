@@ -6,6 +6,11 @@ let epZ = 0;
 
 let epR = 0;
 
+// Vector to moon.
+let v;
+// Vector to moon moon.
+let vM;
+
 let rhTex;
 
 function setup(){
@@ -17,7 +22,12 @@ function setup(){
     
     rhTex = loadImage("RedHenIconAlpha512512.png");
     
-    
+    // Random vectors for position of
+    // moon and moon-moon.
+    v = p5.Vector.random3D();
+    v.mult(300);
+    vM = p5.Vector.random3D();
+    vM.mult(62);
 }
 
 
@@ -40,10 +50,6 @@ function draw(){
     epZ = map(mouseY, 0, height, 0, -100);
     
     renderEggPlanet();
-    
-    //renderMooon();
-    
-    
 }
 
 function renderMooon(){
@@ -52,15 +58,17 @@ function renderMooon(){
     
     ambientMaterial(255);
     
-    rotateY(radians(epR));
+    let v2 = createVector(1,0,1);
+    let p = v.cross(v2);
+    rotate(radians(frameCount*2), p);
     
-    translate(epX+300, epY, epZ);
+    translate(v.x, v.y, v.z);
     
     sphere(42,80,40);
     
         renderMooon2();
     
-    pop();
+    pop(); 
     
 }
 
@@ -70,9 +78,11 @@ function renderMooon2(){
     
     specularMaterial(255,0,0);
     
-    rotateY(radians(-epR*2));
+    let v3 = createVector(1,0,1);
+    let pp = vM.cross(v3);
+    rotate(-radians(frameCount*5), pp);
     
-    translate(62, epY, epZ);
+    translate(vM.x, vM.y, vM.z);
     
     sphere(12,80,40);
     
@@ -93,15 +103,5 @@ function renderEggPlanet(){
         
         renderMooon();
     
-    pop();
-    
+    pop();  
 }
-
-
-
-
-
-
-
-
-
