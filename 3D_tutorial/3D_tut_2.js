@@ -6,6 +6,9 @@ let epZ = 0;
 
 let epR = 0;
 
+let theta = 0;
+let phi = 0;
+
 // Vector to moon.
 let v;
 // Vector to moon moon.
@@ -58,15 +61,27 @@ function renderMooon(){
     
     ambientMaterial(255);
     
-    let v2 = createVector(1,0,1);
-    let p = v.cross(v2);
-    rotate(radians(frameCount*2), p);
+//    let v2 = createVector(1,0,1);
+//    let p = v.cross(v2);
+//    rotate(radians(frameCount*2), p);
+    
+    let r = 300;
+    
+    theta = Math.atan2(v.y,v.x);
+    //Restricts -180,180
+    phi = 
+    Math.acos(v.z/Math.sqrt(
+        v.x*v.x+v.y*v.y+v.z*v.z));
+    //Restricts 0,180
+    
+    rotateZ(theta);
+    rotateY(phi);
     
     translate(v.x, v.y, v.z);
     
     sphere(42,80,40);
     
-        renderMooon2();
+        //renderMooon2();
     
     pop(); 
     
