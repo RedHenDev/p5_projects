@@ -7,8 +7,6 @@ let epZ = 0;
 let rhTex;
 
 let eggPlanet;
-let eggMoon;
-let eggSubMoon;
 
 function setup(){
     
@@ -23,38 +21,11 @@ function setup(){
         new CosmicBody(0,0,0,200);
     eggPlanet.mat = 'ambient';
         
-    eggMoon     = 
-        new CosmicBody(300,0,0,62);
-    eggMoon.oRad = 400;
-    eggMoon.fill = color(240,240,250);
-    eggMoon.axis = 'Y';
-    eggMoon.tilt = PI/9;
-    
-    eggMoon2     = 
-        new CosmicBody(400,0,0,22);
-    eggMoon2.oPos.x = eggMoon.pos.x;
-    eggMoon2.oPos.y = eggMoon.pos.y;
-    eggMoon2.oPos.z = eggMoon.pos.z;
-    eggMoon2.oRad = 100;
-    eggMoon2.fill = color(250,0,0);
-    eggMoon2.axis = 'Y';
-    //eggMoon2.tilt = PI/2;
-    eggMoon2.orbitSpeed = -0.04;
-    
-    eggSubMoon     = 
-        new CosmicBody(440,0,0,12);
-    eggSubMoon.oPos.x = eggMoon2.pos.x;
-    eggSubMoon.oPos.y = eggMoon2.pos.y;
-    eggSubMoon.oPos.z = eggMoon2.pos.z;
-    eggSubMoon.oRad = 40;
-    eggSubMoon.fill = color(0,0,255);
-    eggSubMoon.mat = 'ambient';
-    eggSubMoon.axis = 'Z';
-    //eggMoon2.tilt = PI/2;
-    eggSubMoon.orbitSpeed = 0.12;
 }
 
-
+function mousePressed(){
+    eggPlanet.genMoon();
+}
 
 function draw(){
     
@@ -69,21 +40,6 @@ function draw(){
     translate(0,0,epZ);
     
     eggPlanet.render();
-    
-    eggMoon.orbit();
-    eggMoon.render();
-    
-    eggMoon2.oPos.x = eggMoon.pos.x;
-    eggMoon2.oPos.y = eggMoon.pos.y;
-    eggMoon2.oPos.z = eggMoon.pos.z;
-    eggMoon2.orbit();
-    eggMoon2.render();
-    
-    eggSubMoon.oPos.x = eggMoon2.pos.x;
-    eggSubMoon.oPos.y = eggMoon2.pos.y;
-    eggSubMoon.oPos.z = eggMoon2.pos.z;
-    eggSubMoon.orbit();
-    eggSubMoon.render();
     
     pop();
 }
@@ -119,6 +75,9 @@ class CosmicBody{
         // theta, and to X-axis for phi.
         this.tilt = 0;
         this.axis = 'Y';
+        
+        // Any child objects?
+        this.moons = [];
     }
     
     render(){
@@ -137,6 +96,32 @@ class CosmicBody{
         sphere(this.rad, 180, 90);
         
         pop();
+        
+        if (this.moons.length>1){
+            for (let i = 0; i < this.moons.length; i++){
+                 this.moons[i].orbit();
+                 this.moons[i].render();
+                 }
+        }
+    }
+    
+    genMoon(){
+        // Spawns a moon.
+        // Pick random vector.
+        let v = p5.Vector.random3D();
+        //let v = createVector(1,0,0);
+        v.mult(this.rad * 2);
+        let newMoon =
+        new CosmicBody( this.pos.x +
+                       v.x,
+                        this.pos.y +
+                       v.y,
+                        this.pos.z +
+                       v.z,
+                        this.rad/4);
+            
+        this.moons.push(newMoon);
+        this.moons[this.moons.length-1].oRad = this.rad * 2;
     }
     
     orbit(){
