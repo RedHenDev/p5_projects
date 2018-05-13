@@ -60,7 +60,7 @@ function renderMooon(){
     
     ambientMaterial(255);
     
-    //rotateZ(PI/2);
+    rotateZ(PI/2);
     rotateZ(PI/9);
     
     theta += 0.01;

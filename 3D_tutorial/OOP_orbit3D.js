@@ -8,6 +8,7 @@ let rhTex;
 
 let eggPlanet;
 let eggMoon;
+let eggSubMoon;
 
 function setup(){
     
@@ -27,18 +28,30 @@ function setup(){
     eggMoon.oRad = 400;
     eggMoon.fill = color(240,240,250);
     eggMoon.axis = 'Y';
-    //eggMoon.tilt = PI/9;
+    eggMoon.tilt = PI/9;
     
     eggMoon2     = 
-        new CosmicBody(200,0,0,22);
+        new CosmicBody(400,0,0,22);
     eggMoon2.oPos.x = eggMoon.pos.x;
     eggMoon2.oPos.y = eggMoon.pos.y;
     eggMoon2.oPos.z = eggMoon.pos.z;
     eggMoon2.oRad = 100;
     eggMoon2.fill = color(250,0,0);
-    eggMoon2.axis = 'Z';
-    eggMoon2.tilt = PI/9;
-    eggMoon2.orbitSpeed = 0.04;
+    eggMoon2.axis = 'Y';
+    //eggMoon2.tilt = PI/2;
+    eggMoon2.orbitSpeed = -0.04;
+    
+    eggSubMoon     = 
+        new CosmicBody(440,0,0,12);
+    eggSubMoon.oPos.x = eggMoon2.pos.x;
+    eggSubMoon.oPos.y = eggMoon2.pos.y;
+    eggSubMoon.oPos.z = eggMoon2.pos.z;
+    eggSubMoon.oRad = 40;
+    eggSubMoon.fill = color(0,0,255);
+    eggSubMoon.mat = 'ambient';
+    eggSubMoon.axis = 'Z';
+    //eggMoon2.tilt = PI/2;
+    eggSubMoon.orbitSpeed = 0.12;
 }
 
 
@@ -66,6 +79,12 @@ function draw(){
     eggMoon2.orbit();
     eggMoon2.render();
     
+    eggSubMoon.oPos.x = eggMoon2.pos.x;
+    eggSubMoon.oPos.y = eggMoon2.pos.y;
+    eggSubMoon.oPos.z = eggMoon2.pos.z;
+    eggSubMoon.orbit();
+    eggSubMoon.render();
+    
     pop();
 }
 
@@ -76,7 +95,7 @@ class CosmicBody{
         this.pos = 
             createVector(_x, _y, _z);
         
-        // Radius.
+        // Radius (size, not orbit).
         this.rad = _r;
         
         // Appearance.
@@ -103,17 +122,8 @@ class CosmicBody{
     }
     
     render(){
+
         push();
-        
-//        if (this.axis === 'X'){
-//            rotateZ(PI/2);
-//            rotateX(this.tilt);
-//        } else if (this.axis === 'Y'){
-//            rotateZ(this.tilt);  
-//        } else if (this.axis === 'Z'){
-//            rotateY(this.tilt);
-//        }
-       //rotateX(this.tilt);
         
         translate(  this.pos.x,
                     this.pos.y,
@@ -146,9 +156,10 @@ class CosmicBody{
             this.oRad *
         Math.sin(this.theta) * Math.cos(this.phi);
         
+        // NB. tilt applied here!
         this.pos.y = this.oPos.y +
             this.oRad * 
-        Math.sin(this.theta) * Math.sin(this.phi);
+        Math.sin(this.theta+this.tilt) * Math.sin(this.phi+this.tilt);
         
         this.pos.z = this.oPos.z +
             this.oRad *
