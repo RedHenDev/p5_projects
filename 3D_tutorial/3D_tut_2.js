@@ -25,24 +25,36 @@ function draw(){
     
     background(201,32,12);
     
-    
     epR += 0.1;
     epZ = map(mouseY, 0, height, 0, -100);
     
+    pointLight( 255,255,255,
+                mouseX - width/2,
+                mouseY - height/2,
+                400);
     
     renderEggPlanet();
-    
+
 }
 
 
 function renderEggPlanet(){
     
-    texture(rhTex);
+    //texture(rhTex);
+    
+    //stroke(255);
+    noStroke();
+    
+    //ambientMaterial(0,255,0);
+    specularMaterial(0,255,0);
+    
     translate(epX, epY, epZ);
     rotateY(radians(epR));
-    sphere(200);
+    sphere(200, 240, 120);
     
 }
+
+
 
 
 
