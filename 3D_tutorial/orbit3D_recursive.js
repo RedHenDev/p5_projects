@@ -24,7 +24,7 @@ function setup(){
 }
 
 function mousePressed(){
-    eggPlanet.genMoon();
+    eggPlanet.genMoon(1);
 }
 
 function draw(){
@@ -64,6 +64,12 @@ class CosmicBody{
         // Centre of orbit.
         this.oPos =
             createVector(0,0,0);
+        // What body is my centre of
+        // orbit? If null, will not
+        // be updated.
+        // NB must be set when moon etc.
+        // generated.
+        this.oBody = null;
         this.orbitSpeed = 0.01;
         // Orbital radius.
         this.oRad       = 100;
@@ -91,7 +97,11 @@ class CosmicBody{
         if (this.mat === 'specular')
         specularMaterial(this.fill);
         else if (this.mat === 'ambient') 
-        ambientMaterial(this.fill);    
+        ambientMaterial(this.fill);
+        else if (this.mat === 'basic') 
+        fill(this.fill);
+        else if (this.mat === 'normal')
+        normalMaterial(this.fill);
             
         sphere(this.rad, 180, 90);
         
@@ -105,11 +115,14 @@ class CosmicBody{
         }
     }
     
-    genMoon(){
+    genMoon(_level){
         // Spawns a moon.
         // Pick random vector.
-        let v = p5.Vector.random3D();
-        //let v = createVector(1,0,0);
+        //let v = p5.Vector.random3D();
+        
+        if (_level === 1){
+        
+        let v = createVector(1,0,0);
         v.mult(this.rad * 2);
         let newMoon =
         new CosmicBody( this.pos.x +
@@ -118,10 +131,48 @@ class CosmicBody{
                        v.y,
                         this.pos.z +
                        v.z,
-                        this.rad/4);
-            
+                        this.rad/2);
+        newMoon.fill =
+            color(255,255,255);
+        newMoon.mat = 'normal';
+        newMoon.oRad = this.rad *
+            (Math.random() * 12 + 2);
+        newMoon.tilt = Math.random()*
+            radians(50);
+        newMoon.oBody = this;
         this.moons.push(newMoon);
-        this.moons[this.moons.length-1].oRad = this.rad * 2;
+        
+        if (Math.random() > 0){
+            this.moons
+            [this.moons.length-1].
+            genMoon(2);
+        }
+        
+        }   // End of level 1.
+        
+        if (_level === 2){
+        
+        let v = createVector(1,0,0);
+        v.mult(this.rad * 2);
+        let newMoon =
+        new CosmicBody( this.pos.x +
+                       v.x,
+                        this.pos.y +
+                       v.y,
+                        this.pos.z +
+                       v.z,
+                        this.rad/2);
+        newMoon.orbitSpeed *= -2;
+        newMoon.oRad = this.rad * 2;
+        newMoon.axis = 'Y';
+        newMoon.fill =
+            color(255,255,255);
+        newMoon.mat = 'specular';
+        newMoon.oBody = this;
+        this.moons.push(newMoon);
+        
+        }   // End of level 2.
+        
     }
     
     orbit(){
@@ -134,6 +185,17 @@ class CosmicBody{
         this.theta  += this.orbitSpeed;
         else if (this.axis === 'Z')
         this.phi    += this.orbitSpeed;
+        
+        
+        // Where is my centre of orbit?
+        if (this.oBody !== null){
+            this.oPos.x =
+                this.oBody.pos.x;
+            this.oPos.y =
+                this.oBody.pos.y;
+            this.oPos.z =
+                this.oBody.pos.z;
+        }
         
         // Use 3D polar-coordinates
         // to update x,y,z position.
@@ -149,6 +211,16 @@ class CosmicBody{
         this.pos.z = this.oPos.z +
             this.oRad *
         Math.cos(this.theta);
+        
+        // Now calculate our moons'
+        // orbits.
+        if (this.moons.length > 0){
+            for (let i = 0; 
+                 i < this.moons.length;
+                i++){
+                this.moons[i].orbit();
+            }
+        }
         
     }
     
