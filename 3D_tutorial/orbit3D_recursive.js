@@ -29,12 +29,13 @@ function mousePressed(){
 
 function draw(){
     
-    background(201,32,12);
+    //background(201,32,12);
+    background(120);
     
     pointLight( 255,255,255,
                 mouseX - width/2,
                 mouseY - height/2,
-                300);
+                600);
     push();
     epZ = map(mouseY, 0, height, 0, -1000);
     translate(0,0,epZ);
@@ -107,7 +108,7 @@ class CosmicBody{
         
         pop();
         
-        if (this.moons.length>1){
+        if (this.moons.length > 0){
             for (let i = 0; i < this.moons.length; i++){
                  this.moons[i].orbit();
                  this.moons[i].render();
@@ -133,8 +134,8 @@ class CosmicBody{
                        v.z,
                         this.rad/2);
         newMoon.fill =
-            color(255,255,255);
-        newMoon.mat = 'normal';
+            color(0,0,255,150);
+        newMoon.mat = 'specular';
         newMoon.oRad = this.rad *
             (Math.random() * 12 + 2);
         newMoon.tilt = Math.random()*
@@ -142,10 +143,14 @@ class CosmicBody{
         newMoon.oBody = this;
         this.moons.push(newMoon);
         
-        if (Math.random() > 0){
+        if (Math.random() > 0.5){
+            for (let i = 0; i <
+               this.moons.length;
+                i++){
             this.moons
-            [this.moons.length-1].
+            [i].
             genMoon(2);
+            }
         }
         
         }   // End of level 1.
@@ -153,7 +158,7 @@ class CosmicBody{
         if (_level === 2){
         
         let v = createVector(1,0,0);
-        v.mult(this.rad * 2);
+        v.mult(this.rad * 4);
         let newMoon =
         new CosmicBody( this.pos.x +
                        v.x,
@@ -161,13 +166,14 @@ class CosmicBody{
                        v.y,
                         this.pos.z +
                        v.z,
-                        this.rad/2);
-        newMoon.orbitSpeed *= -2;
+                        this.rad/3);
+        newMoon.orbitSpeed *= 
+            Math.random()*8-4;
         newMoon.oRad = this.rad * 2;
-        newMoon.axis = 'Y';
         newMoon.fill =
-            color(255,255,255);
-        newMoon.mat = 'specular';
+            color(0,255,0);
+        newMoon.mat = 'basic';
+            newMoon.axis = 'Z';
         newMoon.oBody = this;
         this.moons.push(newMoon);
         
@@ -195,6 +201,7 @@ class CosmicBody{
                 this.oBody.pos.y;
             this.oPos.z =
                 this.oBody.pos.z;
+            //this.oPos = this.oBody.pos;
         }
         
         // Use 3D polar-coordinates
