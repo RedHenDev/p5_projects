@@ -17,16 +17,35 @@ class Cyber{
         
         // Ship factors.
         this.thrusting = true;
-        this.shipSpeed = 10;
+        this.shipSpeed = 1;
         this.shipAcc = 1.2;
-        this.maxSpeed = 42;
+        this.maxSpeed = 420;
         
         // Default begins with 
         //the 'base block' only.
-        this.build();
+        this.build(0);
     }
     
     input(){
+        
+        // For touch/mouse swipes...
+        // Get distances.
+        let vM = createVector(mouseX, mouseY);
+        let vP = createVector(prevX, prevY);
+        let dist = p5.Vector.dist(vM,vP);
+        let distX = Math.abs(vM.x - vP.x);
+        let distY = Math.abs(vM.y - vP.y);
+        prevX = mouseX;
+        prevY = mouseY;
+        // Rotation based on left and right swipe.
+        if (distY < distX){
+            if (vM.x > vP.x) this.steer(1, distX);
+            else this.steer(-1, distX);
+        }
+
+    
+   
+        
         // Rotation based on key-input.
     if (keyIsDown(68) ||
        keyIsDown(RIGHT_ARROW)){
@@ -73,7 +92,14 @@ class Cyber{
 //    let zScalar = lerp(sSize,
 //            map(shipSpeed,0,maxSpeed/1000,100,-100),
 //                    0.1);
+        
+        // Screen-wrap as default, but
+        // do not change sector.
+    //this.wrap(false);
+        
+    }
     
+    wrap(sectorSensitive){
         // Boundaries.
         let lB = 0 - width/2;
         let rB = width/2;
@@ -94,13 +120,23 @@ class Cyber{
     if (this.pos.y > bB) {this.pos.y = tB;
                     newSector = true;
                    }
+        
+    // Create new starry layers with new sector?
+    //newSector = false;
+    if (sectorSensitive && 
+        newSector===true){
+        // Initialize layers (to be rendered as images).
+        lettherebeStars(0); // First star layer.
+        lettherebeStars(2); // Second star layer.   
+        }
     }
     
     // Set positions of constituent voxels.
-    build(){
+    build(_mode){
         // Clear array first.
         this.voxs = [];
 
+        if (_mode===0){
         // Default test (entire simple ship).
         // Base voxel. Back of ship.
         this.voxs[0] = 
@@ -127,12 +163,36 @@ class Cyber{
             new Voxel(  0+this.sca,
                         0,
                         0);
+        }
+        
+        // Randomized positions for cubes.
+        else if (_mode===1){
+            for (let i = 0; i < 
+                 12;
+                i++){
+                let v = new Voxel(Math.floor(Math.random()*2*this.sca -
+                                  1*this.sca),
+                                 Math.floor(Math.random()*2*this.sca -
+                                  1*this.sca),
+                                 Math.floor(Math.random()*2*this.sca -
+                                  1*this.sca));
+                this.voxs.push(v);
+            }
+        }
+        
+        // Stain 'base block' blue-green.
+        this.voxs[0].fill = color(0,250,250);
         
         // Apply Cyber's scale to voxels.
-        for (let i = 0; i < this.voxs.length; i++){
+        this.applyScale();
+    }
+    
+    applyScale(){
+        // Applies scale of cyber to array of voxels.
+       for (let i = 0; i < this.voxs.length; i++){
             this.voxs[i].sca = this.sca;
             this.voxs[i].applyScale();
-        }
+        } 
     }
     
     render(_layer){
@@ -164,6 +224,9 @@ class Voxel{
         this.rad = createVector(1,1,1);
         this.sca = 1;
         
+        // Fill style.
+        this.fill = color(255);
+        
         this.applyScale();
         
         // Rotation.
@@ -184,7 +247,7 @@ class Voxel{
                                 this.pos.z);
             _layer.rotateZ(radians(this.rot));
         
-            _layer.ambientMaterial(255);
+            _layer.ambientMaterial(this.fill);
         
             _layer.box( this.rad.x,
                         this.rad.y,

@@ -51,9 +51,9 @@ function voxTest(){
 //                            Math.random()*500-250,
 //                            0);
 //        voxs.push(v);
-//    }
+//    } 
     
-    for (let i = 0; i < 32; i++){
+    for (let i = 0; i < 3; i++){
         let c = new Cyber(Math.random()
                           *(width/2)-(width/4),
                           Math.random()
@@ -61,6 +61,9 @@ function voxTest(){
                           0);
         cybers.push(c);
     }
+    
+    cybers[0].build(1);
+    
     
 }
 
@@ -241,7 +244,7 @@ function draw(){
     }
     
     // Always moving.
-    shipForward(1);
+    //shipForward(1);
     
     // Bottom starry layer.
     lettherebeStars(3);
@@ -253,15 +256,19 @@ function draw(){
     renderShipLayer(1);
     // Test array of Cyber craft.
     cybers[0].input();
-    let cRad = lerp(cRad,
-            map(cybers[0].shipSpeed,0,cybers[0].maxSpeed,22,0.1,true),
-                    0.1);
+    
+    //cybers[0].sca = 14/cybers[0].shipSpeed + 14;
+    //cybers[0].build();
     for (let i = 0; i < cybers.length; i++){
         cybers[i].forward(1);
-        cybers[i].steer(Math.random()*2-1, 5);
+        if (i !== 0){
+            cybers[i].steer(Math.random()*2-1, 5);
+            cybers[i].wrap(false);
+        } else cybers[i].wrap(true);
         cybers[i].render(sop);
         
-    }       
+    }
+   
     // Render to main canvas as image.
     image(sop,0,0);
     
@@ -269,14 +276,8 @@ function draw(){
     lettherebeStars(1);
 }
 
-let sSize = 9;
-function renderShipLayer(_state){
-    if (_state === 0){
-        sop = createGraphics(width,height, WEBGL);
-    }
-    
-    if (_state === 1){
-        // Size of ship.
+function legacyShip(){
+    // Size of ship.
         sSize = lerp(sSize,
             map(shipSpeed,0,maxSpeed,22,0.1,true),
                     0.1);
@@ -338,8 +339,27 @@ function renderShipLayer(_state){
                       -sSize-2);
         sop.box(sSize,sSize,sSize);
         sop.pop();
-//        // Render to main canvas as image.
-//        image(sop,0,0);
+}
+
+let sSize = 9;
+function renderShipLayer(_state){
+    if (_state === 0){
+        sop = createGraphics(width,height, WEBGL);
+    }
+    
+    if (_state === 1){
+        
+        // Legacy parallax action.
+          sSize = lerp(sSize,
+            map(shipSpeed,0,maxSpeed,22,0.1,true),
+                    0.1);
+        
+        // Clear background (clear alpha).
+        sop.background(255,0);
+        
+        // Lighting.
+        sop.pointLight(255,255,255,
+                      0, 0,87);
     }
 }
 
