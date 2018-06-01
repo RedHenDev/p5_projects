@@ -8,10 +8,18 @@ let maxSpeed = 420;
 
 let canvas;
 
-let music;
+let music = [];
+let currentMusic = 0;
 
 function preload(){
-     music = loadSound("https://redhendev.github.io/InfinitePacman/sound/song17.mp3");
+     music[0] = loadSound("https://redhendev.github.io/InfinitePacman/sound/song17.mp3");
+    music[1] = loadSound("media/rMt.ogg");
+    music[2] = loadSound("media/icyRealm.mp3");
+    music[3] = loadSound("media/sirensInDarkness.mp3");
+    
+    currentMusic = 
+            music[Math.floor(Math.random()*
+                             music.length)];
 }
 
 function setup(){
@@ -34,18 +42,15 @@ function setup(){
     
     prevX = mouseX;
     prevY = mouseY;
+    
+     
 }
 
 
 
 function shipForward(_p){
     
-    if (!music.isPlaying()){
-        music.play();
-        music.setVolume(0.1);
-    }
-    
-    mouseMovedd();
+    input();
     
     if (thrusting){
         shipSpeed += 12;
@@ -99,21 +104,26 @@ function shipForward(_p){
 
 function shipSteer(_p, _amount){
     
+    // The latter half of this equation just
+    // decreases steering amount with speed.
+    
     shipR+= (_p * _amount * 2)/(1+(shipSpeed)/100);
     
 }
 
 let thrusting = false;
-
+let touchThrust = false;
 function touchStarted(){
     thrusting = true;
+    touchThrust = true;
 }
 
 function touchEnded(){
     thrusting = false;
+    touchThrust = false;
 }
 
-function mouseMovedd(){
+function input(){
     
     // Get distances.
     let vM = createVector(mouseX, mouseY);
@@ -129,6 +139,21 @@ function mouseMovedd(){
 //        prevY = mouseY;
 //        return;
 //    }
+    
+    // Rotation based on key-input.
+    if (keyIsDown(68) ||
+       keyIsDown(RIGHT_ARROW)){
+        shipSteer(1,5);
+    }
+    if (keyIsDown(65) ||
+       keyIsDown(LEFT_ARROW)){
+        shipSteer(-1,5);
+    }
+    if (keyIsDown(87) ||
+       keyIsDown(UP_ARROW) ||
+       touchThrust){
+        thrusting = true;
+    }else thrusting = false;
     
     // Rotation based on left and right swipe.
     // Thrust based on up and down swipe.
@@ -153,6 +178,18 @@ function draw(){
     // For consistent speed across devices.
     deltaTime = 1/(window.performance.now() - canvas._pInst._lastFrameTime);
     
+    // Music loop.
+    if (!currentMusic.isPlaying()){
+        currentMusic = 
+            music[Math.floor(Math.random()*
+                             music.length)];
+        currentMusic.play();
+        //currentMusic.rate(2);
+        currentMusic.setVolume(1);
+        if (currentMusic !== music[1])
+            currentMusic.setVolume(0.05);
+    }
+    
     // Greeeny space.
     //background(0,29,0);
     // Alpha trail.
@@ -160,7 +197,7 @@ function draw(){
     background(0,9,0);
     
     // Twinkles.
-    if (frameCount % 101 === 0){
+    if (frameCount % 64 === 0){
     stroke(212);
     strokeWeight(10);
     point(  Math.random()*width,
