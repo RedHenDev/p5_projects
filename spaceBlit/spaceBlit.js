@@ -40,7 +40,6 @@ function setupPlayer(){
 
 // Toggle gameMode for testing!
 function keyPressed(){
-    
     // Use space_bar.
     if (keyCode!==32)return;
     
@@ -60,7 +59,7 @@ function draw(){
     
     // Edit mode.
     if (gameMode===0){
-        
+       drawGrid(); 
     }
     else if (gameMode===1){
     
