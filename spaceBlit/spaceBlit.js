@@ -11,15 +11,12 @@ let canvas;
 let music = [];
 let currentMusic = 0;
 
+
+
+
+
 function preload(){
-     music[0] = loadSound("https://redhendev.github.io/InfinitePacman/sound/song17.mp3");
-    music[1] = loadSound("media/rMt.ogg");
-    music[2] = loadSound("media/icyRealm.mp3");
-    music[3] = loadSound("media/sirensInDarkness.mp3");
-    
-    currentMusic = 
-            music[Math.floor(Math.random()*
-                             music.length)];
+     //setupMusic();
 }
 
 function setup(){
@@ -43,10 +40,29 @@ function setup(){
     prevX = mouseX;
     prevY = mouseY;
     
+    voxTest();
      
 }
 
-
+let cybers = [];
+function voxTest(){
+//    for (let i = 0; i < 32; i++){
+//        let v = new Voxel(  Math.random()*500-250,
+//                            Math.random()*500-250,
+//                            0);
+//        voxs.push(v);
+//    }
+    
+    for (let i = 0; i < 32; i++){
+        let c = new Cyber(Math.random()
+                          *(width/2)-(width/4),
+                          Math.random()
+                          *(height/2)-(height/4),
+                          0);
+        cybers.push(c);
+    }
+    
+}
 
 function shipForward(_p){
     
@@ -87,7 +103,9 @@ function shipForward(_p){
     if (shipY > height) {shipY = 0;
                     newSector = true;
                    }
-    newSector = false;
+    
+    // Create new starry layers with new sector?
+    //newSector = false;
     if (newSector===true){
         // Initialize layers (to be rendered as images).
         lettherebeStars(0); // First star layer.
@@ -171,13 +189,17 @@ function input(){
     
 }
 
-let deltaTime = 0;
-function draw(){
+function setupMusic(){
+    music[0] = loadSound("https://redhendev.github.io/InfinitePacman/sound/song17.mp3");
+    music[1] = loadSound("media/rMt.ogg");
+    music[2] = loadSound("media/icyRealm.mp3");
+    music[3] = loadSound("media/sirensInDarkness.mp3");
     
-    // What's our deltaTime?
-    // For consistent speed across devices.
-    deltaTime = 1/(window.performance.now() - canvas._pInst._lastFrameTime);
-    
+    currentMusic = 
+            music[Math.floor(Math.random()*
+                             music.length)];
+}
+function musicSystem(){
     // Music loop.
     if (!currentMusic.isPlaying()){
         currentMusic = 
@@ -189,6 +211,16 @@ function draw(){
         if (currentMusic !== music[1])
             currentMusic.setVolume(0.05);
     }
+}
+
+let deltaTime = 0;
+function draw(){
+    
+    // What's our deltaTime?
+    // For consistent speed across devices.
+    deltaTime = 1/(window.performance.now() - canvas._pInst._lastFrameTime);
+    
+    //musicSystem();
     
     // Greeeny space.
     //background(0,29,0);
@@ -219,9 +251,18 @@ function draw(){
     
     // Player's ship.
     renderShip(1);
+    // Test array of Cyber craft.
+    cybers[0].input();
+    for (let i = 0; i < cybers.length; i++){
+        cybers[i].forward(1);
+        cybers[i].render(sop);
+        
+    }       
+    // Render to main canvas as image.
+    image(sop,0,0);
     
     // Top starry layer.
-    //lettherebeStars(1);
+    lettherebeStars(1);
 }
 
 let sSize = 9;
@@ -293,14 +334,17 @@ function renderShip(_state){
                       -sSize-2);
         sop.box(sSize,sSize,sSize);
         sop.pop();
-        // Render to main canvas as image.
-        image(sop,0,0);
+//        // Render to main canvas as image.
+//        image(sop,0,0);
     }
 }
 
 // First, we want to be able to create the 'stars' by creating a procedural texture.
 // Next, 'volcanic debris' --> a fragmented remnant of the Singularity. Or something.
 let foh;
+let foh2;
+let sop;
+let fop;
 function lettherebeStars(_state){
     // Initialize.
     // Black spots, semi-transparent.
@@ -311,14 +355,20 @@ function lettherebeStars(_state){
         
         let fohX = 0;
         let fohY = 0;
-        for (let i = 0; i < 21; i++){
+        for (let i = 0; i < 3; i++){
             foh.strokeWeight(Math.random()*32);
-            foh.stroke(0,42);
-            // Yellow spots.
-            //foh.stroke(255,255,0,100);
+            
             fohX = Math.random()*width;
             fohY = Math.random()*height;
+            
+            // Yellow spots.
+            foh.stroke(255,255,0,240);
             foh.point(  fohX,
+                        fohY);
+            
+            // Black holes.
+            foh.stroke(0,142);
+            foh.point(  fohX+9,
                         fohY);
         }
         
@@ -407,14 +457,14 @@ function lettherebePlanets(_state){
         // Moon.
         fop.translate(0,
                      -120);
-        fop.ambientMaterial(112,0,0);
+        fop.ambientMaterial(112,112,0);
         fop.sphere(pSize/2);
         
         // Baby moon.
         fop.rotateX(frameCount/100);
         fop.translate(0,
                      224);
-        fop.ambientMaterial(122,0,0);
+        fop.ambientMaterial(122,122,0);
         fop.sphere(pSize/4);
         
         fop.pop();
