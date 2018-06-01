@@ -12,3 +12,196 @@ cynicmusic.com pixelsphere.org
 
 cynicmusic - 'Icy Realm (7 & 8)' 
 cynicmusic.com pixelsphere.org
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Legacy code below here!
+
+//    if (shipX < 0 - zScalar) shipX = width + zScalar;
+//    if (shipX > width + zScalar) shipX = 0 - zScalar;
+//    if (shipY < 0 - zScalar) shipY = height + zScalar;
+//    if (shipY > height + zScalar) shipY = 0 - zScalar;
+
+
+function legacyShip(){
+    // Size of ship.
+        sSize = lerp(sSize,
+            map(shipSpeed,0,maxSpeed,22,0.1,true),
+                    0.1);
+        //let sSize = 9;
+        
+        sop.pointLight(255,255,255,
+                      0, 0,87);
+        
+        // Clear background (clear alpha).
+        sop.background(255,0);
+        sop.push();
+       
+        sop.translate(shipX-width/2,shipY-height/2,
+                     0);
+        sop.rotateZ(radians(shipR+90));
+        
+        // Smoke balls.
+        sop.push();
+            sop.noStroke();
+            //sop.fill(255,255,0,100);
+            //sop.specularMaterial(255,255,0);
+            sop.specularMaterial(0,255,255);
+            for (let i = 0; i < 10; i++){
+                sop.push();
+            sop.translate(Math.random()*
+                          (100-50)/(shipSpeed+1),
+                         sSize/2+Math.random()*
+                          (shipSpeed+1),
+                         Math.random()*
+                          sSize/4);
+//            sop.sphere(Math.random()*
+//                       map(shipSpeed,0,maxSpeed,
+//                                sSize/2,20,true));
+                let bSize = Math.random()*
+                       map(shipSpeed,0,maxSpeed,
+                                sSize/2,20,true);
+                sop.box(bSize,bSize*3,bSize);
+                sop.pop();
+            }
+        sop.pop();
+        
+        // Aesthetics.
+        sop.stroke(0);
+        sop.strokeWeight(2);
+        //sop.fill(250);
+        sop.specularMaterial(250);
+        
+        sop.box(sSize,sSize,sSize);
+        sop.translate(sSize+2,
+                      0);
+        sop.box(sSize,sSize,sSize);
+        sop.translate(-sSize*2-4,
+                      0);
+        sop.box(sSize,sSize,sSize);
+        sop.translate(sSize+2,
+                      -sSize-2);
+        sop.box(sSize,sSize,sSize);
+        sop.translate(0,
+                      -sSize-2);
+        sop.box(sSize,sSize,sSize);
+        sop.pop();
+}
+
+
+function shipForward(_p){
+    
+    input();
+    
+    if (thrusting){
+        shipSpeed += 12;
+    }
+    
+    // Speed regulation.
+    if (shipSpeed > maxSpeed) 
+        shipSpeed = maxSpeed;
+    
+    //_p *= shipSpeed * 1/frameRate();
+    _p *= shipSpeed * deltaTime;
+    
+    shipX += _p * Math.cos(radians(shipR));
+    shipY += _p * Math.sin(radians(shipR));
+     
+    // Space friction :|
+    shipSpeed *= 0.99;
+    
+//    let zScalar = lerp(sSize,
+//            map(shipSpeed,0,maxSpeed/1000,100,-100),
+//                    0.1);
+    
+    // Wrap ship.
+    let newSector = false;
+    if (shipX < 0) {shipX = width;
+                    newSector = true;
+                   }
+    if (shipX > width) {shipX = 0;
+                    newSector = true;
+                   }
+    if (shipY < 0) {shipY = height;
+                    newSector = true;
+                   }
+    if (shipY > height) {shipY = 0;
+                    newSector = true;
+                   }
+    
+    // Create new starry layers with new sector?
+    //newSector = false;
+    if (newSector===true){
+        // Initialize layers (to be rendered as images).
+        lettherebeStars(0); // First star layer.
+        lettherebeStars(2); // Second star layer.   
+    }
+
+    
+    
+    
+}
+
+function shipSteer(_p, _amount){
+    
+    // The latter half of this equation just
+    // decreases steering amount with speed.
+    
+    shipR+= (_p * _amount * 2)/(1+(shipSpeed)/100);
+    
+}
+
+function input(){
+  
+    // Get distances.
+    let vM = createVector(mouseX, mouseY);
+    let vP = createVector(prevX, prevY);
+    
+    let dist = p5.Vector.dist(vM,vP);
+    let distX = Math.abs(vM.x - vP.x);
+    let distY = Math.abs(vM.y - vP.y);
+    
+    // Mumma don't take no cheap moves.
+//    if (dist < 0.1){
+//        prevX = mouseX;
+//        prevY = mouseY;
+//        return;
+//    }
+    
+    // Rotation based on key-input.
+    if (keyIsDown(68) ||
+       keyIsDown(RIGHT_ARROW)){
+        shipSteer(1,5);
+    }
+    if (keyIsDown(65) ||
+       keyIsDown(LEFT_ARROW)){
+        shipSteer(-1,5);
+    }
+    if (keyIsDown(87) ||
+       keyIsDown(UP_ARROW) ||
+       touchThrust){
+        thrusting = true;
+    }else thrusting = false;
+    
+    // Rotation based on left and right swipe.
+    // Thrust based on up and down swipe.
+    if (distY < distX){
+    if (vM.x > vP.x) shipSteer(1, distX);
+    else shipSteer(-1, distX);
+    }
+//    else if (distY > distX){
+//    if (vM.y > vP.y) shipSteer(1, distY);
+//    else shipSteer(-1, distY);
+//    }
+    
+    prevX = mouseX;
+    prevY = mouseY;
+    
+}
+
+let shipX = 0;
+let shipY = 0;
+let shipR = -90;
+let shipSpeed = 1;
+let maxSpeed = 420;

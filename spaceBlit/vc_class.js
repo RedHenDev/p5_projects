@@ -1,5 +1,19 @@
 // Voxel cybernetics.
 
+let prevX;
+let prevY;
+
+// For swipe controls.
+let thrusting = false;
+let touchThrust = false;
+function touchStarted(){
+    thrusting = true;
+    touchThrust = true;
+}
+function touchEnded(){
+    thrusting = false;
+    touchThrust = false;
+}
 
 class Cyber{
     constructor(x,y,z){
@@ -105,6 +119,19 @@ class Cyber{
         let rB = width/2;
         let tB = 0 - height/2;
         let bB = height/2;
+        
+        // Adjust for field of view.
+        // This is a hack.
+        // Should definitely do something
+        // more accurate for negatives,
+        // and find accurate formula.
+        let fOv = 1.04;
+        if (this.pos.z > 0)
+            fOv*=0;
+        lB -= Math.abs(this.pos.z)*fOv;
+        rB += Math.abs(this.pos.z)*fOv;
+        tB -= Math.abs(this.pos.z)*fOv;
+        bB += Math.abs(this.pos.z)*fOv;
         
     // Wrap ship.
     let newSector = false;
@@ -248,6 +275,9 @@ class Voxel{
             _layer.rotateZ(radians(this.rot));
         
             _layer.ambientMaterial(this.fill);
+        
+        _layer.strokeWeight(3);
+        _layer.stroke(0);
         
             _layer.box( this.rad.x,
                         this.rad.y,
