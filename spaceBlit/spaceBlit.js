@@ -29,7 +29,7 @@ function setup(){
     lettherebeStars(2); // Second star layer.
     
     lettherebePlanets(0); // Planet layer.
-    renderShip(0);        // Ship layer.
+    renderShipLayer(0);   // Ship layer.
     
     mouseX = width/2;
     mouseY = height/2;
@@ -250,11 +250,15 @@ function draw(){
     lettherebePlanets(1);
     
     // Player's ship.
-    renderShip(1);
+    renderShipLayer(1);
     // Test array of Cyber craft.
     cybers[0].input();
+    let cRad = lerp(cRad,
+            map(cybers[0].shipSpeed,0,cybers[0].maxSpeed,22,0.1,true),
+                    0.1);
     for (let i = 0; i < cybers.length; i++){
         cybers[i].forward(1);
+        cybers[i].steer(Math.random()*2-1, 5);
         cybers[i].render(sop);
         
     }       
@@ -266,7 +270,7 @@ function draw(){
 }
 
 let sSize = 9;
-function renderShip(_state){
+function renderShipLayer(_state){
     if (_state === 0){
         sop = createGraphics(width,height, WEBGL);
     }
@@ -355,7 +359,7 @@ function lettherebeStars(_state){
         
         let fohX = 0;
         let fohY = 0;
-        for (let i = 0; i < 3; i++){
+        for (let i = 0; i < 7; i++){
             foh.strokeWeight(Math.random()*32);
             
             fohX = Math.random()*width;
