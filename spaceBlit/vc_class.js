@@ -160,6 +160,62 @@ class Cyber{
         }
     }
     
+    // Pass in an array of boxes.
+    construct(boxes){
+        // Clear array first.
+        this.voxs = [];
+        
+        let b = boxes;
+        
+        // Engine block index.
+        let eB = 0;
+        
+        // First, find engine block.
+        for (let i=0;i<b.length;i++){
+           if (b[i].e) {
+               eB = i;
+               break;
+           }
+        }
+        
+        // Instantiate engine block
+        // first, at start of array.
+        this.voxs[0] = new Voxel(0,0,0);
+        
+        // Iterate over array of
+        // boxes, missing out e.
+        // Look for populated boxes.
+        for (let i=0;i<b.length;i++){
+           if (!b[i].e && b[i].p) {
+               
+            // Find relative grid pos.   
+            let x = b[i].gX - b[eB].gX;
+            let y = b[i].gY - b[eB].gY;
+            let z = 0;
+            // Convert unit pos to scale.
+            x*=this.sca;
+            y*=this.sca;
+            z*=this.sca;
+               
+            this.voxs.
+            push(new Voxel(x,y,z));
+               
+               console.log("Voxel " +
+                         i + " " + 
+                         this.voxs[i]);
+               
+           }
+        }
+        
+        // Stain 'engine block' blue-
+        // green.
+        this.voxs[0].fill = color(0,250,250);
+        
+        // Apply Cyber's scale to voxels.
+        this.applyScale();
+        
+    }
+    
     // Set positions of constituent voxels.
     build(_mode){
         // Clear array first.

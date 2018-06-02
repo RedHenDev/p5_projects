@@ -12,13 +12,12 @@ function drawGrid(){
     
     if (gridBoxes.length===0){
         
-        console.log("Creating boxes.");
     for (let i=0;i< boxN;i++){
         for (let j=0;j<boxN;j++){
         let x = Wpad + i * pad;
         let y = Wpad + j * pad;
         let gb = new GridBox(x,y,pad,
-                             j+1,i+1);
+                             i+1,j+1);
         gridBoxes.push(gb);
         }
     }
@@ -30,17 +29,50 @@ function drawGrid(){
 
 
 function mousePressed(){
+    
+    if (gameMode===1){
+        touchThrust = true;
+    }
     // Return if not in Editor mode.
-    //if (gameMode!==0) return;
-    touchThrust = true;
+    if (gameMode!==0) return;
+    
     // Toggle box's 'populated'.
+    // If first/only populated box,
+    // then set as 'engine block'.
     for (let i=0; i<
             gridBoxes.length;i++){
         if(gridBoxes[i].checkMouse()){
             gridBoxes[i].p=
-                !gridBoxes[i].p
+                !gridBoxes[i].p;
+            // If now not populated,
+            // cannot be an engine.
+            if (!gridBoxes[i].p)
+                gridBoxes[i].e=false;
+            else{
+            // If no others populated
+            // then make this newly 
+            // populated engine block.
+            let oP = true;
+            for (let j=0;
+                j<gridBoxes.length;
+                j++){
+                    if (i!==j &&
+                       gridBoxes[j].e){
+                        oP = false;
+                        break;
+                    }
+    
+                }
+            if (oP) gridBoxes[i].e=true;
+            }
+            // Found the right box
+            // so can break out of check.
+         break;  
         }
     }
+    
+    // Construct the newly designed ship!
+    cybers[0].construct(gridBoxes);
     
 }
 
@@ -68,9 +100,10 @@ class GridBox{
         
         // Highlighted?
         this.h = false;
-        
         // Populated?
         this.p = false;
+        // Engine block?
+        this.e = false;
     }
     
     checkMouse(){
@@ -93,6 +126,8 @@ class GridBox{
         if (this.p) {
             fill(51);  
         } else fill(250);
+        
+        if (this.e) fill(0,250,250);
         
         rect(this.x,this.y,
              this.r-3,this.r-3);
