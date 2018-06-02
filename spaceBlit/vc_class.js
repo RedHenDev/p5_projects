@@ -4,12 +4,14 @@ let prevX;
 let prevY;
 
 // For swipe controls.
+// *** NB touchThrust now handled
+// in editor's mousePressed()!!!!
 let thrusting = false;
 let touchThrust = false;
-function touchStarted(){
-    thrusting = true;
-    touchThrust = true;
-}
+//function touchStarted(){
+//    thrusting = true;
+//    touchThrust = true;
+//}
 function touchEnded(){
     thrusting = false;
     touchThrust = false;

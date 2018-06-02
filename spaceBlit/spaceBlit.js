@@ -16,7 +16,6 @@ function preload(){
 function setup(){
     
     canvas = createCanvas(windowWidth, windowHeight);
-    background(0,29,0);
     
     // Initialize layers (to be rendered as images).
     lettherebeStars(0); // First star layer.
@@ -27,6 +26,9 @@ function setup(){
     
     setupPlayer();
     setupTraffic();
+    
+    // Draw rectangles from centre.
+    rectMode(CENTER);
      
 }
 
@@ -59,7 +61,9 @@ function draw(){
     
     // Edit mode.
     if (gameMode===0){
-       drawGrid(); 
+       
+        drawGrid();
+        
     }
     else if (gameMode===1){
     
