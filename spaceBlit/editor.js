@@ -5,17 +5,21 @@ function drawGrid(){
     
     background(0,29,0,10);
     
-    let pad = width/20;
-    let Wpad = width/10;
+    let boxN = 17;
     
-    let boxN = 7;
+    let wPad = height/10;
+    
+    let pad = (height-(wPad*2))/boxN;
+    
+    
+    
     
     if (gridBoxes.length===0){
         
     for (let i=0;i< boxN;i++){
         for (let j=0;j<boxN;j++){
-        let x = Wpad + i * pad;
-        let y = Wpad + j * pad;
+        let x = wPad + i * pad;
+        let y = wPad + j * pad;
         let gb = new GridBox(x,y,pad,
                              i+1,j+1);
         gridBoxes.push(gb);
@@ -25,6 +29,15 @@ function drawGrid(){
     
     renderGridBoxes();
     
+    stroke(0);
+    //noStroke();
+    strokeWeight(2);
+    textSize(32);
+    fill(255,255,0);
+    text("Ship Editor\n\nDesign your ship",
+         wPad+boxN*pad+32,
+         wPad+15);
+        
 }
 
 

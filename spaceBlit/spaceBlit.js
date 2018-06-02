@@ -3,7 +3,7 @@ p5.disableFriendlyErrors = true;
 let canvas;
 // Main game = 1.
 // Editor mode = 0.
-let gameMode = 1;
+let gameMode = 0;
 // Cybernetic vehicle array.
 // Used for player ship and
 // space traffic.
