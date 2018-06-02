@@ -3,6 +3,12 @@
 // First, we want to be able to create the 'stars' by creating a procedural texture.
 // Next, 'volcanic debris' --> a fragmented remnant of the Singularity. Or something.
 
+// Graphics buffers (used in layers).
+let foh;
+let foh2;
+let sop;
+let fop;
+
 let sSize = 9;
 function renderShipLayer(_state){
     if (_state === 0){
@@ -30,7 +36,12 @@ function renderShipLayer(_state){
 // Space Traffic...
 
 function setupTraffic(){
-    for (let i = 0; i < 9; i++){
+    
+    let amount = 32;
+    
+    // Place ships at random positions.
+    // Ships held in the cybers array.
+    for (let i = 0; i < amount; i++){
         let c = new Cyber(Math.random()
                 *(width/2)-(width/4),
                 Math.random()
@@ -67,11 +78,7 @@ function twinkles(){
     }
 }
 
-// Graphics buffers (used in layers).
-let foh;
-let foh2;
-let sop;
-let fop;
+
 function lettherebeStars(_state){
     // Initialize.
     // Black spots, semi-transparent.

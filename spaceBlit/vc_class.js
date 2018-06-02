@@ -200,10 +200,6 @@ class Cyber{
             this.voxs.
             push(new Voxel(x,y,z));
                
-               console.log("Voxel " +
-                         i + " " + 
-                         this.voxs[i]);
-               
            }
         }
         

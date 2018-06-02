@@ -3,6 +3,7 @@ p5.disableFriendlyErrors = true;
 let canvas;
 // Main game = 1.
 // Editor mode = 0.
+// Sector mode = 2;
 let gameMode = 0;
 // Cybernetic vehicle array.
 // Used for player ship and
@@ -26,6 +27,7 @@ function setup(){
     
     setupPlayer();
     setupTraffic();
+    setupNavig();
     
     // Draw rectangles from centre.
     rectMode(CENTER);
@@ -45,9 +47,12 @@ function keyPressed(){
     // Use space_bar.
     if (keyCode!==32)return;
     
-    if (gameMode===0)
-        gameMode=1;
-    else gameMode = 0;
+    gameMode++;
+    if (gameMode>2)gameMode=0;
+    
+//    if (gameMode===0)
+//        gameMode=1;
+//    else gameMode = 0;
 }
 
 let deltaTime = 0;
@@ -64,6 +69,9 @@ function draw(){
        
         drawGrid();
         
+    }
+    else if (gameMode===2){
+        spaceMap();
     }
     else if (gameMode===1){
     

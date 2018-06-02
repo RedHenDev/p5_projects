@@ -34,7 +34,7 @@ function drawGrid(){
     strokeWeight(2);
     textSize(32);
     fill(255,255,0);
-    text("Ship Editor\n\nDesign your ship",
+    text("Ship Editor\n\nDesign your ship\n\nPress Space",
          wPad+boxN*pad+32,
          wPad+15);
         
