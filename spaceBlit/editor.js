@@ -11,9 +11,8 @@ function drawGrid(){
     
     let pad = (height-(wPad*2))/boxN;
     
-    
-    
-    
+    // Initialize grid array for
+    // first time?
     if (gridBoxes.length===0){
         
     for (let i=0;i< boxN;i++){
@@ -34,7 +33,7 @@ function drawGrid(){
     strokeWeight(2);
     textSize(32);
     fill(255,255,0);
-    text("Ship Editor\n\nDesign your ship\n\nPress Space",
+    text("Ship Editor\n\nDesign your ship\n\nPress Space or\nTap to return",
          wPad+boxN*pad+32,
          wPad+15);
         
@@ -49,12 +48,20 @@ function mousePressed(){
     // Return if not in Editor mode.
     if (gameMode!==0) return;
     
+    // For detecting tapping off
+    // grid to exit editor.
+    let offTap = true;
+    
     // Toggle box's 'populated'.
     // If first/only populated box,
     // then set as 'engine block'.
     for (let i=0; i<
             gridBoxes.length;i++){
         if(gridBoxes[i].checkMouse()){
+            
+            // Not an offTap.
+            offTap = false;
+            
             gridBoxes[i].p=
                 !gridBoxes[i].p;
             // If now not populated,
@@ -82,10 +89,17 @@ function mousePressed(){
             // so can break out of check.
          break;  
         }
+        
+        
+        
     }
     
     // Construct the newly designed ship!
     cybers[0].construct(gridBoxes);
+    
+    // If here, we could
+        // exit editor -- tap off grid.
+        if (offTap) gameMode = 1;
     
 }
 
