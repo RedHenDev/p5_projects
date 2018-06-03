@@ -29,7 +29,7 @@ function renderShipLayer(_state){
 
 function setupTraffic(){
     
-    let amount = 99;
+    let amount = 9;
     
     // Place ships at random positions.
     // Ships held in the cybers array.
@@ -142,7 +142,9 @@ function lettherebePlanets(_state){
         fop = createGraphics(width,height, WEBGL);
     }
     
-    if (_state === 1){
+    if (_state === 1 && 
+        sector.x === 4 &&
+        sector.y === 5){
         // Size of ship.
         //let sSize = map(mouseY, 0,height,14,100);
         let pSize = 32;

@@ -19,7 +19,15 @@ function spaceMap(){
     background(0,200,0,12);
     
     spaceMapLayer(1);
-     
+    
+    stroke(0);
+    fill(255);
+    text("Sector " 
+         + sector.x
+         + "."
+         + sector.y,
+         42,42);
+    
 }
 
 

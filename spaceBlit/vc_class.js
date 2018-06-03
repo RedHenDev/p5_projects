@@ -151,16 +151,22 @@ class Cyber{
         
     // Wrap ship.
     let newSector = false;
+    // Dir 1up, 2down, 3left, 4right. 
+    let dir = 0;
     if (this.pos.x < lB) {this.pos.x = rB;
-                    newSector = true;
+                    dir = 3;
+                          newSector = true;
                    }
     if (this.pos.x > rB) {this.pos.x = lB;
-                    newSector = true;
+                    dir = 4;
+                          newSector = true;
                    }
     if (this.pos.y < tB) {this.pos.y = bB;
+                    dir = 1;
                     newSector = true;
                    }
     if (this.pos.y > bB) {this.pos.y = tB;
+                    dir = 2;
                     newSector = true;
                    }
         
@@ -170,8 +176,16 @@ class Cyber{
         newSector===true){
         // Initialize layers (to be rendered as images).
         lettherebeStars(0); // First star layer.
-        lettherebeStars(2); // Second star layer.   
+        lettherebeStars(2); // Second star layer. 
+        
+        // Update location.
+        if (dir===1) sector.y--;
+        if (dir===2) sector.y++;
+        if (dir===3) sector.x--;
+        if (dir===4) sector.x++;
+        
         }
+        
     }
     
     // Pass in an array of boxes.
