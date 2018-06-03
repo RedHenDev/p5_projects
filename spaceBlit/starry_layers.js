@@ -9,20 +9,12 @@ let foh2;
 let sop;
 let fop;
 
-let sSize = 9;
 function renderShipLayer(_state){
     if (_state === 0){
         sop = createGraphics(width,height, WEBGL);
     }
     
     if (_state === 1){
-        
-        // Legacy parallax action.
-          sSize = lerp(sSize,
-            map(cybers[0].shipSpeed,
-            0,
-            cybers[0].maxSpeed,
-            0,-140,true),0.1);
         
         // Clear background (clear alpha).
         sop.background(255,0);
@@ -37,7 +29,7 @@ function renderShipLayer(_state){
 
 function setupTraffic(){
     
-    let amount = 32;
+    let amount = 99;
     
     // Place ships at random positions.
     // Ships held in the cybers array.
@@ -154,6 +146,14 @@ function lettherebePlanets(_state){
         // Size of ship.
         //let sSize = map(mouseY, 0,height,14,100);
         let pSize = 32;
+        
+        // Legacy parallax action.
+        let sSize = 9;
+          sSize = lerp(sSize,
+            map(cybers[0].shipSpeed,
+            0,
+            cybers[0].maxSpeed,
+            0,-140,true),0.1);
         
         // Light source from top-left.
         fop.pointLight(255,255,255,

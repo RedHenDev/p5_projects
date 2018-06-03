@@ -15,6 +15,23 @@ let touchThrust = false;
 function touchEnded(){
     thrusting = false;
     touchThrust = false;
+    
+    
+    if (gameMode===1){
+    // Tapped engine block?
+    let vM = createVector(  
+        mouseX-width/2,
+        mouseY-height/2);
+    
+    let dist = createVector();
+       dist = p5.Vector.sub
+       (vM,cybers[0].pos);
+        
+    if (dist.mag()
+        < 20){
+        gameMode=0;
+    }
+    }
 }
 
 class Cyber{
@@ -60,8 +77,6 @@ class Cyber{
         }
 
     
-   
-        
         // Rotation based on key-input.
     if (keyIsDown(68) ||
        keyIsDown(RIGHT_ARROW)){
@@ -92,27 +107,26 @@ class Cyber{
         this.shipSpeed += this.shipAcc;
         }
     
-    // Speed regulation.
-    if (this.shipSpeed > this.maxSpeed) 
-        this.shipSpeed = this.maxSpeed;
+        // Speed regulation.
+        if (this.shipSpeed > 
+            this.maxSpeed)
+            this.shipSpeed =this.maxSpeed;
     
-    //_p *= shipSpeed * 1/frameRate();
-    _p *= this.shipSpeed * deltaTime;
+        if (this.shipSpeed < 1)
+        this.shipSpeed = 0;
+        
+        if (this.shipSpeed > 0){    
+        //_p *= shipSpeed * 1/frameRate();
+        _p *= this.shipSpeed *
+            deltaTime;
     
-    this.pos.x += _p * Math.cos(radians(this.rot));
-    this.pos.y += _p * Math.sin(radians(this.rot));
+        this.pos.x += _p *  Math.cos(radians(this.rot));
+        this.pos.y += _p *  Math.sin(radians(this.rot));
      
-    // Space friction :|
-    this.shipSpeed *= 0.99;
-    
-//    let zScalar = lerp(sSize,
-//            map(shipSpeed,0,maxSpeed/1000,100,-100),
-//                    0.1);
-        
-        // Screen-wrap as default, but
-        // do not change sector.
-    //this.wrap(false);
-        
+        // Space friction :|
+        this.shipSpeed *= 0.99;
+        }
+
     }
     
     wrap(sectorSensitive){

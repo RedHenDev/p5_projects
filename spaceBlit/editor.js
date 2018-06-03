@@ -31,12 +31,30 @@ function drawGrid(){
     stroke(0);
     //noStroke();
     strokeWeight(2);
-    textSize(32);
-    fill(255,255,0);
-    text("Ship Editor\n\nDesign your ship\n\nPress Space or\nTap to return",
+    textSize(28);
+    fill(0,255,255);
+    text("Ship Editor",
          wPad+boxN*pad+32,
          wPad+15);
+    
+    stroke(0);
+    //noStroke();
+    strokeWeight(2);
+    textSize(28);
+    fill(255,255,0);
+    text("Design your ship\n\nPress 'space' or\nTap here to launch!",
+         wPad+boxN*pad+32,
+         wPad+51);
         
+    stroke(0);
+    //noStroke();
+    strokeWeight(2);
+    textSize(28);
+    fill(255);
+    text("Tap ship's\nengine-block\nto return to editor",
+         wPad+boxN*pad+32,
+         wPad+height/1.8);
+    
 }
 
 
