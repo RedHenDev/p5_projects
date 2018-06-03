@@ -57,6 +57,38 @@ function drawGrid(){
     
 }
 
+function loadDesign(){
+  
+    let bxs = shipLoad.boxs;
+    
+    for (let i=0;i<gridBoxes.length;i++)
+    {
+        
+        // Sluice array.
+        gridBoxes[i].e = false;
+        gridBoxes[i].p = false;
+        
+        gridBoxes[i].e =
+            bxs[i].e;
+        gridBoxes[i].p =
+            bxs[i].p;
+    }
+        
+}
+
+function saveDesign(_array){
+    
+    // We want to convert the array
+    // to an object that can be
+    // passed to the JSON.
+    // Will I also be able to 
+    // *append* to the JSON?
+    let jFile = {};
+    
+    jFile.boxs = _array;
+        
+    saveJSON(jFile, 'designs.json');
+}
 
 function mousePressed(){
     
@@ -106,18 +138,24 @@ function mousePressed(){
             // Found the right box
             // so can break out of check.
          break;  
-        }
-        
-        
+        } 
         
     }
     
-    // Construct the newly designed ship!
-    cybers[0].construct(gridBoxes);
-    
     // If here, we could
         // exit editor -- tap off grid.
-        if (offTap) gameMode = 1;
+        if (offTap) {
+            
+            // Testing Json saving...
+            if (mouseX < width/2){
+                loadDesign();
+                //saveDesign(gridBoxes);
+            }
+            else gameMode = 1;
+        }
+    
+    // Construct newly designed ship!
+    cybers[0].construct(gridBoxes);
     
 }
 

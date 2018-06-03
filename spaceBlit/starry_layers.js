@@ -46,12 +46,21 @@ function setupTraffic(){
 function spaceTraffic(){
 //cybers[0].sca = 14/cybers[0].shipSpeed + 14;
     //cybers[0].build();
+    
     for (let i = 0; i < cybers.length; i++){
         cybers[i].forward(1);
         if (i !== 0){
+           sop.stroke(255);
+           sop.line(cybers[i].pos.x,
+                cybers[i].pos.y,
+                cybers[i].pos.z,
+                cybers[0].pos.x,
+                cybers[0].pos.y,
+                cybers[0].pos.z);
             cybers[i].steer(Math.random()*2-1, 5);
             cybers[i].wrap(false);
-        } else cybers[i].wrap(true);
+        } else {cybers[i].wrap(true);
+               }
         cybers[i].render(sop);
         
     }

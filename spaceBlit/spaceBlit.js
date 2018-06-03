@@ -10,8 +10,11 @@ let gameMode = 0;
 // space traffic.
 let cybers = [];
 
+let shipLoad = {};
+
 function preload(){
      //setupMusic();
+    shipLoad = loadJSON('designs.json');
 }
 
 function setup(){
