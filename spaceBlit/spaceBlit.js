@@ -10,11 +10,8 @@ let gameMode = 0;
 // space traffic.
 let cybers = [];
 
-let shipLoad = {};
-
 function preload(){
-     //setupMusic();
-    shipLoad = loadJSON('designs.json');
+     setupMusic();    
 }
 
 function setup(){
@@ -65,7 +62,7 @@ function draw(){
     // For consistent speed across devices.
     deltaTime = 1/(window.performance.now() - canvas._pInst._lastFrameTime);
     
-    //musicSystem();
+    musicSystem();
     
     // Edit mode.
     if (gameMode===0){

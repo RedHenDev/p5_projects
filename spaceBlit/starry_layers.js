@@ -50,13 +50,13 @@ function spaceTraffic(){
     for (let i = 0; i < cybers.length; i++){
         cybers[i].forward(1);
         if (i !== 0){
-           sop.stroke(255);
-           sop.line(cybers[i].pos.x,
-                cybers[i].pos.y,
-                cybers[i].pos.z,
-                cybers[0].pos.x,
-                cybers[0].pos.y,
-                cybers[0].pos.z);
+//           sop.stroke(255);
+//           sop.line(cybers[i].pos.x,
+//                cybers[i].pos.y,
+//                cybers[i].pos.z,
+//                cybers[0].pos.x,
+//                cybers[0].pos.y,
+//                cybers[0].pos.z);
             cybers[i].steer(Math.random()*2-1, 5);
             cybers[i].wrap(false);
         } else {cybers[i].wrap(true);
@@ -75,6 +75,14 @@ function twinkles(){
     stroke(0,0,212);
     strokeWeight(5);
     point(  Math.random()*width,
+            Math.random()*height);
+    }
+    
+    if (frameCount & 224 === 0){
+        // Shooting star.
+    line(   Math.random()*width,
+            Math.random()*height,
+            Math.random()*width,
             Math.random()*height);
     }
 }

@@ -58,19 +58,19 @@ function drawGrid(){
     
 }
 
-// Array of gridBox arrays loaded?
-shA = false;
+
 
 function loadDesign(_whichShip){
-  
-    if (shA===false) loadDesigns();
     
-    let bxs = shipLoad.boxs;
+    loadJSON('/ships/desig_'+
+             _whichShip+'.json', doLoad);
     
-    let j = (boxN*boxN) *
-            _whichShip;
+    // Callback...
+    function doLoad(data){
+    console.log(data);
+    bxs = data.boxs;
     
-    console.log(_whichShip + " loading...At position " + j);
+    console.log(_whichShip + " loading...");
     
     for (let i=0;i<gridBoxes.length;i++)
     {
@@ -80,78 +80,29 @@ function loadDesign(_whichShip){
         gridBoxes[i].p = false;
         
         gridBoxes[i].e =
-            bxs[j+i].e;
+            bxs[i].e;
         gridBoxes[i].p =
-            bxs[j+i].p;
+            bxs[i].p;
         
     }
-           
+}
 }
 
-function loadDesigns(){
-  
-    let bxs = shipLoad.boxs;
-    
-    // j cycles through at
-    // intervals of total number of
-    // gridboxes.
-    for (let j=0;j<
-         bxs.length;
-         j+=(boxN*boxN)){
-    for (let i=0;i<gridBoxes.length;i++)
-    {
-        
-        // Sluice array.
-        gridBoxes[i].e = false;
-        gridBoxes[i].p = false;
-        
-        gridBoxes[i].e =
-            bxs[j+i].e;
-        gridBoxes[i].p =
-            bxs[j+i].p;
-        
-    }
-        
-    }
-    
-    // Ship designs loaded :)
-    shA = true;
-    console.log(bxs.length/289 + " designs loaded!");
- 
-}
-
-// Array to store all ship
-// designs in this session.
-let totalSsf = [];
-function concatDesign(_array){
-    let tempA = [];
-    tempA = concat(totalSsf, _array);
-    totalSsf = [];
-    totalSsf = tempA;
-}
-
-// Append all designs in this session
-// to existing file.
+// Number of ship designs saved this
+// session.
+let nShip = 0;
+// Save new, numbered ship design JSON.
 function saveDesign(){
     // We want to convert the array
     // to an object that can be
     // passed to the JSON.
     let jFile = {};
     
-    //jFile.boxs = _array;
-        
-    //saveJSON(jFile, 'designs.json');
+    nShip++;
     
-    // Will I also be able to 
-    // *append* to the JSON?
-    // Yes-> first we grab the 
-    // existing designs from the JSON.
-    let ssf = [];
-    ssf = shipLoad.boxs;
-    // Then we concatenate the saved
-    // ship designs from this session.
-    jFile.boxs = concat(ssf, totalSsf);
-    saveJSON(jFile, 'designs.json');
+    jFile.boxs = gridBoxes;
+    saveJSON(jFile, 'desig_'+nShip+'.json');
+    // Thanks, JSON.
 }
 
 // Used to create an initial JSON.
@@ -227,10 +178,10 @@ function mousePressed(){
             // right low to load...
             if (mouseX < width/2){
                 if (mouseY < height/2)
-                concatDesign(gridBoxes); else
+                saveDesign(gridBoxes); else
                     loadDesign(
                     Math.floor(
-                    Math.random()*6));
+                    Math.random()*5));
             }
             else gameMode = 1;
         }
