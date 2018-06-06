@@ -66,6 +66,23 @@ function spaceTraffic(){
     }
 }
 
+// Moving star (position vector).
+// + origin position.
+let mS;
+let mSo;
+let starSpeed;
+// How often will new sliding stars
+// appear?
+let msF;
+
+function setupTwinkles(){
+    mS = createVector(0,0);
+    mSo = createVector(0,0);
+    
+    starSpeed = 1;
+    msF = 1;
+}
+
 function twinkles(){
     if (frameCount % 64 === 0){
     stroke(212);
@@ -78,12 +95,26 @@ function twinkles(){
             Math.random()*height);
     }
     
-    if (frameCount & 224 === 0){
-        // Shooting star.
-    line(   Math.random()*width,
-            Math.random()*height,
-            Math.random()*width,
-            Math.random()*height);
+    // Move sliding star.
+    mS.x += starSpeed;
+    mS.y -= starSpeed;
+    // Render sliding star.
+    stroke(255,100);
+    strokeWeight(2);
+    line (  mSo.x, mSo.y,
+            mS.x, mS.y);
+    // Head of star.
+    stroke(255,255,0,200);
+    strokeWeight(3);
+    point(mS.x,mS.y);
+    
+    if (frameCount % msF === 0){
+    
+        msF = Math.floor(Math.random()*2000) + 100;
+        // Set shooting star location.
+        mSo.x = mS.x = Math.random()*width;
+        mSo.y = mS.y = 
+        Math.random()*height;
     }
 }
 

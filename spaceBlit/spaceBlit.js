@@ -28,6 +28,7 @@ function setup(){
     setupPlayer();
     setupTraffic();
     setupNavig();
+    setupTwinkles();
     
     // Draw rectangles from centre.
     rectMode(CENTER);

@@ -181,7 +181,7 @@ function mousePressed(){
                 saveDesign(gridBoxes); else
                     loadDesign(
                     Math.floor(
-                    Math.random()*5));
+                    Math.random()*4)+1);
             }
             else gameMode = 1;
         }
