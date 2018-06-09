@@ -3,16 +3,33 @@
 let music = [];
 let currentMusic = 0;
 
+let howMuchMusicLoaded = 0;
+let assetsLoadTotal = 5;
+
 function setupMusic(){
-    music[0] = loadSound("https://redhendev.github.io/InfinitePacman/sound/song17.mp3");
-    music[1] = loadSound("media/rMt.ogg");
-    music[2] = loadSound("media/icyRealm.mp3");
-    music[3] = loadSound("media/sirensInDarkness.mp3");
+    music[0] = loadSound("https://redhendev.github.io/InfinitePacman/sound/song17.mp3",someMusicLoaded);
+    music[1] = loadSound("media/rMt.ogg",someMusicLoaded);
+    music[2] = loadSound("media/icyRealm.mp3",someMusicLoaded);
+    music[3] = loadSound("media/sirensInDarkness.mp3",someMusicLoaded);
     
-    currentMusic = 
-            music[Math.floor(Math.random()*
-                             music.length)];
 }
+
+// Our callback function.
+function someMusicLoaded(){
+        howMuchMusicLoaded++;
+        if (howMuchMusicLoaded>=assetsLoadTotal){
+            
+            // Select random track.
+            currentMusic = 
+     music[Math.floor(
+         Math.random()*
+            music.length)];
+            
+            // No longer loading.    
+            gameMode = 0;
+        }
+}
+
 function musicSystem(){
     // Music loop.
     if (!currentMusic.isPlaying()){

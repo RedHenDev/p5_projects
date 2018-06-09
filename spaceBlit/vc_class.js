@@ -16,6 +16,9 @@ function touchEnded(){
     thrusting = false;
     touchThrust = false;
     
+    if (gameMode===-1){
+        someMusicLoaded();
+    }
     
     if (gameMode===1){
     // Tapped engine block?
@@ -170,13 +173,20 @@ class Cyber{
                     newSector = true;
                    }
         
+        
     // Create new starry layers with new sector?
-    //newSector = false;
+    
     if (sectorSensitive && 
         newSector===true){
         // Initialize layers (to be rendered as images).
         lettherebeStars(0); // First star layer.
         lettherebeStars(2); // Second star layer. 
+        
+        // An event listener.
+        // Switched to true at new
+        // sector transition, then
+        // false when new sector check.
+        sectorTransition = true;
         
         // Update location.
         if (dir===1) sector.y--;

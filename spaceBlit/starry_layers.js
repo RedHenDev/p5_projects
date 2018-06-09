@@ -76,11 +76,17 @@ let starSpeed;
 let msF;
 
 function setupTwinkles(){
+    // Current position of sliding star
+    // and origin.
     mS = createVector(0,0);
     mSo = createVector(0,0);
+    msT = createVector(0,0);
     
-    starSpeed = 1;
+    starSpeed = 0.02;
+    // Duration (miliseconds).
     msF = 1;
+    // TimeStamp.
+    msTstamp = millis();
 }
 
 function twinkles(){
@@ -95,11 +101,14 @@ function twinkles(){
             Math.random()*height);
     }
     
+    if (!sectorTransition){
     // Move sliding star.
-    mS.x += starSpeed;
-    mS.y -= starSpeed;
+    mS.x = lerp(mS.x, msT.x, starSpeed);
+    mS.y = lerp(mS.y, msT.y, starSpeed);
+    mSo.x = lerp(mSo.x, msT.x, starSpeed/2);
+    mSo.y = lerp(mSo.y, msT.y, starSpeed/2);
     // Render sliding star.
-    stroke(255,100);
+    stroke(255);
     strokeWeight(2);
     line (  mSo.x, mSo.y,
             mS.x, mS.y);
@@ -107,14 +116,22 @@ function twinkles(){
     stroke(255,255,0,200);
     strokeWeight(3);
     point(mS.x,mS.y);
+    }
     
-    if (frameCount % msF === 0){
+    if (millis() - msTstamp > msF){
     
-        msF = Math.floor(Math.random()*2000) + 100;
+        sectorTransition = false;
+        
+        // TimeStamp.
+        msTstamp = millis();
+        msF = Math.floor(Math.random()*42000) + 100;
         // Set shooting star location.
         mSo.x = mS.x = Math.random()*width;
         mSo.y = mS.y = 
         Math.random()*height;
+        // Target location.
+        msT.x = Math.random()*width;
+        msT.y = Math.random()*height;
     }
 }
 

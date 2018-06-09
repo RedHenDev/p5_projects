@@ -1,18 +1,22 @@
 p5.disableFriendlyErrors = true;
 // For deltaTime calculation.
 let canvas;
+// Loading mode = -1.
 // Main game = 1.
 // Editor mode = 0.
-// Sector mode = 2;
-let gameMode = 0;
+// Sector mode = 2.
+let gameMode = -1;
 // Cybernetic vehicle array.
 // Used for player ship and
 // space traffic.
 let cybers = [];
 
-function preload(){
-     setupMusic();    
-}
+let musicON = true;
+
+//function preload(){
+//        if (musicON)
+//     setupMusic();    
+//}
 
 function setup(){
     
@@ -25,10 +29,15 @@ function setup(){
     lettherebePlanets(0); // Planet layer.
     renderShipLayer(0);   // Ship layer.
     
+    mouseX = width/2;
+    mouseY = height/2;
+    
     setupPlayer();
     setupTraffic();
     setupNavig();
     setupTwinkles();
+    if (musicON)
+    setupMusic();
     
     // Draw rectangles from centre.
     rectMode(CENTER);
@@ -41,6 +50,12 @@ function setupPlayer(){
     // 0 = default 'Tetrix' design.
     // 1 = random cube design.
     cybers[0].build(1); 
+    
+    // An event listener.
+    // Switched to true at new
+    // sector transition, then
+    // false when new sector check.
+    sectorTransition = false;
 }
 
 // Toggle gameMode for testing!
@@ -63,7 +78,17 @@ function draw(){
     // For consistent speed across devices.
     deltaTime = 1/(window.performance.now() - canvas._pInst._lastFrameTime);
     
+    // Don't try to play music
+    // if music mode off or
+    // still loading assets.
+    if (musicON && 
+        gameMode !== -1)
     musicSystem();
+    
+    // Loading mode.
+    if (gameMode===-1){
+       loadMe();
+    }
     
     // Edit mode.
     if (gameMode===0){
