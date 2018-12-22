@@ -30,8 +30,6 @@ function spaceMap(){
     
 }
 
-
-
 // Map design layer.
 
 // Space map layer.
@@ -44,7 +42,12 @@ function spaceMapLayer(_state){
     
     if (_state === 1){
         
-        let size = height/7;
+        engineCage();
+    }
+}
+
+function engineCage(){
+    let size = height/7;
         
         // Light source from top-left.
         sMap.pointLight(255,255,255,
@@ -81,5 +84,4 @@ function spaceMapLayer(_state){
         sMap.pop();
         // Render to main canvas as image.
         image(sMap,0,0);
-    }
 }
