@@ -12,7 +12,9 @@ function draw(){
     background(142,0,142);
     
     dots.forEach(function(dot){
-                dot.pv.add(new p5.Vector(0,random(0.1,10)));
+                if (dot.pv.y < height - 12){
+                dot.pv.add(new p5.Vector(0,random(0.04,2)));
+                } else dot.r += 0.01;
                 dot.update();
                 dot.screenWrap();
                 dot.render();
