@@ -1,5 +1,11 @@
+// Performance boost.
+p5.disablefriendlyerrors = true;
+
 // Array of particles.
 let dots = [];
+
+// Alpha for particles.
+let alpha = 255;
 
 // Track mouse positions
 // across updates.
@@ -21,16 +27,31 @@ function setup(){
     angleMode(DEGREES);
     
     // Centre mouse position.
-    mx = mouseX = 0;
-    my = mouseY = 0;
+    mx = mouseX = width/2;
+    my = mouseY = height/2;
     
     // Wind vector.
-    windV = createVector(0,0);
+    //windV = createVector(-0.0001,-0.0042);
+    windV = createVector(-0.001,-0.0042);
     
+    dots.push(new Particle(width/2,height/2,width/12));
+    dots[0].h = width/24;
 }
 
 function draw(){
-    background(0,200,222,99);
+    background(0,200,222,49);
+    
+    stroke(0);
+    noFill();
+    
+    if (dots[0].pv.x - dots[0].w*0.5 < width/2+width/8 &
+       dots[0].pv.x + dots[0].w*0.5 > width/2-width/8 &
+       dots[0].pv.y - dots[0].h*0.5 < height/3+height/8 &
+       dots[0].pv.y + dots[0].h*0.5 > height/3-height/8){
+        stroke(0);
+        fill(255,200,0,42);
+    }
+    rect(width/2, height/3,width/4,height/4);
     
     // Iterate backwards over array, since we
     // may remove objects.
@@ -38,33 +59,52 @@ function draw(){
             
         // Basic Euler and rendering.
         
+        // Gravity.
+        dots[i].av.y += 0.098;
+        
         // Let's see if we can't simulate the wind.
-        // The wind needs to be a vector.
-        // And that vector will affect the
-        // object's angular acceleration
-        // according to the object's rotation.
-        // If exactly perpendicular, no change.
-        // If exactly parallel, no change.
-        // Anything else, there will be a resultant
-        // angular acceleration force.
-        dots[i].anga += (Math.cos(radians(dots[i].t)) *
-            windV.x * (1+dots[i].h*0.5)) +
-            (Math.sin(radians(dots[i].t)) *
-            windV.y * (1+dots[i].w*0.5));
-        // Some random wind force.
-        dots[i].anga += random(-0.1, 0.1);
-            
-        dots[i].av.add(windV);
+        // Wind's effect on rotation.
+        dots[i].anga += (Math.sin(radians(dots[i].t)) *
+            windV.x * dots[i].h) +
+            (Math.cos(radians(dots[i].t)) *
+            windV.y * dots[i].w);
+        // Some random wind force (angular acceleration).
+        dots[i].anga += random(-0.2, 0.2);
+        
+        // Wind's effect on position.
+        // Need to take into consideration
+        // rotation of the particle.
+        // So, do this by trigonometric
+        // functions across the components
+        // of the wind's vector multiplied by
+        // the corresponding dimensions of the
+        // particle.
+        dots[i].av.y += windV.y * 
+            Math.abs(Math.cos(radians(dots[i].t))) *
+            dots[i].w;
+         dots[i].av.x += windV.x * 
+            Math.abs(Math.sin(radians(dots[i].t))) *
+            dots[i].h;
+        
+        // Dubious...but perhaps working.
+       // dots[i].av.y += windV.x * 
+         //   Math.abs(Math.cos(radians(dots[i].t))) *
+           // dots[i].w;
+       //  dots[i].av.x += windV.y * 
+         //   Math.abs(Math.sin(radians(dots[i].t))) *
+           // dots[i].h;
         
         dots[i].update();
-        dots[i].screenWrap();
+        //dots[i].screenWrap();
+        dots[i].screenBounce('y');
+        dots[i].screenWrap('x');
         dots[i].render(renderHawk);
         
         // If square, grow the particle.
         // (For shits and giggles).
         if (dots[i].h === dots[i].w) {
-            dots[i].w += 0.1;
-            dots[i].h += 0.1;
+            //dots[i].w += 0.1;
+            //dots[i].h += 0.1;
             // Make sure we update radius.
             dots[i].r = dots[i].h;
         }
@@ -75,10 +115,12 @@ function draw(){
         if (dots[i].r > width/10) dots.splice(i,1);
     }
     
+    //text("theta="+dots[0].t,dots[0].pv.x, dots[0].pv.y-42);
+    
     // For manually affecting rotation (via force; mouseY),
     // as well as speed of wind (mouseX).
     controls();
-    windV.x = map(mouseX, 0,width, -0.1,0.1);
+    //windV.x = map(mouseX, 0,width, -0.1,0.1);
     
 }
 
@@ -92,7 +134,7 @@ function controls(){
     if (Math.abs(dy) > Math.abs(dx)){
     for (let i = dots.length-1; i >= 0; i--){
         dots[i].anga += dy*0.1;
-        //dots[i].t = map(mouseY, 0,height, 0,360);
+        //dots[i].t = map(mouseY, 0,height, 0,180);
     }
     }
 
@@ -111,29 +153,24 @@ function renderHawk(_p){
     rotate(_p.t);
     
     if (_p.w === _p.h){
-        stroke(0);
-        fill(255,99);
+        stroke(0,alpha);
+        strokeWeight(1);
+        fill(255,0,255,alpha);
         
         // Circle.
         circle(0,0,_p.r);
         // Draw line, so
         // we can see rotations.
+        strokeWeight(2);
         line(0,0,0,-_p.r*0.5);
         
     }else {
-    stroke(0);
+    stroke(0,alpha);
     strokeWeight(2);
-    fill(255);
-        
+    fill(map(Math.abs(_p.vv.x),0,3,0,255),alpha);
     // Using width and height.
     rect(0,0,_p.w,_p.h);
     }
-    
-    // Golden ratio snub.
-    //rect(0,0,_r*1.618,_r);
-    
-    // A little longer -- felt right for the crow.
-    //rect(0,0,_r*2.618,_r);
     
     // Restore co-ordinate matrix.
     pop();
@@ -141,17 +178,20 @@ function renderHawk(_p){
 }
 
 function mousePressed(){
-    dots.push(new Particle( mouseX,mouseY,
-                            width/12));
-    dots[dots.length-1].h = width/24;
+   // dots.push(new Particle( mouseX,mouseY,
+     //                       width/12));
+    //dots[dots.length-1].h = width/24;
     // Only height need be assigned, since
     // width will have used radius, which
     // has already been given as width/12.
+    
+    // Propulsion right.
+    dots[0].av.x += 1;
 }
 
 function mouseDragged(){
     dots.push(new Particle( mouseX,mouseY,
-                            width/64));
+                            width/44));
 }
 
 function mouseMoved(){

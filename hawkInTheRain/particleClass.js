@@ -42,7 +42,7 @@ class Particle{
         this.angv += this.anga; // Add ang-acc to ang-vel.
         this.t += this.angv;  // Add ang-vel to ang-theta.
         // Air resistance/friction.
-        this.angv *= 0.96;
+        this.angv *= 0.96; //- (this.r*0.01);
         
         // Zero out angular force each update.
         this.anga = 0;
@@ -61,13 +61,48 @@ class Particle{
    
     }
     
-    screenWrap(){
-        // If going off screen, transport to
-        // opposite side.
-        if (this.pv.x < 0) this.pv.x = width;
-        if (this.pv.y < 0) this.pv.y = height;
-        if (this.pv.x > width) this.pv.x = 0;
-        if (this.pv.y > height) this.pv.y = 0;
+    // Particle to bounce off screen bounds?
+    // Set X or Y bounds on, or nothing for both.
+    screenBounce(XorY){
+        
+        if (XorY!='y'){
+        
+        if (this.pv.x < 0) {
+            this.pv.x = 0;
+            this.av.x = 5;
+        }
+        if (this.pv.x > width) {
+            this.pv.x = width;
+            this.av.x = -5;
+        }
+        }
+        if (XorY!='x'){
+        if (this.pv.y < 0) {
+            this.pv.y = 0;
+            this.av.y = 5;
+        }
+        if (this.pv.y > height) {
+            this.pv.y = height;
+            this.av.y = -5;
+        }
+        }
+    }
+    
+    // If going off screen, transport to
+    // opposite side.
+    screenWrap(XorY){
+        
+         if (XorY!='y'){
+            if (this.pv.x < 0) this.pv.x = width;
+            if (this.pv.x > width) this.pv.x = 0;
+         }
+        
+         if (XorY!='x'){
+            if (this.pv.y < 0) this.pv.y = height;
+            if (this.pv.y > height) this.pv.y = 0;
+         }
+        
+        
     }
     
     
