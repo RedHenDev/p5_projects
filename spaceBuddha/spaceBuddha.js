@@ -190,7 +190,7 @@ function draw(){
     // These things, if rendered to canvas,
     // will appear over the top of other things.
     // See frameCount etc.
-    printInstructions();
+    //printInstructions();
     
 }
 
