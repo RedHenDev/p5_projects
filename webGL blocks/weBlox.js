@@ -22,7 +22,7 @@ function setup(){
     mouseX = 0;
     mouseY = 0;
 
-    translate(0,0,700);
+    //translate(0,0,700);
     
 }
 
@@ -52,15 +52,20 @@ function draw(){
     // Updates global translation and rotation.
     me.update();
     
+    push();
+    translate(me.pos.x,0,me.pos.z);
+    
     adam.render();
     adam.rot.y += 0.02;
     adam.rot.x += 0.01;
+    
     
     for (let i = 0; i < blox.length; i++){
         blox[i].render();
         //blox[i].rot.y += 0.02;
 //        blox[i].rot.x += 0.01;
     }
+    pop();
 }
 
 
@@ -85,16 +90,23 @@ class Subject{
     
     checkInput(){
         if (keyIsDown(87)){
-            this.pos.z += Math.cos(radians(this.rot.y));
-            this.pos.x += Math.sin(radians(this.rot.y));
+            this.pos.z += Math.cos(-radians(this.rot.y));
+            this.pos.x += Math.sin(-radians(this.rot.y));
+        }
+        if (keyIsDown(83)){
+            this.pos.z -= Math.cos(-radians(this.rot.y));
+            this.pos.x -= Math.sin(-radians(this.rot.y));
         }
     }
     
     // Updates position of subject/user/player.
     update(){
         
+        // Centre of view -- for correct rotations.
         translate(0, 0, 700);
-        rotateY(-radians(this.rot.y));
+        
+        // Rotation.
+        rotateY(radians(this.rot.y));
         //rotateX(this.rot.x);
         
         this.checkInput();
@@ -116,7 +128,8 @@ class Blox{
     
     render(){
         push();
-            translate(me.pos.x + this.pos.x,this.pos.y, me.pos.z + this.pos.z);
+            //translate(me.pos.x + this.pos.x,this.pos.y, me.pos.z + //this.pos.z);
+        translate(this.pos.x,this.pos.y, this.pos.z);
             rotateX(this.rot.x);
             rotateY(radians(this.rot.y));
             rotateZ(this.rot.z);
