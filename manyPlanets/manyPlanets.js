@@ -5,14 +5,23 @@ let bg;
 // Planets.
 let planets = [];
 
+let font;
+
+let r = 0;
+
+// location.
+let w = 0;
+
 function preload(){
     moonT = loadImage("2k_moon.jpg");
     marsT = loadImage("2k_mars.jpg");
+    
+    font = loadFont("OpenSans-Regular.ttf");
 }
 
 function setup(){
     
-    createCanvas(800,800, WEBGL);
+    createCanvas(windowWidth,windowHeight, WEBGL);
     
     bg = new Background;
     bg.refresh();
@@ -22,11 +31,15 @@ function setup(){
     generatePlanets();
     
     ambientMaterial(250);
+    
+    textSize(22);
+    textAlign(CENTER, CENTER);
+    textFont(font);
 }
 
 function generatePlanets(){
    
-    for (let i=0;i<444;i++){
+    for (let i=0;i<44;i++){
         planets.push(new Planet);
     }
 
@@ -37,15 +50,42 @@ function draw(){
     
     let z = map(mouseX, 0, width, -100,0);
     
-    //translate(0,0,z);
+    if (keyIsDown(37)){
+         r+=1;
+    }
+    if (keyIsDown(39)){
+         r-=1;
+    }
+    if (keyIsDown(38)){
+         w+=10;
+    }
+    if (keyIsDown(40)){
+         w-=10;
+    }
     
+    translate(0,0,700);
+    rotateY(radians(r));
     
-    let dirY = (mouseY / height - 0.5) *2;
-    let dirX = (mouseX / width - 0.5) *2;
+    push(); // Start of main.
+        
+    translate(0+cos(radians(r)),
+              0+sin(radians(r)),
+              700+tan);
+    //let dirY = (mouseY / height - 0.5) *2;
+    //let dirX = (mouseX / width - 0.5) *2;
     //directionalLight(250, 250, 0, -dirX, -dirY, -1);
     directionalLight(250, 250, 0, 42, -4, -1);
     
     planets.forEach(update);
+    
+    push();
+    rotateY(radians(-r));
+    translate(0,0,-200);
+    rotateY(radians(r));
+    text(mouseX, 0,0);
+    pop();
+        
+    pop(); // End of main.
 }
 
 function mouseMoved(){
@@ -55,6 +95,8 @@ function mouseMoved(){
 function keyPressed(){
     planets.forEach(reverseP);
 }
+
+
 
 function mousePressed(){
     planets.forEach(pushP);
@@ -77,13 +119,22 @@ function pushP(item, index){
 }
 
 function pullP(item, index){
-    let originV = new p5.Vector(0, 0, -50);
+    if (index>0) {
+    //let originV = new p5.Vector(0, 0, -50);
+    let originV = createVector(
+        planets[0].pos.x,
+        planets[0].pos.y,
+        planets[0].pos.z);
+        
+        
     
     let dirV = originV.sub(planets[index].pos);
  
-    dirV.mult(0.0001 * (10/planets[index].rad));
+    dirV.mult((1000/dirV.magSq()) *
+              (10/planets[index].rad));
     
     planets[index].acc.add(dirV);
+    }
 }
 
 function update(item, index){
@@ -158,6 +209,6 @@ class Background{
     refresh(){
         background( this.r,
                     this.g,
-                    this.b);
+                    this.b,);
     }
 }

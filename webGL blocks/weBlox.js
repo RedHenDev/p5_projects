@@ -22,7 +22,7 @@ function setup(){
     mouseX = 0;
     mouseY = 0;
 
-    translate(0,0,10);
+    translate(0,0,700);
     
 }
 
@@ -85,16 +85,16 @@ class Subject{
     
     checkInput(){
         if (keyIsDown(87)){
-            this.pos.z += Math.cos(rad*(this.rot.y));
-            this.pos.x += Math.sin(rad*(this.rot.y));
+            this.pos.z += Math.cos(radians(this.rot.y));
+            this.pos.x += Math.sin(radians(this.rot.y));
         }
     }
     
     // Updates position of subject/user/player.
     update(){
         
-        translate(0, 0, 0);
-        rotateY(rad*(this.rot.y));
+        translate(0, 0, 700);
+        rotateY(-radians(this.rot.y));
         //rotateX(this.rot.x);
         
         this.checkInput();
