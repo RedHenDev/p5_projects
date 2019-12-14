@@ -8,6 +8,9 @@ let prevY = 0;
 
 let rad = Math.PI/180;
 
+// Update count, for smaller increment than frameCount.
+let upD = 0.00001;
+
 function setup(){
     createCanvas(windowWidth, windowHeight, WEBGL);
     
@@ -52,7 +55,9 @@ function draw(){
     // Updates global translation and rotation.
     me.update();
     
-    push();
+    //upD += 0.000000001;
+    
+    //push();
     translate(me.pos.x,0,me.pos.z);
     
     adam.render();
@@ -63,9 +68,14 @@ function draw(){
     for (let i = 0; i < blox.length; i++){
         blox[i].render();
         //blox[i].rot.y += 0.02;
-//        blox[i].rot.x += 0.01;
+        //blox[i].rot.x += 0.03;
+        //let distV = createVector(blox[i].pos.x,
+          //                       0,
+            //                     0);
+        //distV.sub(me.pos);
+        //blox[i].pos.y = 242+ (62*Math.sin(distV.magSq()*upD));
     }
-    pop();
+   
 }
 
 
