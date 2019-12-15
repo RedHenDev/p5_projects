@@ -12,6 +12,7 @@ let r = -90;
 // location.
 let wx = 0;
 let wz = 0;
+let wy = 0;
 
 function preload(){
     moonT = loadImage("2k_moon2.jpg");
@@ -48,7 +49,7 @@ function generatePlanets(){
 }
 
 function draw(){
-    //bg.refresh();
+    bg.refresh();
     
     let z = map(mouseX, 0, width, -100,0);
     
@@ -69,6 +70,13 @@ function draw(){
         wx-= sin(-radians(r));
         wz-= cos(-radians(r));
     }
+  	if (keyIsDown(87)){
+	  wy += 1;
+	}
+  if (keyIsDown(83)){
+	  wy -= 1;
+	}
+  
   
 //    push();
 //  		translate(0,0,500);
@@ -79,26 +87,32 @@ function draw(){
     rotateY(radians(r));
     
     // Translate to Subject's position.    
-    translate(wx,0,wz);
+    translate(wx,wy,wz);
   
     //let dirY = (mouseY / height - 0.5) *2;
     //let dirX = (mouseX / width - 0.5) *2;
     //directionalLight(250, 250, 0, -dirX, -dirY, -1);
-    directionalLight(250, 250, 250, 42, -4, -1);
+    directionalLight(250, 250, 250, 1, -1, -1);
     
     planets.forEach(update);
   
-  	// Static sky sphere.
+    // Static sky sphere.
+  	skySphere();
+
+   	
+}
+
+function skySphere(){
+  // Static sky sphere.
   	translate(-wx,0,-wz);
   	ambientLight(25,
 				 map(Math.sin(frameCount*0.02),-1,1,25,222),
 				 25);
   	texture(starsT);
   	sphere(2512,42);
-   	
 }
 
-function mouseMoved(){
+function mouseDragged(){
     planets.forEach(pullP);
 }
 
@@ -153,6 +167,64 @@ function pullP(item, index){
 function update(item, index){
     planets[index].render();
     planets[index].physics();
+  
+  	// Has there been a collision?
+  	let col = false;
+  
+  	for (let i = 0; i < planets.length; i++){
+	  
+	  if (i != index && 
+		  checkSphereCollision(	planets[index].pos,
+		 						planets[i].pos,
+		 						planets[index].rad,
+		 						planets[i].rad)){
+		
+		// Just reverse each velocity.
+		planets[i].vel.mult(-1);
+		planets[index].vel.mult(-1);
+		
+		// Swap velocity vectors, and move on.
+//		let tempV = planets[index].vel.copy();
+//		tempV.mult(0.996);
+//		planets[index].vel = planets[i].vel.copy();
+//		planets[i].vel = tempV.copy();
+		
+		//planets[i].vel = p5.Vector.random3D();
+		
+//		stroke(255,0,255);
+//		strokeWeight(2);
+//		line(planets[i].pos.x,
+//			 planets[i].pos.y,
+//			 planets[i].pos.z,
+//			 planets[index].pos.x,
+//			 planets[index].pos.y,
+//			 planets[index].pos.z);
+//		noStroke();
+		
+//		planets[i].acc.add(planets[index].vel);
+//		planets[index].acc.add(planets[i].vel);
+		//planets[i].vel.mult(0);
+		//planets[index].vel.mult(0);
+	  }
+	  if (col) break;
+	  else col = false;
+	}
+}
+
+// Have these two spheres collided?
+function checkSphereCollision(posA, posB, radA, radB){
+  
+  // Measure distance between the two
+  // spheres' position vectors.
+  let distanceV = p5.Vector.sub(posA, posB);
+  
+  // Is the distance between the two
+  // position vectors less than the
+  // sum of the two spheres' radii?
+  if (distanceV.mag() < (radA + radB)){
+	  return true;
+	  }
+	  else return false;
 }
 
 class Planet{
@@ -200,7 +272,7 @@ class Planet{
         
         // Space friction.
         this.vel.mult(0.99);
-        
+	  
         /*
         if (this.vel.magnitude > 12){
             this.vel.mult(0.5);
