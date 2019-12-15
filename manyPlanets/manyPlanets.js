@@ -75,7 +75,6 @@ function draw(){
 //    	text(mouseX, 0,0);
 //  	pop();
   
- 
     translate(0,0,700);
     rotateY(radians(r));
     
@@ -92,7 +91,7 @@ function draw(){
   	// Static sky sphere.
   	translate(-wx,0,-wz);
   	ambientLight(25,
-				 map(Math.sin(frameCount*0.04),-1,1,25,255),
+				 map(Math.sin(frameCount*0.02),-1,1,25,222),
 				 25);
   	texture(starsT);
   	sphere(2512,42);
@@ -161,8 +160,7 @@ class Planet{
         this.pos = new p5.Vector(random(-width/2,width/2),
                              random(-height/2,height/2),
                             random(0,-100));
-        
-        
+         
         this.vel = new p5.Vector(random(-3,3),
                                 random(-3,3),
                                 random(-3,3));
