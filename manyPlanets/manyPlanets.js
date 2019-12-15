@@ -7,15 +7,17 @@ let planets = [];
 
 let font;
 
-let r = 0;
+let r = -90;
 
 // location.
-let w = 0;
+let wx = 0;
+let wz = 0;
 
 function preload(){
-    moonT = loadImage("2k_moon.jpg");
+    moonT = loadImage("2k_moon2.jpg");
     marsT = loadImage("2k_mars.jpg");
-    
+  	starsT = loadImage("2k_stars_milky.jpg");  
+  
     font = loadFont("OpenSans-Regular.ttf");
 }
 
@@ -46,46 +48,55 @@ function generatePlanets(){
 }
 
 function draw(){
-    bg.refresh();
+    //bg.refresh();
     
     let z = map(mouseX, 0, width, -100,0);
     
+  	let va = 1;
+ 	if (keyIsDown(40)) va = -1;
+  
     if (keyIsDown(37)){
-         r+=1;
+         r-=1 * va;
     }
     if (keyIsDown(39)){
-         r-=1;
+         r+=1 * va;
     }
     if (keyIsDown(38)){
-         w+=10;
+        wx+= sin(-radians(r));
+        wz+= cos(-radians(r));
     }
     if (keyIsDown(40)){
-         w-=10;
+        wx-= sin(-radians(r));
+        wz-= cos(-radians(r));
     }
-    
+  
+//    push();
+//  		translate(0,0,500);
+//    	text(mouseX, 0,0);
+//  	pop();
+  
+ 
     translate(0,0,700);
     rotateY(radians(r));
     
-    push(); // Start of main.
-        
-    translate(0+cos(radians(r)),
-              0+sin(radians(r)),
-              700+tan);
+    // Translate to Subject's position.    
+    translate(wx,0,wz);
+  
     //let dirY = (mouseY / height - 0.5) *2;
     //let dirX = (mouseX / width - 0.5) *2;
     //directionalLight(250, 250, 0, -dirX, -dirY, -1);
-    directionalLight(250, 250, 0, 42, -4, -1);
+    directionalLight(250, 250, 250, 42, -4, -1);
     
     planets.forEach(update);
-    
-    push();
-    rotateY(radians(-r));
-    translate(0,0,-200);
-    rotateY(radians(r));
-    text(mouseX, 0,0);
-    pop();
-        
-    pop(); // End of main.
+  
+  	// Static sky sphere.
+  	translate(-wx,0,-wz);
+  	ambientLight(25,
+				 map(Math.sin(frameCount*0.04),-1,1,25,255),
+				 25);
+  	texture(starsT);
+  	sphere(2512,42);
+   	
 }
 
 function mouseMoved(){
@@ -93,7 +104,7 @@ function mouseMoved(){
 }
 
 function keyPressed(){
-    planets.forEach(reverseP);
+    //planets.forEach(reverseP);
 }
 
 
@@ -119,22 +130,25 @@ function pushP(item, index){
 }
 
 function pullP(item, index){
-    if (index>0) {
-    //let originV = new p5.Vector(0, 0, -50);
-    let originV = createVector(
-        planets[0].pos.x,
-        planets[0].pos.y,
-        planets[0].pos.z);
-        
-        
-    
+    //if (index>0) {
+    let originV = new p5.Vector(0, 0, -50);
+    //let originV = createVector(
+      //  planets[0].pos.x,
+        //planets[0].pos.y,
+        //planets[0].pos.z);
+  
     let dirV = originV.sub(planets[index].pos);
  
-    dirV.mult((1000/dirV.magSq()) *
-              (10/planets[index].rad));
+    dirV.mult((dirV.magSq()*0.00000001)); 
+              //*(10/planets[index].rad));
+  
+  // Force restrictor.
+  		if (dirV.mag()>1)
+		dirV.mult(0.001);
+			  
     
     planets[index].acc.add(dirV);
-    }
+    //}
 }
 
 function update(item, index){
@@ -173,7 +187,7 @@ class Planet{
         
         this.theta+=0.001;
         
-        rotate(this.rad*this.theta, [0,1,0]);
+        rotate((10/this.rad)*this.theta, [0,1,0]);
         texture(this.tex);
         sphere(this.rad, 24);
         

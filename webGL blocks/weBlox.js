@@ -58,7 +58,7 @@ function draw(){
     //upD += 0.000000001;
     
     //push();
-    translate(me.pos.x,0,me.pos.z);
+    translate(me.pos.x,me.pos.y,me.pos.z);
     
     adam.render();
     adam.rot.y += 0.02;
