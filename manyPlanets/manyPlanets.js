@@ -14,10 +14,13 @@ let wx = 0;
 let wz = 0;
 let wy = 0;
 
+let ww;
+
 function preload(){
     moonT = loadImage("2k_moon2.jpg");
     marsT = loadImage("2k_mars.jpg");
   	starsT = loadImage("2k_stars_milky.jpg");  
+  	sunT = loadImage("2k_sun.jpg");
   
     font = loadFont("OpenSans-Regular.ttf");
 }
@@ -42,14 +45,14 @@ function setup(){
 
 function generatePlanets(){
    
-    for (let i=0;i<44;i++){
+    for (let i=0;i<444;i++){
         planets.push(new Planet);
     }
 
 }
 
 function draw(){
-    bg.refresh();
+    //bg.refresh();
     
     let z = map(mouseX, 0, width, -100,0);
     
@@ -94,6 +97,7 @@ function draw(){
     //directionalLight(250, 250, 0, -dirX, -dirY, -1);
     directionalLight(250, 250, 250, 1, -1, -1);
     
+  	ww = createVector(wx, wy, wz);
     planets.forEach(update);
   
     // Static sky sphere.
@@ -165,6 +169,12 @@ function pullP(item, index){
 }
 
 function update(item, index){
+  
+  let d = planets[index].pos.dist(ww);
+  	if (d < 20) {
+	  planets[index].tex = sunT;
+	}
+  
     planets[index].render();
     planets[index].physics();
   
@@ -239,7 +249,7 @@ class Planet{
         
         this.acc = new p5.Vector(0,0,0);
         
-        this.rad = random(0.1,92);
+        this.rad = random(0.1,22);
         
         this.theta = 0;
         
