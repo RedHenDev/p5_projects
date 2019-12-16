@@ -41,28 +41,31 @@ function setup(){
     textSize(22);
     textAlign(CENTER, CENTER);
     textFont(font);
+  
+  	// Subject's position vector.
+  	ww = createVector(wx,wy,wz);
 }
 
 function generatePlanets(){
    
-    for (let i=0;i<444;i++){
+    for (let i=0;i<44;i++){
         planets.push(new Planet);
     }
 
 }
 
 function draw(){
-    //bg.refresh();
+    bg.refresh();
     
     let z = map(mouseX, 0, width, -100,0);
     
   	let va = 1;
  	if (keyIsDown(40)) va = -1;
   
-    if (keyIsDown(37)){
+    if (keyIsDown(37) || keyIsDown(65)){
          r-=1 * va;
     }
-    if (keyIsDown(39)){
+    if (keyIsDown(39) || keyIsDown(68)){
          r+=1 * va;
     }
     if (keyIsDown(38)){
@@ -80,12 +83,13 @@ function draw(){
 	  wy -= 1;
 	}
   
-  
+  // Text in front of subject.
 //    push();
 //  		translate(0,0,500);
-//    	text(mouseX, 0,0);
+//    	text('Z = ' + Math.floor(wz), 0,0);
 //  	pop();
   
+  	// Centre of scene camera for rotation.
     translate(0,0,700);
     rotateY(radians(r));
     
@@ -97,13 +101,20 @@ function draw(){
     //directionalLight(250, 250, 0, -dirX, -dirY, -1);
     directionalLight(250, 250, 250, 1, -1, -1);
     
-  	ww = createVector(wx, wy, wz);
+  	
     planets.forEach(update);
   
     // Static sky sphere.
-  	skySphere();
+  	//skySphere();
 
    	
+}
+
+function checkRay(index){
+  // Refresh subject's position vector.
+  ww.x = wx;
+  ww.y = wy;
+  ww.z = wz;
 }
 
 function skySphere(){
@@ -172,8 +183,9 @@ function update(item, index){
   
   let d = planets[index].pos.dist(ww);
   	if (d < 20) {
-	  planets[index].tex = sunT;
-	}
+	  console.log('planet ' + index + ' at ' + d + ' metres.' );
+	  //planets[index].tex = sunT;
+	} 
   
     planets[index].render();
     planets[index].physics();
@@ -293,6 +305,8 @@ class Planet{
 
 class Background{
     constructor(){
+	  
+	  	// 140 r, 66 b is a nice pink.
         this.r = random(0,255);
         this.g = 0;
         this.b = random(0,255);
