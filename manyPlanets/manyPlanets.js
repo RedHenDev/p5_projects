@@ -101,13 +101,10 @@ function draw(){
     //directionalLight(250, 250, 0, -dirX, -dirY, -1);
     directionalLight(250, 250, 250, 1, -1, -1);
     
-  	
     planets.forEach(update);
   
     // Static sky sphere.
-  	//skySphere();
-
-   	
+  	//skySphere();  	
 }
 
 function checkRay(index){
