@@ -104,7 +104,7 @@ function draw(){
     planets.forEach(update);
   
     // Static sky sphere.
-  	//skySphere();  	
+  	skySphere();  	
 }
 
 function checkRay(index){
