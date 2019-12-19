@@ -22,10 +22,7 @@ function setup(){
 		
 		
 	}
-	
-	
-	
-	
+
 }
 
 function draw(){

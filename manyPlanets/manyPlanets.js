@@ -2,26 +2,27 @@
 // Background object.
 let bg;
 
+let font;
+
 // Planets.
 let planets = [];
 
-let font;
 
-let r = -90;
-
-// location.
-let wx = 0;
-let wz = 0;
-let wy = 0;
-
-let ww;
+// Subject Euler physics vectors etc.
+let pos;	// Position.
+let vel;	// Velocity.
+let acc;	// Acceleration.
+let r =-90;	// Rotation.	
+let maxSpeed = 3;
+let impulseF = 1;	// Booster amount.
 
 function preload(){
     moonT = loadImage("2k_moon2.jpg");
     marsT = loadImage("2k_mars.jpg");
   	starsT = loadImage("2k_stars_milky.jpg");  
   	sunT = loadImage("2k_sun.jpg");
-  
+  	earthT = loadImage("2k_earth.jpg");
+	
     font = loadFont("OpenSans-Regular.ttf");
 }
 
@@ -29,6 +30,8 @@ function setup(){
     
     createCanvas(windowWidth,windowHeight, WEBGL);
     
+	perspective(PI/3.0, width/height, 0.1, 4000);
+	
     bg = new Background;
     bg.refresh();
     
@@ -42,24 +45,22 @@ function setup(){
     textAlign(CENTER, CENTER);
     textFont(font);
   
-  	// Subject's position vector.
-  	ww = createVector(wx,wy,wz);
+  	// Subject's position etc. vectors.
+  	pos = createVector(0,0,0);
+	vel = createVector(0,0,0);
+	acc = createVector(0,0,0);
 }
 
 function generatePlanets(){
    
-    for (let i=0;i<44;i++){
+    for (let i=0;i<444;i++){
         planets.push(new Planet);
     }
 
 }
 
-function draw(){
-    bg.refresh();
-    
-    let z = map(mouseX, 0, width, -100,0);
-    
-  	let va = 1;
+function inputs(){
+	let va = 1;	// Reverse steer if pressing reverse.	
  	if (keyIsDown(40)) va = -1;
   
     if (keyIsDown(37) || keyIsDown(65)){
@@ -69,20 +70,29 @@ function draw(){
          r+=1 * va;
     }
     if (keyIsDown(38)){
-        wx+= sin(-radians(r));
-        wz+= cos(-radians(r));
+        acc.x+= sin(-radians(r)) * impulseF;
+        acc.z+= cos(-radians(r)) * impulseF;
     }
     if (keyIsDown(40)){
-        wx-= sin(-radians(r));
-        wz-= cos(-radians(r));
+        acc.x-= sin(-radians(r)) * impulseF;
+        acc.z-= cos(-radians(r)) * impulseF;
     }
   	if (keyIsDown(87)){
-	  wy += 1;
+	  acc.y += 1 * impulseF;
 	}
   if (keyIsDown(83)){
-	  wy -= 1;
+	  acc.y -= 1 * impulseF;
 	}
   
+}
+
+function draw(){
+    bg.refresh();
+    
+	// Steer and propulsion.
+	inputs();
+	subjectPhysics();
+	
   // Text in front of subject.
 //    push();
 //  		translate(0,0,500);
@@ -94,7 +104,7 @@ function draw(){
     rotateY(radians(r));
     
     // Translate to Subject's position.    
-    translate(wx,wy,wz);
+    translate(pos.x,pos.y,pos.z);
   
     //let dirY = (mouseY / height - 0.5) *2;
     //let dirX = (mouseX / width - 0.5) *2;
@@ -107,18 +117,12 @@ function draw(){
   	skySphere();  	
 }
 
-function checkRay(index){
-  // Refresh subject's position vector.
-  ww.x = wx;
-  ww.y = wy;
-  ww.z = wz;
-}
 
 function skySphere(){
   // Static sky sphere.
-  	translate(-wx,0,-wz);
+  	translate(-pos.x,-pos.y,-pos.z);
   	ambientLight(25,
-				 map(Math.sin(frameCount*0.02),-1,1,25,222),
+	map(Math.sin(frameCount*0.02),-1,1,100,242),
 				 25);
   	texture(starsT);
   	sphere(2512,42);
@@ -131,8 +135,6 @@ function mouseDragged(){
 function keyPressed(){
     //planets.forEach(reverseP);
 }
-
-
 
 function mousePressed(){
     planets.forEach(pushP);
@@ -171,18 +173,23 @@ function pullP(item, index){
   		if (dirV.mag()>1)
 		dirV.mult(0.001);
 			  
-    
     planets[index].acc.add(dirV);
     //}
 }
 
+// Euler integration for Subject.
+function subjectPhysics(){
+	vel.add(acc);
+	pos.add(vel);
+	
+	// Speed delimiter.
+	if (vel.mag() > maxSpeed)
+		vel.mult(0.99);
+	
+	acc.mult(0);
+}
+
 function update(item, index){
-  
-  let d = planets[index].pos.dist(ww);
-  	if (d < 20) {
-	  console.log('planet ' + index + ' at ' + d + ' metres.' );
-	  //planets[index].tex = sunT;
-	} 
   
     planets[index].render();
     planets[index].physics();
@@ -248,9 +255,10 @@ function checkSphereCollision(posA, posB, radA, radB){
 
 class Planet{
     constructor(){
-        this.pos = new p5.Vector(random(-width/2,width/2),
-                             random(-height/2,height/2),
-                            random(0,-100));
+		let gaia = 8000;
+        this.pos = new p5.Vector(random(-gaia,gaia),
+                             random(-gaia,gaia),
+                            random(gaia,-gaia));
          
         this.vel = new p5.Vector(random(-3,3),
                                 random(-3,3),
@@ -258,13 +266,25 @@ class Planet{
         
         this.acc = new p5.Vector(0,0,0);
         
-        this.rad = random(0.1,22);
+        this.rad = random(1,888);
         
         this.theta = 0;
         
-        this.tex = Math.floor(random(0,2));
-        if (this.tex==1) this.tex = moonT;
-        else this.tex = marsT;
+//        this.tex = Math.floor(random(0,2));
+//        if (this.tex==1) this.tex = moonT;
+//        else this.tex = marsT;
+		if (this.rad > 700){
+			this.tex = sunT;
+		}
+		else if (this.rad > 342){
+			this.tex = earthT;
+		}
+		else if (this.rad > 170){
+			this.tex = marsT;
+		}
+		else if (this.rad > 0){
+			this.tex = moonT;
+		}
     }
     
     render(){
