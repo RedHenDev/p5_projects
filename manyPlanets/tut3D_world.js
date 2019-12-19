@@ -47,10 +47,7 @@ function draw(){
 		
 		boxes[i].render();
 	}
-	
-	
-	
-	
+
 }
 
 
@@ -64,7 +61,7 @@ function checkInput(){
         theta = theta + 1;
     }
 	
-	// Move forwwards please! :)
+	// Move forwards please! :)
 	if (keyIsDown(38)){
         px += sin(-radians(theta));
         pz += cos(-radians(theta));
