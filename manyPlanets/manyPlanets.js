@@ -32,9 +32,10 @@ function setup(){
     
 	perspective(PI/3.0, width/height, 0.1, 4000);
 	
-    bg = new Background;
-    bg.refresh();
-    
+    //bg = new Background;
+    //bg.refresh();
+    background(0,0);
+	
     noStroke();
     
     generatePlanets();
@@ -87,16 +88,17 @@ function inputs(){
 }
 
 function draw(){
-    bg.refresh();
-    
+    //bg.refresh();
+    background(0,0);
+	
 	// Steer and propulsion.
 	inputs();
 	subjectPhysics();
 	
   // Text in front of subject.
 //    push();
-//  		translate(0,0,500);
-//    	text('Z = ' + Math.floor(wz), 0,0);
+//  		translate(-20,0,500);
+//    	text(new Date().getDay(), 0,0);
 //  	pop();
   
   	// Centre of scene camera for rotation.
@@ -138,6 +140,7 @@ function keyPressed(){
 
 function mousePressed(){
     planets.forEach(pushP);
+	//alert("Playing God, is it?");
 }
 
 function reverseP(item, index){
