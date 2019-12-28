@@ -30,7 +30,7 @@ function setup(){
     
     createCanvas(windowWidth,windowHeight, WEBGL);
     
-	perspective(PI/3.0, width/height, 0.1, 4000);
+	perspective(PI/3.0, width/height, 0.1, 8000);
 	
     //bg = new Background;
     //bg.refresh();
@@ -54,7 +54,7 @@ function setup(){
 
 function generatePlanets(){
    
-    for (let i=0;i<444;i++){
+    for (let i=0;i<44;i++){
         planets.push(new Planet);
     }
 

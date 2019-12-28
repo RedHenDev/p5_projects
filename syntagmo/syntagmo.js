@@ -89,9 +89,16 @@ let adjectives = [
   'delicious'
 ];
 
-function preload(){
-  
+
+
+function touchStarted() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+  let synth = new p5.MonoSynth();
+  synth.play('A4', 0.5, 0, 0.2);
 }
+
 
 function setup(){
   createCanvas(windowWidth,400);
@@ -125,14 +132,20 @@ FirstLetterToUpperCase(_string)
   firstLetter.toUpperCase())); 
 }
 
+
+
 function mousePressed(){
+	
   background(200,0,200);
   
   fill(255);
   textSize(random(22,42));
   
-  text(newSyntagm(),8,width/4);
+	tx = newSyntagm();
+	
+  text(tx,8,width/4);
  
+	doSpeak(tx);
 }
 
 
