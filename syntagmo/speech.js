@@ -6,10 +6,10 @@
 let myText = "Sniffles, snibbles, snibbly.";
 
 function doSpeak(_message){
-	
+
 	// This is our speech object.
 let robot = new p5.Speech();
-
+	console.log(robot.listVoices());
     robot.speak(_message);
 	 
   }
