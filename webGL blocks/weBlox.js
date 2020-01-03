@@ -19,7 +19,7 @@ function setup(){
     
     me = new Subject();
     
-    let aPos = createVector(0,1,0);
+    let aPos = createVector(0,10,0);
     adam = new Blox(aPos, 10);
     
     mouseX = 0;
@@ -37,14 +37,22 @@ function setupSun(){
 
 function setupBlox(){
     
-    let rows = 10;
-    let cols = 10;
-    
-    for (let i = 0; i < rows * cols; i++){
+    let rows = 44;
+    let cols = 44;
+	let blockSize = 10;
+    let gap = blockSize * 4;	// Default = 4.
+	
+	noiseSeed(2020);
+	
+    for (let i = 0; i < rows ; i++){
         
         for (let j = 0; j < cols; j++){
-            let aPos = createVector(i * 10*6, 70,-200 + j * 10*6);
-            blox.push(new Blox(aPos, 10));
+            let aPos = createVector(i * gap, 70,-200 + j * gap);
+            blox.push(new Blox(aPos, blockSize));
+			tb = blox[blox.length-1];
+			tb.pos.y +=
+				noise(tb.pos.x/542,
+					tb.pos.z/542) * 400;
         }
     }
 }
@@ -84,6 +92,11 @@ function mouseMoved(){
         me.rot.y -= (prevX - mouseX);
     else if (mouseX > prevX)
         me.rot.y += (mouseX - prevX);
+	
+	if (mouseY < prevY)
+        me.rot.x += (prevY - mouseY);
+    else if (mouseY > prevY)
+        me.rot.x -= (mouseY - prevY);
     
     prevX = mouseX;
     prevY = mouseY;
@@ -117,7 +130,7 @@ class Subject{
         
         // Rotation.
         rotateY(radians(this.rot.y));
-        //rotateX(this.rot.x);
+        //rotateX(-radians(this.rot.x));
         
         this.checkInput();
     }

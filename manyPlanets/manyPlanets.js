@@ -29,8 +29,8 @@ function preload(){
 function setup(){
     
     createCanvas(windowWidth,windowHeight, WEBGL);
-    
-	perspective(PI/3.0, width/height, 0.1, 8000);
+	
+	//perspective(PI/3.0, width/height, 0.4, 10000);
 	
     //bg = new Background;
     //bg.refresh();
@@ -40,8 +40,11 @@ function setup(){
     
     generatePlanets();
     
-    ambientMaterial(250);
-    
+    //ambientMaterial(250);
+	shininess(42);
+	specularColor(0,200,200);
+    specularMaterial(0,200,200);
+	
     textSize(22);
     textAlign(CENTER, CENTER);
     textFont(font);
@@ -54,7 +57,7 @@ function setup(){
 
 function generatePlanets(){
    
-    for (let i=0;i<44;i++){
+    for (let i=0;i<444;i++){
         planets.push(new Planet);
     }
 
@@ -111,7 +114,8 @@ function draw(){
     //let dirY = (mouseY / height - 0.5) *2;
     //let dirX = (mouseX / width - 0.5) *2;
     //directionalLight(250, 250, 0, -dirX, -dirY, -1);
-    directionalLight(250, 250, 250, 1, -1, -1);
+    
+	directionalLight(250, 250, 250, 1, -1, -1);
     
     planets.forEach(update);
   
@@ -258,6 +262,7 @@ function checkSphereCollision(posA, posB, radA, radB){
 
 class Planet{
     constructor(){
+		// Bounds of creation space.
 		let gaia = 8000;
         this.pos = new p5.Vector(random(-gaia,gaia),
                              random(-gaia,gaia),
@@ -297,10 +302,17 @@ class Planet{
                     this.pos.y,
                     this.pos.z);
         
-        this.theta+=0.001;
+        this.theta+=0.1;
         
         rotate((10/this.rad)*this.theta, [0,1,0]);
-        texture(this.tex);
+        
+		if (this.rad > 700){
+			emissiveMaterial(0,200,0);
+		} else {specularMaterial(0,200,200);
+				texture(this.tex);
+			   }
+		
+		
         sphere(this.rad, 24);
         
         pop();
