@@ -1,17 +1,19 @@
-
 /*
 
 Pseudo-Hilbert Curve 
-0.1
+0.2
+
+Adding new functionality and
+playing around etc. :)
 
 Following Daniel Shiffman's example:
 https://www.youtube.com/watch?v=dSK-MW-zuAc
 
-Sat 8th February 2020
+Sun 9th February 2020
 
 */
 
-let order = 6;
+let order = 7;
 let N = Math.pow(2, order);
 let total = N * N;
 
@@ -19,7 +21,8 @@ let paths = [];
 
 function setup(){
     
-   createCanvas(400,400);
+   createCanvas(windowWidth,
+				windowHeight);
     
    background(random(0,255),
 			  0,
@@ -132,4 +135,51 @@ function hilbert(i){
 
 
 
+//*^*^*^*^*^*^*^*^*^*^*^*^*^
+
+function Ohilbert(_o){
+	
+	stroke(255);
+	strokeWeight(2);
+	
+	let v = createVector(0,0);
+	let p_v = createVector(0,0);
+	
+	let sC = height/N;
+	let shift = height/(sC*_o);
+	
+	for (let n = 0; n < 4; n++){
+	// Record previous v, for line.
+	p_v.x = v.x;
+	p_v.y = v.y;
+		
+	if (n == 0){
+		v.x = 0;
+		v.y = 0;
+	}
+	else if (n == 1){
+		v.x = 0;
+		v.y = 1;
+	}
+	else if (n == 2){
+		v.x = 1;
+		v.y = 1;
+	}
+	else if (n == 3){
+		v.x = 1;
+		v.y = 0;
+	}
+		
+	// Draw the line.
+	line(p_v.x * sC + shift, 
+		 p_v.y * sC + shift,
+		v.x * sC + shift, 
+		 v.y * sC + shift);
+		
+	// Count vertex.
+	text(n, v.x * sC + shift,
+		 	v.y * sC + shift);
+	}
+	
+}
 
