@@ -13,7 +13,9 @@ Sun 9th February 2020
 
 */
 
-let order = 7;
+let rendering = true;
+
+let order = 6;
 let N = Math.pow(2, order);
 let total = N * N;
 
@@ -21,64 +23,104 @@ let paths = [];
 
 function setup(){
     
-   createCanvas(windowWidth,
-				windowHeight);
+   createCanvas(window.innerWidth,
+				window.innerHeight);
     
-   background(random(0,255),
-			  0,
-			  random(0,255));
+   background(42);
 	
+  fill(255);
+  
 	text("Order = " + order +
 		 "\nN = " + N +
 		 "\nTotal = " + total,
-		 width/2,42);
+		 width/1.2,42);
 	
-//	for (let i = 1; i <= N; i++){
-//		hilbert(i);
-//	}
 	
 	for (let i = 0; i < total; i++){
 		paths[i] = hilbert(i);
-		let len = width/N;
+		let len = height/N;
 		paths[i].mult(len);
 		paths[i].add(len/2,len/2);
 	}
 
+	colorMode(HSB,360,255,255);
 	stroke(255);
-	strokeWeight(3);
+	strokeWeight(1);
 	noFill();
 	
-	
+	textSize(8);
+}
+
+let counting = false;
+
+function mousePressed(){
+  counter = 0;
+  background(42);
+  
+  counting = !counting;
+	rendering = true;
 }
 
 let counter = 0;
 function draw(){
 	
+	//beginShape();
 	
-	
-	beginShape();
-	
-	//translate(width/2,height/2);
+//	translate(width/2 ,
+//			  height/2);
 		
-		for (let i = 0; i < counter; i++){
-			stroke(255,10);
-			strokeWeight(1);
+  let whatCount;
+  if (counting){
+    whatCount = counter;
+  } else whatCount = total;
+  
+	if (rendering || whatCount == counting){
+		
+		for (let i = 1; i < whatCount; i++){
+			
+			// Colouring.
+			h = map(i, 0, paths.length, 360,128);
+			
+			stroke(h,255,255);
+			strokeWeight(0.4);
 			noFill();
 			
-			//rotate(0.005);
+			//rotate(0.002);
 			
-			vertex(	paths[i].x,
-			  		paths[i].y);
-//			fill(0);
-//			text(i, paths[i].x,
-//					paths[i].y)
-//			noFill();
+//			vertex(	paths[i].x,
+//			  		paths[i].y);
+			
+			let wiggle =
+				Math.sin(i/10) * 3;
+			
+			line(	paths[i-1].x + wiggle,
+			  		paths[i-1].y - wiggle,
+				 	paths[i].x - wiggle,
+			  		paths[i].y + wiggle)
+			
+			fill(0);
+			text(i, paths[i].x,
+					paths[i].y)
+			noFill();
+			
 		}
-	endShape();
-	
-	if (counter < paths.length)
-	counter++;
+	//endShape();
+		
+	if (whatCount == total)
+	rendering = false;
+		
+  let speed =
+      map(mouseX, 0, width,
+         1,42);
+  
+	if (counter < paths.length){
+	counter+=speed;
+    if (counter>= paths.length)
+      counter = 0;
+  }
 	else counter = 0;
+		
+	}
 		
 }
 
@@ -90,7 +132,6 @@ function hilbert(i){
 	points.push(createVector(0,1));
 	points.push(createVector(1,1));
 	points.push(createVector(1,0));
-	
 	
 	// Binary me up.
 	// (Bit masking).
@@ -132,54 +173,4 @@ function hilbert(i){
 }
 
 
-
-
-
-//*^*^*^*^*^*^*^*^*^*^*^*^*^
-
-function Ohilbert(_o){
-	
-	stroke(255);
-	strokeWeight(2);
-	
-	let v = createVector(0,0);
-	let p_v = createVector(0,0);
-	
-	let sC = height/N;
-	let shift = height/(sC*_o);
-	
-	for (let n = 0; n < 4; n++){
-	// Record previous v, for line.
-	p_v.x = v.x;
-	p_v.y = v.y;
-		
-	if (n == 0){
-		v.x = 0;
-		v.y = 0;
-	}
-	else if (n == 1){
-		v.x = 0;
-		v.y = 1;
-	}
-	else if (n == 2){
-		v.x = 1;
-		v.y = 1;
-	}
-	else if (n == 3){
-		v.x = 1;
-		v.y = 0;
-	}
-		
-	// Draw the line.
-	line(p_v.x * sC + shift, 
-		 p_v.y * sC + shift,
-		v.x * sC + shift, 
-		 v.y * sC + shift);
-		
-	// Count vertex.
-	text(n, v.x * sC + shift,
-		 	v.y * sC + shift);
-	}
-	
-}
 
