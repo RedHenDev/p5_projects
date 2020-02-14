@@ -1,6 +1,8 @@
 // Performance boost.
 p5.disablefriendlyerrors = true;
 
+let canvas;
+
 // Array of particles.
 let dots = [];
 
@@ -15,9 +17,11 @@ let my = 0;
 // Wind vector.
 let windV;
 
+let aBots = [];
+
 function setup(){
     
-    createCanvas(400,400);
+    canvas = createCanvas(400,400);
     background(0,200,222);
     
     // Draw from centre of rectangles,
@@ -36,11 +40,41 @@ function setup(){
     
     dots.push(new Particle(width/2,height/2,width/12));
     dots[0].h = width/24;
+	
+	//aBots.push(new antBot(false, width/2, height/2, 2));
+	
+	RedHen_2DPhysics.setupMatter(true);
+	
+	aBots.push(new antBot(true, width/2, height/2, 2));
+	
+	aBots.push(new antBot(true, width/2, height/2, 3));
+	aBots.push(new antBot(true, width/2, height/3, 2));
+	aBots.push(new antBot(true, width/2, height/4, 4));
+	
 }
+
+
 
 function draw(){
     background(0,200,222,49);
     
+	
+	RedHen_2DPhysics.updateObjs();
+	
+	for (let i = 0; i< aBots.length;i++){
+		
+		/*
+		let grounded = aBots[i].checkGround(height-42);
+            if (!grounded) aBots[i].acc.add(windV);
+            else if (Math.random()*100>99) aBots[i].acc.add(0,-10*aBots[i].scale);
+			*/
+             
+		//aBots[i].update();
+		aBots[i].render();
+	}
+	
+	
+	
     stroke(0);
     noFill();
     
