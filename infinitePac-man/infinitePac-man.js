@@ -173,7 +173,7 @@ function draw(){
     
   
     
-    boo.spawnBubbles();
+    //boo.spawnBubbles();
     
     push();
     // Move 'camera' to centre on boo.

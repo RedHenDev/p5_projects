@@ -12,7 +12,7 @@ function preload(){
 function setup(){
     
    createCanvas(window.innerWidth,
-				window.innerWidth,
+				window.innerHeight,
 			   WEBGL);
 	
 	newTex();
@@ -38,8 +38,8 @@ function draw(){
 	speedY = map(mouseY, 0, height,
 			   0.01, 12);
 	
-	translate(0,-height/7);
-	rotateY(speed);
+	translate(0,-height/6);
+	rotateY(speed + frameCount/100);
 	rotateX(speedY);
 	texture(tex);
 	box(height/3.2);	
