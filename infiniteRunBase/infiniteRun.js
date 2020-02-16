@@ -95,7 +95,7 @@ function setup(){
     
     // Celestial orbs that can be woken/put to sleep
     // depending on collision speed with boo.
-    //createDigitBalls();
+    createDigitBalls();
     
     rectMode(CENTER);
    
