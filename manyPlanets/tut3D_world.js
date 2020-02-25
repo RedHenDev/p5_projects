@@ -40,8 +40,7 @@ function draw(){
 	// Now move to player's position.
 	translate(px, py, pz);
 	
-	for (let i = 0; i < boxes.length; i++){
-		
+	for (let i = 0; i < boxes.length; i++){	
 		boxes[i].render();
 	}
 

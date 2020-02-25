@@ -22,6 +22,7 @@ function preload(){
   	starsT = loadImage("2k_stars_milky.jpg");  
   	sunT = loadImage("2k_sun.jpg");
   	earthT = loadImage("2k_earth.jpg");
+	soilT = loadImage("soil.jpg");
 	
     font = loadFont("OpenSans-Regular.ttf");
 }
@@ -291,7 +292,7 @@ class Planet{
 			this.tex = marsT;
 		}
 		else if (this.rad > 0){
-			this.tex = moonT;
+			this.tex = soilT;
 		}
     }
     
