@@ -31,11 +31,10 @@ function setup(){
     
     createCanvas(windowWidth,windowHeight, WEBGL);
 	
-	//perspective(PI/3.0, width/height, 0.4, 10000);
+	perspective(PI/3.0, width/height, 0.9, 90000);
 	
-    //bg = new Background;
+    bg = new Background;
     //bg.refresh();
-    background(0,0);
 	
     noStroke();
     
@@ -58,7 +57,7 @@ function setup(){
 
 function generatePlanets(){
    
-    for (let i=0;i<444;i++){
+    for (let i=0;i<99;i++){
         planets.push(new Planet);
     }
 
@@ -92,8 +91,8 @@ function inputs(){
 }
 
 function draw(){
-    //bg.refresh();
-    background(0,0);
+    bg.refresh();
+    //background(70,0,70);
 	
 	// Steer and propulsion.
 	inputs();
@@ -121,7 +120,7 @@ function draw(){
     planets.forEach(update);
   
     // Static sky sphere.
-  	skySphere();  	
+  	//skySphere();  	
 }
 
 
@@ -264,25 +263,26 @@ function checkSphereCollision(posA, posB, radA, radB){
 class Planet{
     constructor(){
 		// Bounds of creation space.
-		let gaia = 8000;
-        this.pos = new p5.Vector(random(-gaia,gaia),
-                             random(-gaia,gaia),
-                            random(gaia,-gaia));
+		let gaia = 80000;
+        this.pos = new p5.Vector.
+		random3D().mult(random(1,gaia));
          
-        this.vel = new p5.Vector(random(-3,3),
-                                random(-3,3),
-                                random(-3,3));
+        this.vel = new p5.Vector.
+		random3D().mult(random(-3,3));
         
         this.acc = new p5.Vector(0,0,0);
         
-        this.rad = random(1,888);
+        this.rad = random(1,3000);
         
         this.theta = 0;
         
 //        this.tex = Math.floor(random(0,2));
 //        if (this.tex==1) this.tex = moonT;
 //        else this.tex = marsT;
-		if (this.rad > 700){
+		if (this.rad > 1400){
+			this.tex = moonT;
+		}
+		else if (this.rad > 700){
 			this.tex = sunT;
 		}
 		else if (this.rad > 342){
@@ -307,7 +307,8 @@ class Planet{
         
         rotate((10/this.rad)*this.theta, [0,1,0]);
         
-		if (this.rad > 700){
+		if (this.rad > 700 &
+		   this.rad < 800){
 			emissiveMaterial(0,200,0);
 		} else {specularMaterial(0,200,200);
 				texture(this.tex);
