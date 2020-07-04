@@ -20,6 +20,7 @@ function setup(){
     
        
 	mic = new p5.AudioIn();
+	
 	mic.start();
 	upV = createVector(0,-1);
     // Create white circles.
@@ -43,15 +44,19 @@ function draw(){
     
 	// Return between 0-1.
     let amp = mic.getLevel();
-   	//let force = amp * 1000;
+   	let force = amp * 1000;
 	text(amp, 42, 42);
 	for (let i = 0; i < bods.length; i ++) {
-		let nV = upV.mult(amp); 
+		let nV = upV.mult(force); 
 		bods[i].addForce(nV)
 	}
 }
 
 // ***** INPUT and OTHER FUNCTIONS *****
+
+function mousePressed(){
+	userStartAudio();
+}
 
 function mouseDragged(){
     
