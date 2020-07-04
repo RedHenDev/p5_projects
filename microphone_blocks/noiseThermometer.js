@@ -44,11 +44,14 @@ function draw(){
     
 	// Return between 0-1.
     let amp = mic.getLevel();
-   	let force = amp * 1000;
-	text(amp, 42, 42);
+   	let force = amp*0.5;
+	upV.x = 0;
+	upV.y = -1;
+	upV.mult(force); 
+	text(Math.floor(force*1000000), 42, 42);
 	for (let i = 0; i < bods.length; i ++) {
-		let nV = upV.mult(force); 
-		bods[i].addForce(nV)
+		
+		bods[i].addForce(upV);
 	}
 }
 
