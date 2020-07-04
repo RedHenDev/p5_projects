@@ -48,7 +48,11 @@ function draw(){
 	upV.x = 0;
 	upV.y = -1;
 	upV.mult(force); 
-	text(Math.floor(force*1000000), 42, 42);
+	textSize(32);
+ 	stroke(0); 
+ 	fill(255);
+ 	text('mic = ' + Math.floor(force*1000000),
+		 42, 42);
 	for (let i = 0; i < bods.length; i ++) {
 		
 		bods[i].addForce(upV);
