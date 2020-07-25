@@ -9,13 +9,13 @@ function test(){
   
   text("Test decimal = " + testDec, 42, 42);
   fill(0);
-  stroke(255);
+  noStroke();
   text("Converted: " + decToBin(testDec), 42, 62);
   fill(255);
   stroke(0);
   text("Test binary = " + testBin, 42, 92);
   fill(0);
-  stroke(255);
+  noStroke();
   text("Converted: " + binToDec(testBin), 42, 112);
 }
 
