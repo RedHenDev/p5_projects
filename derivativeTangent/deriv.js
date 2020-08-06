@@ -36,39 +36,57 @@ function graphFunction(_x){
 	strokeWeight(map(scalar,0.1,200,0.4,8));
 	// Map x to axes: shift back half of width.
 	_x = map(_x,0,width,-reach,reach);
+	
+	// For drawing circle over graph.
 	let mX = map(mouseX,0,width,-reach,reach)/scalar;
 	let x, x2, y, y2;
 	let cX, cY;
-	for (let i = startPoint; i < _x; 
+	// Grab circle location.
+		cX = ((mX)*scalar)+width*0.5;
+		cY = (-f(mX)*scalar)+(height*0.5);
+	
+	// Iterate over points to draw graph.
+	// NB adjusts for scale.
+	for (let i = startPoint; i <= _x/scalar; 
 			 i+=(map(scalar,0.1,200,0.25,0.025))){
-		y  = (-f(i)*scalar)+(height*0.5);
-		y2 = (-f(i+0.25)*scalar)+(height*0.5);
-		x  = ((i)*scalar)+width*0.5;
-		x2 = ((i+0.25)*scalar)+(width*0.5);
+		y  = (-f(i-0.25)*scalar)+(height*0.5);
+		y2 = (-f(i)*scalar)+(height*0.5);
+		x  = ((i-0.25)*scalar)+width*0.5;
+		x2 = ((i)*scalar)+(width*0.5);
 		line(x,
 				 y,
 				 x2,
 				 y2);
-		
-		// Grab circle location.
-		cX = ((mX)*scalar)+width*0.5;
-		cY = (-f(mX)*scalar)+(height*0.5);
 	}
 	
+	// Draw tangent.
+	// Origin will be (cX, cY).
+	// Fixed radius.
+	// Derivative (of x**2) = f(2*mX**1).
+	// End point, derived from gradient at
+	// (cX, cY), will be Ox+r*Cos(radians(deriv)),
+	// Oy+r*Sin(radians(deriv)).
+	// So, at first we will draw line from origin.
+	stroke(255);
+	let r = height*0.25;
+	line(	cX-r,
+			 	cY+r*(2*mX),
+				cX+r,
+			 	cY-r*(2*mX)
+			);
+	
+	// Draw circle.
 	noFill();
 	stroke(255);
 	strokeWeight(2);
-	//text("X"+Math.floor(_x),42,42);
-	let newX = 
-			map(mouseX, 0,width,-reach,reach)/scalar;
-	//circle(mouseX,(-f(newX))*scalar+
-		//		 (height*0.5),42,42);
 	circle(cX, cY, 32,32);
+	
+	// Print x & y co-ords derived from mouseX.
 	stroke(255);
 	strokeWeight(1);
 	fill(255);
-	text("X"+Math.floor(newX),42,42);
-	text("Y"+Math.floor(f(newX)),42,62);
+	text("X"+Math.floor(mX*scalar),42,42);
+	text("Y"+Math.floor(f(mX)*scalar),42,62);
 	stroke(0);
 	fill(0);
 	text("zoom " + Math.floor(scalar), 42, 92);
@@ -80,6 +98,8 @@ function f(_x){
 	//return Math.sqrt(_x);
 	return Math.pow(_x, 2);
 	//return Math.sin(_x);
+	//return Math.pow(_x,2) - 2 * _x - 9;
+	
 }
 
 // First, we're going to draw some axes.
