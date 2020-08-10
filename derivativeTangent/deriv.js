@@ -59,21 +59,26 @@ function graphFunction(_x){
 				 y2);
 	}
 	
+	
 	// Draw tangent.
 	// Origin will be (cX, cY).
-	// Fixed radius.
-	// Derivative (of x**2) = f(2*mX**1).
-	// End point, derived from gradient at
-	// (cX, cY), will be Ox+r*Cos(radians(deriv)),
-	// Oy+r*Sin(radians(deriv)).
-	// So, at first we will draw line from origin.
+	// Fixed length from x.
+	// Derivative (of x**2) = 2*mX**1.
+	// Length from y derived from gradient at
+	// (cX, cY): cY + r * 2*mX**1.
 	stroke(255);
 	let r = height*0.25;
+	//let deriv = r*(2*mX);	// for x**2.
+	//let deriv = r*(-Math.pow(mX,-2)); // for 1/x.
+	//let deriv = r*Math.cos(mX);	// For sin(x).
+	//let deriv = r*(3*Math.pow(mX,2)); // For x**3.
+	let deriv = r*(1/3)*Math.pow(mX,(-1/3)); // For 3SQRx.
 	line(	cX-r,
-			 	cY+r*(2*mX),
+			 	cY+deriv,
 				cX+r,
-			 	cY-r*(2*mX)
+			 	cY-deriv
 			);
+	
 	
 	// Draw circle.
 	noFill();
@@ -93,12 +98,14 @@ function graphFunction(_x){
 }
 
 function f(_x){
-	if (_x === 0) return 0;
+	//if (_x === 0) return 0;
 	//return 1/_x;
 	//return Math.sqrt(_x);
-	return Math.pow(_x, 2);
+	//return Math.pow(_x, 2);
 	//return Math.sin(_x);
 	//return Math.pow(_x,2) - 2 * _x - 9;
+	//return Math.pow(_x, 3);
+	return Math.sqrt(_x, 3);
 	
 }
 
