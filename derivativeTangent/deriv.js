@@ -70,9 +70,11 @@ function graphFunction(_x){
 	let r = height*0.25;
 	//let deriv = r*(2*mX);	// for x**2.
 	//let deriv = r*(-Math.pow(mX,-2)); // for 1/x.
-	//let deriv = r*Math.cos(mX);	// For sin(x).
+	let deriv = r*Math.cos(mX);	// For sin(x).
 	//let deriv = r*(3*Math.pow(mX,2)); // For x**3.
-	let deriv = r*(1/3)*Math.pow(mX,(-1/3)); // For 3SQRx.
+	//let deriv = r*(1/3)*Math.pow(mX,(-1/3)); // For 3SQRx.
+	//let deriv = 240*mX*Math.pow((4*(mX*mX)+1),29);
+	// For y = (4x**2 + 1)**30.
 	line(	cX-r,
 			 	cY+deriv,
 				cX+r,
@@ -102,10 +104,11 @@ function f(_x){
 	//return 1/_x;
 	//return Math.sqrt(_x);
 	//return Math.pow(_x, 2);
-	//return Math.sin(_x);
+	return Math.sin(_x);
 	//return Math.pow(_x,2) - 2 * _x - 9;
 	//return Math.pow(_x, 3);
-	return Math.sqrt(_x, 3);
+	//return Math.sqrt(_x, 3);
+	//return Math.pow((4*Math.pow(_x,3) + 1),30);
 	
 }
 
