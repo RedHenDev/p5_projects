@@ -4,16 +4,28 @@ let squares = [];
 
 let step;
 
-let rows = 32;
-let columns = 32;
+let rows = 64;
+let columns = 64;
+
+let linesOn = false;
+
+let g = Math.random()*255;
+
+let xOff = 0;
 
 function setup(){
     createCanvas(window.innerWidth,
 								 window.innerHeight);
     
-    background(0,random(0,255),0);
+    paintBackground();
+	
+	//strokeWeight(2);
 	
 	march();
+}
+
+function paintBackground(){
+	background(0,72,0);
 }
 
 function march(){
@@ -21,13 +33,19 @@ function march(){
 	squares = [];
 	
 	scatterNodes();
-	renderNodes();
+	//renderNodes();
 	gatherSquares(rows,columns);
 	renderSquares();
 }
 
 function mousePressed(){
+	xOff+=1*step;
+	paintBackground();
 	march();
+}
+
+function draw(){
+	if (mouseIsPressed) mousePressed();
 }
 
 function renderSquares(){
@@ -77,16 +95,24 @@ function scatterNodes(){
 	// How far apart to draw nodes?
 	// Minus 1 from rows in order to fit squares
 	// exactly across canvas.
-	step = height/(rY);
+	step = width/(cX-1);
 	// Would be cool to write a LCF function here.
 	// I.e. to calc a step that fits maximum 
 	// number of nodes in consideration of both
 	// height and width.
 	
+	// For Perlin noise.
+	noiseSeed(1984);
+	
 	for (let i = 0; i < rY; i++){
 		for (let j = 0; j < cX; j++){
+			// Just random.
+			//let onORoff = Math.round(Math.random());
+			// Perlin.
+			let onORoff = Math.round(
+				noise((j*step)+xOff,(i*step)));
 			let baby = new Node(j*step,i*step,
-							 Math.round(Math.random()));
+							 onORoff);
 			nodes.push(baby);
 		}
 	}
@@ -127,50 +153,111 @@ class Square{
 		let b = createVector(this.nodes[0].pos.x+step*0.5,
 													 this.nodes[2].pos.y);
 		
+		if (!linesOn) {	
+										stroke(0,g,0); 
+									 	fill(0,g,0);}
+		
 		switch (this.bin){
 			case (1): 
+				if (linesOn)
 				line(l.x,l.y,t.x,t.y);
+				triangle(l.x,l.y, t.x,t.y,l.x,t.y);
 				break;
 			case (2): 
+				if (linesOn)
 				line(t.x,t.y,r.x,r.y);
+				triangle(r.x,r.y, t.x,t.y,r.x,t.y);
 				break;
 			case (3): 
+				if (linesOn)
 				line(l.x,l.y,r.x,r.y);
+				triangle(l.x,t.y, r.x,t.y,l.x,l.y);
+				triangle(r.x,r.y, r.x,t.y,l.x,l.y);
 				break;
 			case (4): 
+				if (linesOn)
 				line(b.x,b.y,r.x,r.y);
+				triangle(b.x,b.y, r.x,r.y,r.x,b.y);
 				break;
 			case (5): 
+				if (linesOn)
 				line(b.x,b.y,r.x,r.y);
+				triangle(b.x,b.y, r.x,r.y,r.x,b.y);
+				if (linesOn)
 				line(l.x,l.y,t.x,t.y);
+				triangle(l.x,l.y, t.x,t.y,l.x,t.y);
 				break;
 			case (6): 
+				if (linesOn)
 				line(t.x,t.y,b.x,b.y);
+				triangle(t.x,t.y, b.x,b.y,r.x,t.y);
+				triangle(b.x,b.y, r.x,t.y,r.x,b.y);
 				break;
 			case (7): 
+				if (linesOn)
 				line(l.x,l.y,b.x,b.y);
+				triangle(l.x,l.y, b.x,b.y,t.x,t.y);
+				triangle(l.x,t.y, t.x,t.y,l.x,l.y);
+				triangle(t.x,t.y, b.x,b.y,r.x,b.y);
+				triangle(t.x,t.y, r.x,t.y,r.x,b.y);
 				break;
 			case (8): 
+				if (linesOn)
 				line(l.x,l.y,b.x,b.y);
+				triangle(l.x,l.y, b.x,b.y,l.x,b.y);
 				break;
 			case (9): 
+				if (linesOn)
 				line(b.x,b.y,t.x,t.y);
+				triangle(t.x,t.y, b.x,b.y,l.x,t.y);
+				triangle(b.x,b.y, l.x,t.y,l.x,b.y);
 				break;
-			case (10): 
+			case (10):
+				if (linesOn)
 				line(t.x,t.y,r.x,r.y);
+				triangle(r.x,r.y, t.x,t.y,r.x,t.y);
+				if (linesOn)
 				line(l.x,l.y,b.x,b.y);
+				triangle(l.x,l.y, b.x,b.y,l.x,b.y);
 				break;
 			case (11): 
+				if (linesOn)
 				line(b.x,b.y,r.x,r.y);
+				triangle(r.x,r.y, b.x,b.y,t.x,t.y);
+				triangle(r.x,t.y, t.x,t.y,r.x,r.y);
+				triangle(t.x,t.y, b.x,b.y,l.x,b.y);
+				triangle(t.x,t.y, l.x,t.y,l.x,b.y);
 				break;
 			case (12): 
+				if (linesOn)
 				line(l.x,l.y,r.x,r.y);
+				triangle(l.x,b.y, r.x,b.y,l.x,l.y);
+				triangle(r.x,r.y, r.x,b.y,l.x,l.y);
 				break;
 			case (13): 
+				if (linesOn)
 				line(r.x,r.y,t.x,t.y);
+				beginShape();
+				vertex(l.x, t.y);
+				vertex(t.x, t.y);
+				vertex(r.x, r.y);
+				vertex(r.x, b.y);
+				vertex(l.x, b.y);
+				endShape(CLOSE);
 				break;
 			case (14): 
+				if (linesOn)
 				line(t.x,t.y,l.x,l.y);
+				beginShape();
+				vertex(r.x, t.y);
+				vertex(t.x, t.y);
+				vertex(l.x, l.y);
+				vertex(l.x, b.y);
+				vertex(r.x, b.y);
+				endShape(CLOSE);
+				break;
+			case (15):
+				rect(l.x,t.y,step);
 		}
 	}
 	
@@ -197,11 +284,21 @@ class Node{
 		
 		if (this.on) { fill(0);
 									stroke(255);
+//									push();
+//			rectMode(CENTER);
+//									noStroke();
+//			translate(this.pos.x, this.pos.y);
+//			rotate(radians(45));
+//			rect(0,0,step*0.8);
+//			rectMode(LEFT);
+//		pop();
 								 }
 		else {fill(255);
 					stroke(0);
+				
 				 }
 		circle(this.pos.x,this.pos.y,this.rad);
+		
 	}
 }
 
