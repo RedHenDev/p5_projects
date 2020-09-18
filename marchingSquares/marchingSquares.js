@@ -1,3 +1,6 @@
+//new Q5("global");
+
+let autoMove = true;
 
 let nodes = [];
 let squares = [];
@@ -39,9 +42,20 @@ function march(){
 }
 
 function mouseMoved(){
-	xOff+=1*step;
+  if (!autoMove)
+	scrollMarch();
+}
+
+function scrollMarch(){
+  xOff+=1*step;
 	paintBackground();
 	march();
+}
+
+function draw(){
+  if (autoMove){
+    scrollMarch();
+  }
 }
 
 function renderSquares(){
@@ -319,9 +333,3 @@ i.e. is node number a multiple of total columns?
 from n = square number to n = node number :D
 
 */
-// n = square number.
-// tc = total number of columns.
-// tr = total numbers of rows.
-function getNodes(_n, _tc, _tr){
-	
-}
