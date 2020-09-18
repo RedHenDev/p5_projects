@@ -7,7 +7,7 @@ let step;
 let rows = 64;
 let columns = 64;
 
-let linesOn = false;
+let linesOn = true;
 
 let g = Math.random()*255;
 
@@ -38,14 +38,10 @@ function march(){
 	renderSquares();
 }
 
-function mousePressed(){
+function mouseMoved(){
 	xOff+=1*step;
 	paintBackground();
 	march();
-}
-
-function draw(){
-	if (mouseIsPressed) mousePressed();
 }
 
 function renderSquares(){
