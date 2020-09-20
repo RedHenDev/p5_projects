@@ -27,7 +27,7 @@ let columns = 64;
 
 let linesOn = true;
 
-let g = Math.random()*255;
+let g = Math.random()*100+155;
 
 // Perlin noise offsets.
 let xOff = 0;
