@@ -16,22 +16,28 @@ let r =-90;	// Rotation.
 let maxSpeed = 3;
 let impulseF = 1;	// Booster amount.
 
+// Music.
+let music1;
+
 function preload(){
     moonT = loadImage("2k_moon2.jpg");
     marsT = loadImage("2k_mars.jpg");
   	starsT = loadImage("2k_stars_milky.jpg");  
   	sunT = loadImage("2k_sun.jpg");
   	earthT = loadImage("2k_earth.jpg");
-	soilT = loadImage("soil.jpg");
+		soilT = loadImage("soil.jpg");
+		marioT = loadImage("33HU.gif");
 	
     font = loadFont("OpenSans-Regular.ttf");
+	
+		music1 = loadSound("airtone_-_reCreation.mp3");
 }
 
 function setup(){
     
-    createCanvas(windowWidth,windowHeight, WEBGL);
+  createCanvas(windowWidth,windowHeight, WEBGL);
 	
-	perspective(PI/3.0, width/height, 0.9, 90000);
+	perspective(PI/3.0, width/height, 0.9, 900000);
 	
     bg = new Background;
     //bg.refresh();
@@ -43,7 +49,7 @@ function setup(){
     //ambientMaterial(250);
 	shininess(42);
 	specularColor(0,200,200);
-    specularMaterial(0,200,200);
+  specularMaterial(0,200,200);
 	
     textSize(22);
     textAlign(CENTER, CENTER);
@@ -51,39 +57,41 @@ function setup(){
   
   	// Subject's position etc. vectors.
   	pos = createVector(0,0,0);
-	vel = createVector(0,0,0);
-	acc = createVector(0,0,0);
+		vel = createVector(0,0,0);
+		acc = createVector(0,0,0);
 }
 
 function generatePlanets(){
    
-    for (let i=0;i<99;i++){
+    for (let i=0;i<222;i++){
         planets.push(new Planet);
     }
 
 }
 
 function inputs(){
-	let va = 1;	// Reverse steer if pressing reverse.	
+	// Reverse steer if pressing reverse.
+	let va = 1;		
  	if (keyIsDown(40)) va = -1;
   
+		// Left arrow or A.
     if (keyIsDown(37) || keyIsDown(65)){
          r-=1 * va;
-    }
+    } // Right arrow or D.
     if (keyIsDown(39) || keyIsDown(68)){
          r+=1 * va;
-    }
+    }	// Up arrow.
     if (keyIsDown(38)){
         acc.x+= sin(-radians(r)) * impulseF;
         acc.z+= cos(-radians(r)) * impulseF;
-    }
+    } // Down arrow.
     if (keyIsDown(40)){
         acc.x-= sin(-radians(r)) * impulseF;
         acc.z-= cos(-radians(r)) * impulseF;
-    }
+    }	// W.
   	if (keyIsDown(87)){
 	  acc.y += 1 * impulseF;
-	}
+	}	// S.
   if (keyIsDown(83)){
 	  acc.y -= 1 * impulseF;
 	}
@@ -93,7 +101,7 @@ function inputs(){
 function draw(){
     bg.refresh();
     //background(70,0,70);
-	
+
 	// Steer and propulsion.
 	inputs();
 	subjectPhysics();
@@ -103,7 +111,7 @@ function draw(){
 //  		translate(-20,0,500);
 //    	text(new Date().getDay(), 0,0);
 //  	pop();
-  
+  push();
   	// Centre of scene camera for rotation.
     translate(0,0,700);
     rotateY(radians(r));
@@ -119,6 +127,12 @@ function draw(){
     
     planets.forEach(update);
   
+		pop();
+	text(	"X>"		+	Math.floor(pos.x)	+
+				"\nY>"	+	Math.floor(pos.y)	+
+				"\nZ>"	+	Math.floor(pos.z)
+				, 0,0,0);
+	
     // Static sky sphere.
   	//skySphere();  	
 }
@@ -143,6 +157,13 @@ function keyPressed(){
 }
 
 function mousePressed(){
+	// Permit sounds.
+		userStartAudio();
+	// Begin music.
+	if (!music1.isPlaying()){
+		music1.play();
+	}
+	
     planets.forEach(pushP);
 	//alert("Playing God, is it?");
 }
@@ -152,36 +173,61 @@ function reverseP(item, index){
     planets[index].acc.mult(-1);
 }
 
+// All planets forced away from origin.
 function pushP(item, index){
-    let originV = new p5.Vector(0, 0, -50);
-    
-    let dirV = originV.sub(planets[index].pos);
+	
+		// I think this pos is in front of subject.
+    let originV = createVector
+		(pos.x, pos.y, pos.z);
+  
+    let dirV = 
+				p5.Vector.sub(
+					planets[index].pos, 
+					originV);
  
-    dirV.mult(-1*(1000/dirV.magSq()) *
-             (10/planets[index].rad));
-    
-    planets[index].acc.add(dirV);
+		// Greater the distance,
+		// greater the force.
+    //dirV.mult((dirV.magSq())); 
+  
+  	// Force restrictor.
+  	while (dirV.mag()>1){
+			dirV.mult(0.5);
+		}
+			  
+	// Add force.
+	let force = 10;
+	planets[index].acc.add
+		(dirV.mult(force));
 }
 
+// Pull all planets towards centre of
+// galaxy, as it were.
 function pullP(item, index){
-    //if (index>0) {
-    let originV = new p5.Vector(0, 0, -50);
-    //let originV = createVector(
-      //  planets[0].pos.x,
-        //planets[0].pos.y,
-        //planets[0].pos.z);
+	
+		// I think this pos is in front of subject.
+    let originV = createVector(
+			0,
+			-2000000,
+			0);
   
-    let dirV = originV.sub(planets[index].pos);
+    let dirV = 
+				p5.Vector.sub(
+					planets[index].pos, 
+					originV);
  
-    dirV.mult((dirV.magSq()*0.00000001)); 
-              //*(10/planets[index].rad));
+		// Greater the distance,
+		// greater the force.
+   // dirV.mult((dirV.magSq())); 
   
-  // Force restrictor.
-  		if (dirV.mag()>1)
-		dirV.mult(0.001);
+  	// Force restrictor.
+  	while (dirV.mag()>1){
+			dirV.mult(0.5);
+		}
 			  
-    planets[index].acc.add(dirV);
-    //}
+		// Add force.
+	let force = 10;
+	planets[index].acc.add
+		(dirV.mult(-force));
 }
 
 // Euler integration for Subject.
@@ -200,47 +246,33 @@ function update(item, index){
   
     planets[index].render();
     planets[index].physics();
-  
+  let collisionsON = false;
+	if (!collisionsON) return;
+	
   	// Has there been a collision?
   	let col = false;
   
   	for (let i = 0; i < planets.length; i++){
 	  
-	  if (i != index && 
-		  checkSphereCollision(	planets[index].pos,
-		 						planets[i].pos,
-		 						planets[index].rad,
-		 						planets[i].rad)){
+			
+	  if (collisionsON && i != index && 
+		  checkSphereCollision(
+				planets[index].pos,
+		 		planets[i].pos,
+		 		planets[index].rad,
+		 		planets[i].rad)){
 		
 		// Just reverse each velocity.
+		// And acceleration...
 		planets[i].vel.mult(-1);
 		planets[index].vel.mult(-1);
+		planets[i].acc.mult(-1);
+		planets[index].acc.mult(-1);
+			
+		col = true;
 		
-		// Swap velocity vectors, and move on.
-//		let tempV = planets[index].vel.copy();
-//		tempV.mult(0.996);
-//		planets[index].vel = planets[i].vel.copy();
-//		planets[i].vel = tempV.copy();
-		
-		//planets[i].vel = p5.Vector.random3D();
-		
-//		stroke(255,0,255);
-//		strokeWeight(2);
-//		line(planets[i].pos.x,
-//			 planets[i].pos.y,
-//			 planets[i].pos.z,
-//			 planets[index].pos.x,
-//			 planets[index].pos.y,
-//			 planets[index].pos.z);
-//		noStroke();
-		
-//		planets[i].acc.add(planets[index].vel);
-//		planets[index].acc.add(planets[i].vel);
-		//planets[i].vel.mult(0);
-		//planets[index].vel.mult(0);
 	  }
 	  if (col) break;
-	  else col = false;
 	}
 }
 
@@ -265,16 +297,17 @@ class Planet{
 		// Bounds of creation space.
 		let gaia = 80000;
         this.pos = new p5.Vector.
-		random3D().mult(random(1,gaia));
+				random3D().mult((Math.random()*gaia)+10000);
          
-        this.vel = new p5.Vector.
-		random3D().mult(random(-3,3));
+        //this.vel = new p5.Vector.
+		//random3D().mult(random(-3,3));
+			this.vel = createVector(0,0,0);
         
-        this.acc = new p5.Vector(0,0,0);
+        this.acc = createVector(0,0,0);
         
         this.rad = random(1,3000);
         
-        this.theta = 0;
+        this.theta = random(0,360);
         
 //        this.tex = Math.floor(random(0,2));
 //        if (this.tex==1) this.tex = moonT;
