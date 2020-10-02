@@ -113,7 +113,9 @@ function draw(){
 //  	pop();
   push();
   	// Centre of scene camera for rotation.
+
     translate(0,0,700);
+		r = map(mouseX, 0, width,0,360);
     rotateY(radians(r));
     
     // Translate to Subject's position.    
