@@ -26,7 +26,7 @@ function preload(){
   	sunT = loadImage("2k_sun.jpg");
   	earthT = loadImage("2k_earth.jpg");
 		soilT = loadImage("soil.jpg");
-		marioT = loadImage("33HU.gif");
+		marioT = loadImage("blub.gif");
 	
     font = loadFont("OpenSans-Regular.ttf");
 	
@@ -208,9 +208,9 @@ function pullP(item, index){
 	
 		// I think this pos is in front of subject.
     let originV = createVector(
-			0,
-			-2000000,
-			0);
+			pos.x,
+			pos.y,
+			pos.z+1400);
   
     let dirV = 
 				p5.Vector.sub(
