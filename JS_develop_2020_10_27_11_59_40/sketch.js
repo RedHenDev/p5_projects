@@ -2,6 +2,18 @@
 
 Created around 24th October 2020.
 
+A game engine for simple 2D platformer
+games.
+
+Allows users to build completely in
+the browser, including easy to
+manage media assets. Key principle
+is to promote non-fiddly simplicity
+from the off. So, it should be
+like playing with blocks or lego
+to build a world with.
+
+[Legacy comment :)]
 So what we want to be able to do
 is save an array
 of objects (2D platforms) to a json, 
@@ -62,7 +74,6 @@ function setup() {
 
 
 function findSubject(){
-  if (playmode){
     console.log("Finding subject");
     // We'll iterate over all the plats
     // and find first 'subject' type.
@@ -75,7 +86,6 @@ function findSubject(){
         break;
       }
     }
-  }
 }
 
 // Setup and management of the
