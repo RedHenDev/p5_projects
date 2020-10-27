@@ -209,21 +209,29 @@ class Subject extends Platform{
          !this.selected) {
         strokeWeight(3);
         stroke(200,0,200);
-        fill(0,142,0);
+        fill(0,222,0,42);
       } else if(this.selected){
         strokeWeight(3);
         stroke(0,200,0);
-        fill(0,111,0);
+        fill(0,222,0,42);
       } else{
         // Natural appearance.
         strokeWeight(1);
         stroke(42);
-        fill(0,111,0);
+        fill(0,222,0,42);
       } 
      
-      translate(this.p.x, this.p.y);
-      rect(0,0, this.w, this.h);
-   
+      translate(this.p.x-this.wh, 
+								this.p.y-this.hh);
+      //rect(0,0,this.w, this.h);
+		
+   		image(img[0],
+						0,
+						0,
+						this.w,
+						this.h);
+						
+		
       pop();
     
   }

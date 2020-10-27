@@ -51,10 +51,19 @@ function setupButtons(){
   butPlay = createButton("Play toggle");
   butPlay.mousePressed(h=>
           {
+						// Toggle playmode.
             playmode=!playmode;
+						// If we're in playmode,
+						// work out who our main
+						// subject/player is -- so
+						// that camera follow works.
 						if (playmode){
             	findSubject(); 
 						}
+						// Since we've just started either
+						// mode -- deselect all objects.
+						// Previously/Currently selected
+						// set to -1, which is 'none'.
 						if (plats[prevSel])
 							plats[prevSel].selected
 							=false;

@@ -20,6 +20,7 @@ function keyPressed(){
   // incorportate a shortcut key.
   if (key=="s"){
     whichPlatType++;
+		haveBegunPreview = false;
     if (whichPlatType>1) whichPlatType = 0;
   }
   

@@ -62,23 +62,31 @@ let inDOWN = false;
 let inSPACE = false;
 // Our main subject/player index on plats.
 let mainSubjectID = -1;
+
+img = [];
+function preload(){
+	img[0] = loadImage('33HU.gif');
+}
+
 function setup() {
   createCanvas(windowWidth,
-               windowHeight- 200);
+               windowHeight-200);
   
   // To draw rects from centre, not corner.
   rectMode(CENTER);
   
+	// Editor DOM controls.
   setupButtons();
 }
 
-
+// For determing which index of plats array
+// belongs to main subject/player.
 function findSubject(){
     console.log("Finding subject");
     // We'll iterate over all the plats
     // and find first 'subject' type.
     // this will be the plat controlled
-    // by user and who the camera follows.
+    // by user and whom the camera follows.
     for (let i = 0; i < plats.length; i++){
       if (plats[i].name == 'subject'){
         mainSubjectID = i;
@@ -91,8 +99,13 @@ function findSubject(){
 // Setup and management of the
 // preview object displayed ready
 // for placement.
+// Needed since previewPlat operations
+// are called in draw() -- so we don't
+// want to generate things ad infinitum.
 let haveBegunPreview = false;
 let whichPlatType = 0;
+// Preview plat.
+let pPlat;
 // This needs to be called in draw.
 function previewPlat(){
   
@@ -101,12 +114,46 @@ function previewPlat(){
   // sure the which-type-next variable
   // is in default mode.
   if (!haveBegunPreview){
-    placePlat(width-42, height-32);
-    prevSel = -1;
-    plats[plats.length-1].selected = false;
+		// What we want to do is instantiate
+		// a new object of whichPlatType,
+		// which load/save and placePlat use
+		// to generate their objects.
+		// Maybe use placePlat in load? Don't
+		// want to be doubling any code.
+		let prevX = 42;
+		let prevY = 42;
+		if (whichPlatType===0){
+		pPlat = 
+				new Platform(prevX, prevY);
+		}
+		else if (whichPlatType===1){
+		pPlat = 
+				new Subject(prevX, prevY);
+		}
+		// Now, we don't want to push this
+		// to the main plats array, but we
+		// simply want to render it during 
+		// draw() loop. Maybe just a global
+		// variable is needed, then?
+		
+    //placePlat(width-42, height-32);
+    //prevSel = -1;
+    //plats[plats.length-1].selected = false;
     haveBegunPreview = true;
   }
   
+	// Since this function is called in draw()
+	// we can render the previewPlat here.
+	// Do we want this to stand out somehow?
+	// Sin bob? Colour? Rotate? Something else?
+	pPlat.render();
+	strokeWeight(2);
+	stroke(200,0,200);
+	fill(255);
+	text(pPlat.name, 
+			 pPlat.p.x-pPlat.wh,
+			 pPlat.p.y+pPlat.h);
+	
 }
 // To place a new plat object.
 function placePlat(whereX,whereY){
@@ -114,6 +161,7 @@ function placePlat(whereX,whereY){
   if (playmode) return;
   // Create new platform at mouse pos.
   if (!canPlace) return;
+	// Temp holder for our new plat.
   let jo;
   if (whichPlatType===0)
     jo = new Platform(whereX-x,whereY-y);
@@ -124,18 +172,24 @@ function placePlat(whereX,whereY){
   // Now make jo selected
   // platform.
   // Also need to update input box.
+	// So far, we just take the width.
   butInput.value(jo.w);
+	// Now make sure newly instantiated
+	// plat is selected in the editor.
   if (plats[prevSel])
     plats[prevSel].selected = false;
   prevSel = plats.length - 1;
   jo.selected = true;
 }
 
-
-
-
 function checkPlayInput(){
-
+	// Turn off global input -- must make
+  // sure user is providing input *this* update.
+  inRIGHT = false;
+  inLEFT = false;
+  inUP = false;
+  inDOWN = false;
+	
     if (keyIsDown(RIGHT_ARROW)){
         inRIGHT = true;
         } else inRIGHT = false;
@@ -165,21 +219,24 @@ function draw() {
     strokeWeight(15);
     stroke(0,200,0);
     rect(width*0.5, height*0.5,width,height);
+		
+		// Display a preview of plat type to be
+		// instantiated on mousePress().
+  	previewPlat();
   }else{
-   
     // Nothing.
   }
   
-  previewPlat();
+	
   
-  // Navigate level with arrow keys.
-  // To move around level during edit mode.
+  // Navigate level with arrow key
+  // during edit mode.
   // x and y are variables used for this
   // translation.
-  if (!playmode)
-  translate(x,y);
-  if (!playmode)
-    checkNavInput();
+  if (!playmode) {
+  	translate(x,y);
+    checkNavInput()
+	}
   else checkPlayInput();
   
   // Translate view around subject.
@@ -187,11 +244,11 @@ function draw() {
   //push();
   if (playmode && plats[mainSubjectID]) 
     translate(
-      width/2-plats[mainSubjectID].p.x,
-      height/2-plats[mainSubjectID].p.y);
+      width*0.5-plats[mainSubjectID].p.x,
+      height*0.5-plats[mainSubjectID].p.y);
   
   // Update plats -- check to see if mouse
-  // is hoving over (not needed to playmdode)
+  // is hoving over (not needed in playmode)
   // and render plats.
   let i = 0;
   while (i < plats.length){
@@ -213,7 +270,8 @@ function draw() {
     // Draw all objects to screen.
     plats[i].render();
     
-    // Subject update.
+    // Subject update: physics and
+		// locomotion.
     if (plats[i].name==='subject' &&
         playmode)
         plats[i].update(i);
@@ -221,10 +279,5 @@ function draw() {
     i++;
   }
   //pop();
-  // Turn off global input -- must make
-  // sure user is proving input next update.
-  inRIGHT = false;
-  inLEFT = false;
-  inUP = false;
-  inDOWN = false;
+  
 }
