@@ -97,6 +97,12 @@ class Subject extends Platform{
      this.h = 64;
      this.calcForCollisions();
      
+		 // For image flipping on y axis.
+		 // Right = 1. Left = -1.
+		 // Used in calculations when rendering.
+		 this.flip = 1;
+		 // Changed with controls in update().
+		 
      // Euler physics properties.
      this.vel = createVector(0,0);
      this.acc = createVector(0,0);
@@ -111,6 +117,7 @@ class Subject extends Platform{
   // platforms should be the key
   // building block of collisions and
   // terrain.
+	// SelfIndex used for collisions.
   update(selfIndex){
     
     // I'm just hard coding in plats array.
@@ -126,6 +133,7 @@ class Subject extends Platform{
     for (let i = 0; i < plats.length; i++){
       // Don't check against self...
       if (plats[i]===this) continue;
+			// (i===selfIndex) // Faster, surely.
       // Could I use hoverCheck here?
       // Trying a 'four-corner' system.
       // Each corner point of subject
@@ -159,7 +167,7 @@ class Subject extends Platform{
                 -this.vel.y*
                 0.33);
       this.p.y -= 0.5; // Extract upward.
-      //this.vel.mult(0);
+      this.vel.y = 0;
       this.acc.add(dir);
       // Switch off gravity this update.
       useGrav = false;
@@ -181,6 +189,13 @@ class Subject extends Platform{
     // Apply subject locomotion
     // according to global inputs.
     if (playmode){
+			// Correct orientation of subject.
+			if (keyIsPressed && 
+					keyCode === LEFT_ARROW)
+				this.flip = -1;
+			if (keyIsPressed && 
+					keyCode === RIGHT_ARROW)
+				this.flip = 1;
       let pDir = createVector(0,0);
       let upForce = 2.7 * !useGrav;
       let rightForce = 0.2;
@@ -220,18 +235,21 @@ class Subject extends Platform{
         stroke(42);
         fill(0,222,0,42);
       } 
-     
-      translate(this.p.x-this.wh, 
+     	// Flip is right or left facing.
+			// Right = 1.
+			// Left = -1.
+			// This is used with translation and
+			// scale.
+      translate(this.p.x-(this.wh*this.flip), 
 								this.p.y-this.hh);
       //rect(0,0,this.w, this.h);
-		
+			scale(this.flip,1);
    		image(img[0],
 						0,
 						0,
 						this.w,
 						this.h);
-						
-		
+				
       pop();
     
   }
