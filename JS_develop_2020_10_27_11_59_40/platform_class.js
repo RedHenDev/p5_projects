@@ -36,6 +36,15 @@ class Platform{
     this.hh = this.h*0.5;  // Half height.
     //calcForCollisions();
     
+		// What image to use during
+		// render?
+		// Null by default on plats.
+		// Using image false too.
+		//Right! Need to add these to
+		// load/save STAT!!
+		this.img = 'no image';//img[1];
+		this.useImg = false;
+		
     // Editor states.
     this.mouseOver = false;
     this.selected = false;
@@ -219,7 +228,7 @@ class Subject extends Platform{
   }
     
   render(){
-   push();
+   if (!playmode){
       if (this.mouseOver &&
          !this.selected) {
         strokeWeight(3);
@@ -235,6 +244,14 @@ class Subject extends Platform{
         stroke(42);
         fill(0,222,0,42);
       } 
+		
+		push();
+		translate(this.p.x,this.p.y);
+		 rect(0,0,this.wh, 
+					 this.hh);
+		pop();
+	 }
+		push();
      	// Flip is right or left facing.
 			// Right = 1.
 			// Left = -1.
@@ -242,8 +259,9 @@ class Subject extends Platform{
 			// scale.
       translate(this.p.x-(this.wh*this.flip), 
 								this.p.y-this.hh);
-      //rect(0,0,this.w, this.h);
+     
 			scale(this.flip,1);
+			img[0].delay(200);
    		image(img[0],
 						0,
 						0,
@@ -251,6 +269,7 @@ class Subject extends Platform{
 						this.h);
 				
       pop();
+		
     
   }
 }

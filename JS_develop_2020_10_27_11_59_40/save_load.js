@@ -43,26 +43,26 @@ function loadIt(_json){
       jojo = new 
       Platform(jPlats.x[i],
                jPlats.y[i]);
-      plats.push(jojo);
-      // Use static function, which
-      // correctly recalculates width info --
-      // has to be after pushed to array.
-      Platform.changeWidth(i,jPlats.w[i]);
-      jojo.h = jPlats.h[i];
-      console.log('platform added');
+      //console.log('platform added');
     }
     else if (jPlats.name[i] == 'subject'){
       jojo = new 
       Subject( jPlats.x[i],
                jPlats.y[i]);
-      plats.push(jojo);
-      // Use static function, which
-      // correctly recalculates width info --
-      // has to be after pushed to array.
-      Subject.changeWidth(i,jPlats.w[i]);
-      jojo.h = jPlats.h[i];
-      console.log('subject added');
+      //console.log('subject added');
     }
+		
+		// Boiler plate stuff common to
+		// objects.
+		plats.push(jojo);
+    // Use static function, which
+    // correctly recalculates width info --
+    // has to be after it's pushed to array,
+		// since the status function accesses
+		// 'jojo' here via the plats array itself.
+		jojo.h = jPlats.h[i];
+    Platform.changeWidth(i,jPlats.w[i]);
+    
   }
   
   // Reset relative translation.
@@ -80,7 +80,11 @@ function savePlats(){
   console.log("saving plats...");
   
   // So, I basically would love to just bang
-  // the plats[] array onto a json and go from there?
+  // the plats[] array onto a json and 
+	// go from there?
+	// ...Nope. Well, let's try it disaggregated.
+	
+	// Here's the main json object.
   let jPlats = {};
   // Platform properties in arrays.
   jPlats.x = [];
@@ -88,16 +92,23 @@ function savePlats(){
   jPlats.w = [];
   jPlats.h = [];
   jPlats.name = [];
+	jPlats.img = [];
+	jPlats.useImg = [];
   // Number of platforms (plats.length) --
   // required for loading with for loop.
   jPlats.len = plats.length;
   for (let i = 0; i < plats.length; i++){
+		// If plat type is 'Platform'.
     jPlats.x[i] = plats[i].p.x;
     jPlats.y[i] = plats[i].p.y;
     jPlats.w[i] = plats[i].w;
     jPlats.h[i] = plats[i].h;
     jPlats.name[i] = plats[i].name;
+		jPlats.img[i] = plats[i].img;
+		jPlats.useImg[i] = plats[i].useImg;
+		// If plat type is 'Subject'.
   }
   
+	// Aaaaand save this unholy mess to JSON.
   saveJSON(jPlats, 'plats.json');
 }

@@ -63,9 +63,19 @@ let inSPACE = false;
 // Our main subject/player index on plats.
 let mainSubjectID = -1;
 
+// OK -- pre-alpha for using image files.
+// How to develop an error catch system?
+// Using async or promise, then catching
+// error, in which case just using a
+// set skin texture or something in place
+// of desire image?
 img = [];
 function preload(){
-	img[0] = loadImage('33HU.gif');
+	//img[0] = loadImage('33HU.gif');
+	img[0] = loadImage('unicorn.gif');
+	// Let's see if we can use a local path...
+	// Nope.
+	img[1] = loadImage('TheCodingTrain_Wallpaper_2560x1440_Landscape.jpg');
 }
 
 function setup() {
