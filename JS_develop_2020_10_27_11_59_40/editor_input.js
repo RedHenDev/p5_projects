@@ -2,8 +2,41 @@
 
 // Tues 27th Oct 2020.
 
-// keyboard functions at top.
+// Placing a plat first.
+// keyboard functions next.
 // Mouse at bottom.
+
+
+// To place a new plat object.
+function placePlat(whereX,whereY){
+  
+  if (playmode) return;
+  // Create new platform at mouse pos.
+  if (!canPlace) return;
+	// Temp holder for our new plat.
+  let jo;
+  if (whichPlatType===0)
+    jo = new Platform(whereX-x,whereY-y);
+  else
+    jo = new Subject(whereX-x,whereY-y);
+  // Push onto plats array.
+  plats.push(jo);
+	
+	// Now make sure newly instantiated
+	// plat is selected in the editor.
+  if (plats[prevSel])
+    plats[prevSel].selected = false;
+	
+  prevSel = plats.length - 1;
+  jo.selected = true;
+	// Do we need to load any imagery?
+	if (jo.useImg){
+		Platform.loadImage(prevSel);
+	}
+	// Also need to update DOM fields.
+  manageProperties();
+	
+}
 
 function keyPressed(){
   

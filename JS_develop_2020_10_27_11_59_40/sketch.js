@@ -63,19 +63,7 @@ let inSPACE = false;
 // Our main subject/player index on plats.
 let mainSubjectID = -1;
 
-// OK -- pre-alpha for using image files.
-// How to develop an error catch system?
-// Using async or promise, then catching
-// error, in which case just using a
-// set skin texture or something in place
-// of desire image?
-images = [];
 function preload(){
-	//img[0] = loadImage('33HU.gif');
-	images[0] = loadImage('unicorn.gif');
-	// Let's see if we can use a local path...
-	// Nope.
-	images[1] = loadImage('TheCodingTrain_Wallpaper_2560x1440_Landscape.jpg');
 }
 
 function setup() {
@@ -140,15 +128,28 @@ function previewPlat(){
 		pPlat = 
 				new Subject(prevX, prevY);
 		}
+		
+		// Using an image be default?
+		if (pPlat.useImg){
+			// Hmmmm can't use the static
+			// function -- because it is
+			// disgusting and works on the
+			// global array of plats.
+			// Instead, then, we'll just 
+			// do the work here ourselves.
+			// God this is awful.
+			// Well...on first test it works. So.
+			pPlat.img = loadImage(pPlat.imgName);
+			//Platform.loadImage(prevSel);
+		}
+		
+		
 		// Now, we don't want to push this
 		// to the main plats array, but we
 		// simply want to render it during 
 		// draw() loop. Maybe just a global
 		// variable is needed, then?
 		
-    //placePlat(width-42, height-32);
-    //prevSel = -1;
-    //plats[plats.length-1].selected = false;
     haveBegunPreview = true;
   }
   
@@ -158,37 +159,14 @@ function previewPlat(){
 	// Sin bob? Colour? Rotate? Something else?
 	pPlat.render();
 	strokeWeight(2);
-	stroke(200,0,200);
+	stroke(0);
 	fill(255);
 	text(pPlat.name, 
 			 pPlat.p.x-pPlat.wh,
 			 pPlat.p.y+pPlat.h);
 	
 }
-// To place a new plat object.
-function placePlat(whereX,whereY){
-  
-  if (playmode) return;
-  // Create new platform at mouse pos.
-  if (!canPlace) return;
-	// Temp holder for our new plat.
-  let jo;
-  if (whichPlatType===0)
-    jo = new Platform(whereX-x,whereY-y);
-  else
-    jo = new Subject(whereX-x,whereY-y);
-  // Push onto plats array.
-  plats.push(jo);
-	// Now make sure newly instantiated
-	// plat is selected in the editor.
-  if (plats[prevSel])
-    plats[prevSel].selected = false;
-	
-  prevSel = plats.length - 1;
-  jo.selected = true;
-	// Also need to update DOM fields.
-  manageProperties();
-}
+
 
 function checkPlayInput(){
 	// Turn off global input -- must make

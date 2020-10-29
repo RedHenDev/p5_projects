@@ -16,11 +16,12 @@ class Platform{
       plats[id].calcForCollisions();
     }
   }
-	static loadImage(id, val){
+	static loadImage(id){
     //if (id===-1) return;
     
     // Only make change if this
     // platform exists.
+		let val = plats[id].imgName;
     if (plats[id]){
       plats[id].img = loadImage(val);
     }
@@ -41,9 +42,9 @@ class Platform{
     // platform's dimensions changed.
     // In fact, let's make a function
     // for that now.
-    this.wh = this.w*0.5;  // Half width.
-    this.hh = this.h*0.5;  // Half height.
-    //calcForCollisions();
+    this.wh;  // Half width.
+    this.hh;  // Half height.
+    this.calcForCollisions();
     
 		// What image to use during render? 
 		this.useImg = false;
@@ -135,9 +136,9 @@ class Subject extends Platform{
 		 // Used in calculations when rendering.
 		 // Changed with controls in update().
 		 this.flip = 1;
-		 // Let's load a default image for subjects.
+		 // Let's determine a default  
+		 // image for subjects.
 		 this.imgName = 'unicorn.gif';
-		 this.img = loadImage(this.imgName);
 		 this.useImg = true;
 		 
      // Euler physics properties.
@@ -279,8 +280,9 @@ class Subject extends Platform{
 		 rect(0,0,this.wh, 
 					 this.hh);
 		pop();
-	 }	// End of !playmode.
+	 }	// End of !playmode (i.e. edit mode).
 		// Image render.
+		if (this.useImg && this.img){
 		push();
      	// Flip is right or left facing.
 			// Right = 1.
@@ -292,14 +294,16 @@ class Subject extends Platform{
 								this.p.y-this.hh);
      
 			scale(this.flip,1);
-			images[0].delay(200);	// Speed of gif.
-   		image(images[0],
+			//images[0].delay(200);	// Speed of gif.
+		
+   		image(this.img,
 						0,
 						0,
 						this.w,
 						this.h);
 				
       pop();
+		} // End of 'are we using an image?'
 		
     
   }
