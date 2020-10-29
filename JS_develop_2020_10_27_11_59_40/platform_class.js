@@ -259,20 +259,21 @@ class Subject extends Platform{
 	render(){
 		if (!playmode || !this.useImg){
     push();
+			// Highlighted.
       if (this.mouseOver &&
          !this.selected) {
-        fill(246);
+        fill(0,222,0,42);
         strokeWeight(3);
         stroke(200,0,200);
         
       } else if(this.selected){
-        fill(246);
+        fill(0,222,0,42);
         strokeWeight(3);
         stroke(0,200,0);
         
       } else{
         // Natural appearance.
-        fill(246);
+        fill(0,222,0,42);
         strokeWeight(1);
         stroke(42);
         

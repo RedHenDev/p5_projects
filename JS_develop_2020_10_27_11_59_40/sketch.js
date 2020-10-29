@@ -118,7 +118,7 @@ function previewPlat(){
 		// to generate their objects.
 		// Maybe use placePlat in load? Don't
 		// want to be doubling any code.
-		let prevX = 42;
+		let prevX = 64;
 		let prevY = 42;
 		if (whichPlatType===0){
 		pPlat = 
@@ -158,12 +158,13 @@ function previewPlat(){
 	// Do we want this to stand out somehow?
 	// Sin bob? Colour? Rotate? Something else?
 	pPlat.render();
-	strokeWeight(2);
-	stroke(0);
-	fill(255);
+	strokeWeight(1);
+	stroke(255,101);
+	fill(0);
+	textSize(18);
 	text(pPlat.name, 
 			 pPlat.p.x-pPlat.wh,
-			 pPlat.p.y+pPlat.h);
+			 pPlat.p.y+pPlat.h+4);
 	
 }
 
