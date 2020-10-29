@@ -16,6 +16,15 @@ class Platform{
       plats[id].calcForCollisions();
     }
   }
+	static loadImage(id, val){
+    //if (id===-1) return;
+    
+    // Only make change if this
+    // platform exists.
+    if (plats[id]){
+      plats[id].img = loadImage(val);
+    }
+  }
   
   
   constructor(_x, _y){
@@ -36,15 +45,10 @@ class Platform{
     this.hh = this.h*0.5;  // Half height.
     //calcForCollisions();
     
-		// What image to use during
-		// render?
-		// Null by default on plats.
-		// Using image false too.
-		//Right! Need to add these to
-		// load/save STAT!!
-		this.img = 'no image';//img[1];
+		// What image to use during render? 
 		this.useImg = false;
-		
+		this.imgName = 'none';
+		this.img;
     // Editor states.
     this.mouseOver = false;
     this.selected = false;
@@ -70,6 +74,7 @@ class Platform{
   }
   
   render(){
+		if (!playmode || !this.useImg){
     push();
       if (this.mouseOver &&
          !this.selected) {
@@ -92,7 +97,26 @@ class Platform{
       translate(this.p.x, this.p.y);
       rect(0,0, this.w, this.h);
     pop();
-  }
+  	} // End of !playmode in render.
+		// Image render.
+		if (this.useImg){
+		push();
+     	//console.log('Trying to render img...');
+      translate(this.p.x-(this.wh), 
+								this.p.y-this.hh);
+     
+			//scale(this.flip,1);
+			//images[0].delay(200);	// Speed of gif.
+   		image(this.img,
+						0,
+						0,
+						this.w,
+						this.h);
+				
+     pop();
+		 }
+	}
+	
 } // End of Platform class.
 
 class Subject extends Platform{
@@ -102,15 +126,19 @@ class Subject extends Platform{
      // .this keyword used for new variables.
      super(_x, _y);
      this.name = 'subject';
-     this.w = 64*0.618;
-     this.h = 64;
+     this.w = 84;
+     this.h = 84*0.618;
      this.calcForCollisions();
      
 		 // For image flipping on y axis.
 		 // Right = 1. Left = -1.
 		 // Used in calculations when rendering.
-		 this.flip = 1;
 		 // Changed with controls in update().
+		 this.flip = 1;
+		 // Let's load a default image for subjects.
+		 this.imgName = 'unicorn.gif';
+		 this.img = loadImage(this.imgName);
+		 this.useImg = true;
 		 
      // Euler physics properties.
      this.vel = createVector(0,0);
@@ -229,6 +257,7 @@ class Subject extends Platform{
     
   render(){
    if (!playmode){
+		 // Highlighted.
       if (this.mouseOver &&
          !this.selected) {
         strokeWeight(3);
@@ -244,25 +273,27 @@ class Subject extends Platform{
         stroke(42);
         fill(0,222,0,42);
       } 
-		
+		// The rectangle - in editor.
 		push();
 		translate(this.p.x,this.p.y);
 		 rect(0,0,this.wh, 
 					 this.hh);
 		pop();
-	 }
+	 }	// End of !playmode.
+		// Image render.
 		push();
      	// Flip is right or left facing.
 			// Right = 1.
 			// Left = -1.
 			// This is used with translation and
-			// scale.
+			// scale. Code for this found in
+			// subject's update().
       translate(this.p.x-(this.wh*this.flip), 
 								this.p.y-this.hh);
      
 			scale(this.flip,1);
-			img[0].delay(200);
-   		image(img[0],
+			images[0].delay(200);	// Speed of gif.
+   		image(images[0],
 						0,
 						0,
 						this.w,

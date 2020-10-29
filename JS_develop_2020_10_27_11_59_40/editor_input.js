@@ -38,6 +38,9 @@ function keyPressed(){
     if (plats[prevSel] &&
         plats[prevSel].selected)
         plats.splice(prevSel,1);
+				// Either way -- once backspace
+				// pressed, nothing is selected.
+				prevSel = -1
     return;
   }
   } // End of edit mode keys.
@@ -51,7 +54,9 @@ function keyPressed(){
 let x = 0;
 let y = 0;
 function checkNavInput(){
-  
+  if (!keyIsPressed) return;
+	if (playmode) return;
+	
   // Space-bar pressed?
   if (keyCode===32){
     // Maybe duplicate?
@@ -161,13 +166,19 @@ function mouseSelect(toggle){
           plats[prevSel].selected = false;
           }
       
-      // Populate input value with width
-      // of selected platform.
+      // Set current selected object (prevSel)
+			// to this [i] object on plats.
       // But if nothing now selected,
       // set prevSel to -1.
+			// NB Also populate editor fields
+			// with object's properties (if anything
+			// selected).
       if (plats[i].selected){
         prevSel = i;
-        butInput.value(plats[i].w);
+				// Now populate DOM fields with
+				// currently selected (prevSel)
+				// object's properties.
+        manageProperties();
       } else prevSel = -1;
       
       // Job done -- exit loop & function!

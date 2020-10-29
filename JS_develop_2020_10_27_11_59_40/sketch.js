@@ -69,13 +69,13 @@ let mainSubjectID = -1;
 // error, in which case just using a
 // set skin texture or something in place
 // of desire image?
-img = [];
+images = [];
 function preload(){
 	//img[0] = loadImage('33HU.gif');
-	img[0] = loadImage('unicorn.gif');
+	images[0] = loadImage('unicorn.gif');
 	// Let's see if we can use a local path...
 	// Nope.
-	img[1] = loadImage('TheCodingTrain_Wallpaper_2560x1440_Landscape.jpg');
+	images[1] = loadImage('TheCodingTrain_Wallpaper_2560x1440_Landscape.jpg');
 }
 
 function setup() {
@@ -179,17 +179,15 @@ function placePlat(whereX,whereY){
     jo = new Subject(whereX-x,whereY-y);
   // Push onto plats array.
   plats.push(jo);
-  // Now make jo selected
-  // platform.
-  // Also need to update input box.
-	// So far, we just take the width.
-  butInput.value(jo.w);
 	// Now make sure newly instantiated
 	// plat is selected in the editor.
   if (plats[prevSel])
     plats[prevSel].selected = false;
+	
   prevSel = plats.length - 1;
   jo.selected = true;
+	// Also need to update DOM fields.
+  manageProperties();
 }
 
 function checkPlayInput(){

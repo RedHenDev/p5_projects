@@ -55,14 +55,28 @@ function loadIt(_json){
 		// Boiler plate stuff common to
 		// objects.
 		plats.push(jojo);
-    // Use static function, which
+    
+		jojo.h = jPlats.h[i];
+    //jojo.img = jPlat.img[i];
+		jojo.imgName = jPlats.imgName[i];
+		jojo.useImg = jPlats.useImg[i];
+		// NB we do not save the image data to
+		// the json, but just the file name.
+		// So, upon loading or creating a new
+		// object that does have an image name,
+		// we must load that image. So, we'll use
+		// a static function for that (on the pattern
+		// of the changeWidth() function).
+		if (jojo.useImg){
+			Platform.loadImage(i, jPlats.imgName[i]);
+		}
+		Platform.changeWidth(i,jPlats.w[i]);
+		
+		// Use static function, which
     // correctly recalculates width info --
     // has to be after it's pushed to array,
-		// since the status function accesses
-		// 'jojo' here via the plats array itself.
-		jojo.h = jPlats.h[i];
-    Platform.changeWidth(i,jPlats.w[i]);
-    
+		// since the static function accesses
+		// 'jojo' via the plats array itself.
   }
   
   // Reset relative translation.
@@ -92,7 +106,8 @@ function savePlats(){
   jPlats.w = [];
   jPlats.h = [];
   jPlats.name = [];
-	jPlats.img = [];
+	//jPlats.img = [];
+	jPlats.imgName = [];
 	jPlats.useImg = [];
   // Number of platforms (plats.length) --
   // required for loading with for loop.
@@ -104,7 +119,8 @@ function savePlats(){
     jPlats.w[i] = plats[i].w;
     jPlats.h[i] = plats[i].h;
     jPlats.name[i] = plats[i].name;
-		jPlats.img[i] = plats[i].img;
+		//jPlats.img[i] = plats[i].img;
+		jPlats.imgName[i] = plats[i].imgName;
 		jPlats.useImg[i] = plats[i].useImg;
 		// If plat type is 'Subject'.
   }
