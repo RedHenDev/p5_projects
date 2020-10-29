@@ -98,7 +98,7 @@ class Platform{
       translate(this.p.x, this.p.y);
       rect(0,0, this.w, this.h);
     pop();
-  	} // End of !playmode in render.
+  	} // End of edit mode in render.
 		// Image render.
 		if (this.useImg){
 		push();
@@ -115,8 +115,8 @@ class Platform{
 						this.h);
 				
      pop();
-		 }
-	}
+		 } // End of is using image.
+	} // End of render.
 	
 } // End of Platform class.
 
@@ -255,7 +255,52 @@ class Subject extends Platform{
     this.vel.mult(0.96);
     this.vel.y = tempY;  // Do not affect y.
   }
-    
+   
+	render(){
+		if (!playmode || !this.useImg){
+    push();
+      if (this.mouseOver &&
+         !this.selected) {
+        fill(246);
+        strokeWeight(3);
+        stroke(200,0,200);
+        
+      } else if(this.selected){
+        fill(246);
+        strokeWeight(3);
+        stroke(0,200,0);
+        
+      } else{
+        // Natural appearance.
+        fill(246);
+        strokeWeight(1);
+        stroke(42);
+        
+      }
+      translate(this.p.x, this.p.y);
+      rect(0,0, this.w, this.h);
+    pop();
+  	} // End of edit mode in render.
+		// Image render.
+		if (this.useImg){
+		push();
+     	//console.log('Trying to render img...');
+      translate(this.p.x-(this.wh*this.flip), 
+								this.p.y-this.hh);
+     
+			scale(this.flip,1);
+			//images[0].delay(200);	// Speed of gif.
+   		image(this.img,
+						0,
+						0,
+						this.w,
+						this.h);
+				
+     pop();
+		 } // End of is using image.
+	} // End of render.
+	
+	/*
   render(){
    if (!playmode){
 		 // Highlighted.
@@ -304,7 +349,7 @@ class Subject extends Platform{
 				
       pop();
 		} // End of 'are we using an image?'
-		
-    
-  }
+	
+  } // End of render().
+	*/
 }

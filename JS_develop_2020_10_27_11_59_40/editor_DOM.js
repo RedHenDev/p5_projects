@@ -70,7 +70,7 @@ function setupButtons(){
 	// drop down list for users to select from?
 	
 	butImgInput = createInput('no image');
-	butImgInput.changed(imgValChanged);
+	butImgInput.input(imgValChanged);
 	function imgValChanged(){
 		
 			// Attempt to load the image.
