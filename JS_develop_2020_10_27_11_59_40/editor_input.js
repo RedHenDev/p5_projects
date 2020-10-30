@@ -51,12 +51,53 @@ function keyPressed(){
   // I think I want this done via
   // the DOM -- and by all means 
   // incorportate a shortcut key.
-  if (key=="s"){
+  if (key=="s" && mouseY < height){
     whichPlatType++;
 		haveBegunPreview = false;
     if (whichPlatType>1) whichPlatType = 0;
   }
   
+	// Duplicate...
+	// This could be a static method...
+	if (key=="d" && plats[prevSel])
+	{
+		let clone;
+		if (plats[prevSel].name==='platform'){
+				clone = new 
+				Platform(plats[prevSel].p.x,
+							 	plats[prevSel].p.y);
+		}
+		else if (plats[prevSel].name==='subject'){
+				clone = new 
+				Subject(plats[prevSel].p.x,
+							 	plats[prevSel].p.y);
+			clone.flip = plats[prevSel].flip;
+		}
+		// Common properties.
+		clone.w = plats[prevSel].w;
+		clone.h = plats[prevSel].h;
+		clone.img = plats[prevSel].img;
+		clone.useImg = plats[prevSel].useImg;
+		clone.imgName = plats[prevSel].imgName;
+		// Move to new position.
+		clone.p.x += clone.w;
+		// Push to plats array.
+		plats.push(clone);
+		// Sort out 'wh' etc. for collisions.
+		Platform.changeWidth(plats.length-1,
+												 clone.w);
+		// Finally, make sure we have selected
+		// the just-created object.
+		// Now make sure newly instantiated
+		// plat is selected in the editor.
+  	if (plats[prevSel])
+    	plats[prevSel].selected = false;
+  	prevSel = plats.length - 1;
+  	clone.selected = true;	
+		// Also need to update DOM fields.
+  	manageProperties();
+	}
+		
   // Don't want unfortunate deletions etc.
   // So -- ignore keys if mouse off canvas.
   if (mouseY > height) return;
@@ -115,7 +156,7 @@ function checkNavInput(){
   
   let speed = 12;
   
-  if (key=="w" || keyCode==
+  if (keyCode==
      UP_ARROW){
     //spaceVoice.speak("going up");
     y+=speed;
@@ -124,11 +165,11 @@ function checkNavInput(){
     //spaceVoice.speak("going down");
     y-=speed;
   }
-  if (key=="a" || keyCode==
+  if (keyCode==
      LEFT_ARROW){
     x+=speed;
   }
-  if (key=="d" || keyCode==
+  if (keyCode==
      RIGHT_ARROW){
     x-=speed;
   }
