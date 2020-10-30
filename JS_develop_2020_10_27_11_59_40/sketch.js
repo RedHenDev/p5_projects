@@ -11,7 +11,7 @@ manage media assets. Key principle
 is to promote non-fiddly simplicity
 from the off. So, it should be
 like playing with blocks or lego
-to build a world with.
+to build a world.
 
 [Legacy comment :)]
 So what we want to be able to do
@@ -31,7 +31,8 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static
 // Our array of platforms.
 let plats = [];
 // Previously selected platform.
-// For dealing with selection logic.
+// For dealing with selection logic;
+// Basically means 'currently selected plat'.
 let prevSel = 0;
 // Let's deal with moving platforms
 // with mouse drag.
@@ -93,6 +94,43 @@ function findSubject(){
       }
     }
 }
+
+// Called to set up an start a level.
+// We do things like returning subjects
+// to their start positions.
+// So, this also needs to be called when
+// we return to edit mode? Yes.
+function resetLevel(){
+	// Iterate over plats and find
+	// any subject types.
+	// Reset their positions to
+	// start positions.
+	
+	// Going back into edit mode...
+	if (!playmode){
+		for (let i = 0; i < plats.length; i++){
+			if (plats[i].name==='subject'){
+				plats[i].p.x = plats[i].op.x;
+				plats[i].p.y = plats[i].op.y;
+			}
+		}
+	}
+	
+	// Going into play mode...
+	// So, here we can set original positions
+	// based on current position.
+	if (playmode){
+		for (let i = 0; i < plats.length; i++){
+			if (plats[i].name==='subject'){
+				plats[i].op.x = plats[i].p.x;
+				plats[i].op.y = plats[i].p.y;
+			}
+		}
+	}
+	
+	
+}
+
 
 // Setup and management of the
 // preview object displayed ready

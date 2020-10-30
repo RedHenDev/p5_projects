@@ -161,7 +161,8 @@ function mouseDragged(){
     amDragging = true;
     plats[prevSel].p.x = mouseX-x-dmX;
     plats[prevSel].p.y = mouseY-y-dmY;
-  }
+		
+	}
 }
 
 function mouseSelect(toggle){

@@ -23,6 +23,7 @@ function loadPlats(_file){
   
   // Should probably do this with
   // await and async.
+	console.log(_file.name); // Can we get the name?
   loadIt(_file.data);
 }
 
@@ -49,11 +50,14 @@ function loadIt(_json){
       jojo = new 
       Subject( jPlats.x[i],
                jPlats.y[i]);
+			jojo.flip = jPlats.flip[i];	// Unique *.
+			jojo.op.x = jPlats.op_x[i];
+			jojo.op.y = jPlats.op_y[i];
       //console.log('subject added');
     }
 		
 		// Boiler plate stuff common to
-		// objects.
+		// all object types.
 		plats.push(jojo);
     
 		jojo.h = jPlats.h[i];
@@ -106,9 +110,13 @@ function savePlats(){
   jPlats.w = [];
   jPlats.h = [];
   jPlats.name = [];
-	//jPlats.img = [];
+	//jPlats.img = [];	// Don't store image data!
 	jPlats.imgName = [];
 	jPlats.useImg = [];
+	// Subject properties in arrays.
+	jPlats.flip = [];
+	jPlats.op_x = [];
+	jPlats.op_y = [];
   // Number of platforms (plats.length) --
   // required for loading with for loop.
   jPlats.len = plats.length;
@@ -123,8 +131,33 @@ function savePlats(){
 		jPlats.imgName[i] = plats[i].imgName;
 		jPlats.useImg[i] = plats[i].useImg;
 		// If plat type is 'Subject'.
+		if (plats[i].name==='subject'){
+			jPlats.flip[i] = plats[i].flip;
+			// NB - we take the actual pos, since
+			// user needs to hit play toggle to 
+			// set op position vector to current p.
+			// That is, we are assuming user is
+			// saving level in edit mode.
+			// In fact, at some point I likely need
+			// to hid the DOM controls during playmode.
+			jPlats.op_x[i] = plats[i].p.x;
+			jPlats.op_y[i] = plats[i].p.y;
+		}
   }
   
 	// Aaaaand save this unholy mess to JSON.
   saveJSON(jPlats, 'plats.json');
+}
+
+function superSavePlats(){
+	let level = {};
+	
+	
+	// Let's see if we can remove all the
+	// image data first...
+
+	// This time, let's just save one array
+	// for plats, but just copy all the 
+	// components according to type.
+	saveJSON(level, 'superPlats.json');
 }

@@ -11,6 +11,9 @@ let butSave;
 let butLoad;
 let butInput;
 let butPlay;
+let butImgInput;
+
+let butSuperSave;
 
 // Called in mouseSelect -- for populating
 // DOM fields with currently selected
@@ -117,6 +120,11 @@ function setupButtons(){
   butSave.mousePressed(savePlats);
   butSave.position(pad,height+pad);
   butSave.size(bw,bh);
+	
+	butSuperSave = createButton("Super Save");
+  butSuperSave.mousePressed(superSavePlats);
+  butSuperSave.position(pad+bw+pad,height+pad);
+  butSuperSave.size(bw,bh);
   
   butPlay = createButton("Play toggle");
   butPlay.mousePressed(h=>
@@ -128,8 +136,10 @@ function setupButtons(){
 						// subject/player is -- so
 						// that camera follow works.
 						if (playmode){
-            	findSubject(); 
+            	findSubject();
 						}
+						// Also, manage subject start pos.
+						resetLevel();
 						// Since we've just started either
 						// mode -- deselect all objects.
 						// Previously/Currently selected
@@ -141,11 +151,12 @@ function setupButtons(){
           });
   butPlay.position(width-pad-bw,height+pad);
   butPlay.size(bw,bh);
-  
+	
+	// Experiment.
+	
   //butLoad = createButton("Load");
   //butLoad.mousePressed(loadPlats);
   butLoad = createFileInput(loadPlats);
   butLoad.position(pad,height + bh*3);
-  butLoad.size(bw,bh);
-  butLoad.text = 'load';
+  butLoad.size(bw*3,bh);
 }

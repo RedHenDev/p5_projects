@@ -27,7 +27,6 @@ class Platform{
     }
   }
   
-  
   constructor(_x, _y){
     // Type.
     this.name = 'platform';
@@ -126,6 +125,9 @@ class Subject extends Platform{
      // constructor. Must be used before
      // .this keyword used for new variables.
      super(_x, _y);
+		 // Original positions.
+		 // Logic for this found in resetLevel().
+		 this.op = createVector(_x,_y);
      this.name = 'subject';
      this.w = 84;
      this.h = 84*0.618;
