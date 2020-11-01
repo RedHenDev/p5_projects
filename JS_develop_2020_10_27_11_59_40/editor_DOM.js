@@ -13,7 +13,23 @@ let butInput;
 let butPlay;
 let butImgInput;
 
-let butSuperSave;
+// Array of textures/images.
+// This needs repopulating at start (so, in setup?).
+// Key is to have a selection of images right
+// there automatically for users, but also so
+// that they can upload their own simply (either
+// place in root folder, or upload to p5.js Web
+// Editor).
+// Need to also create a preview of currently
+// selected image. Wonder if I can pass this
+// to img src in html? So that I can place under
+// canvas?
+let imgArray = [];
+// Selector for images.
+// This needs populating form setup.
+let butSelect;
+let butFindImage;
+//let butSuperSave;
 
 // Called in mouseSelect -- for populating
 // DOM fields with currently selected
@@ -72,7 +88,7 @@ function setupButtons(){
 	// files types and then load these into a simple
 	// drop down list for users to select from?
 	
-	butImgInput = createInput('no image');
+	butImgInput = createInput('none');
 	butImgInput.input(imgValChanged);
 	function imgValChanged(){
 		
@@ -87,8 +103,9 @@ function setupButtons(){
 			// Need to refactor this as a promise.
 			if (plats[prevSel]){
 				plats[prevSel].img =
-					loadImage(this.value());
-				plats[prevSel].imgName = this.value();
+					loadImage(butImgInput.value());
+				plats[prevSel].imgName =
+					butImgInput.value();
 				plats[prevSel].useImg = true;
 			}
 		
@@ -121,10 +138,12 @@ function setupButtons(){
   butSave.position(pad,height+pad);
   butSave.size(bw,bh);
 	
-	butSuperSave = createButton("Super Save");
-  butSuperSave.mousePressed(superSavePlats);
-  butSuperSave.position(pad+bw+pad,height+pad);
-  butSuperSave.size(bw,bh);
+	// An attempt to use json properly...
+	// ...and fail.
+//	butSuperSave = createButton("Super Save");
+//  butSuperSave.mousePressed(superSavePlats);
+//  butSuperSave.position(pad+bw+pad,height+pad);
+//  butSuperSave.size(bw,bh);
   
   butPlay = createButton("Play toggle");
   butPlay.mousePressed(h=>
@@ -159,4 +178,79 @@ function setupButtons(){
   butLoad = createFileInput(loadPlats);
   butLoad.position(pad,height + bh*3);
   butLoad.size(bw*3,bh);
+	
+	// Finding image from file...
+	butFindImage = createFileInput(findImage);
+  butFindImage.position(width*0.5, height+pad+bh);
+  butFindImage.size(bw*3,bh);
+	
+	imgArray.push('none');
+	imgArray.push('marioGround.png');
+	butSelect = createSelect();
+	butSelect.position(width*0.5, height+pad+bh*3);
+	butSelect.option(imgArray[0]);
+	butSelect.option(imgArray[1]);
+	butSelect.selected(imgArray[0]);
+	butSelect.changed(selectTexture);
+	butSelect.mousePressed(selectTexture);
+	
+	function selectTexture(){
+		//butImgInput.value(butSelect.value());
+		//imgValChanged();
+		if (plats[prevSel]){
+				plats[prevSel].img =
+					loadImage(butSelect.value());
+				plats[prevSel].imgName = butSelect.value();
+				plats[prevSel].useImg = true;
+			}
+		previewImage();
+	}
+	
+	function previewImage(){
+		let domi;
+		
+		// If no texture selected, then load some
+		// sort of null texture. For testing etc.
+		// I'm obviously using and animated
+		// totoro.gif.
+		if (butSelect.value()==='none'){
+			li = 'totoro.gif';
+		} else {
+			li = butSelect.value();
+		}
+		domi = createImg(li,
+										 butSelect.value());
+		domi.size(64,64);
+		domi.position(222,height);
+	}
+	
+	function findImage(_file){
+		//let imgArray = [];
+		let tsa = loadImage(_file.data);
+		let domi = 
+				createImg(tsa, _file.name);
+		domi.size(64,64);
+		domi.position(222,height);
+		
+		// Oh! So we can just save the names
+		// of all the textures found/loaded this
+		// way, and load them up again from their
+		// names, just as I'm doing with plats.img and
+		// plats.imgName.
+		// All we need is this: _file.name :)
+		imgArray.push(_file.name);
+		butSelect.option(_file.name);
+		butSelect.selected(_file.name);
+		selectTexture();
+		//console.log('You loaded ' + _file.name);
+	}
+	
 }
+
+
+
+
+
+
+
+

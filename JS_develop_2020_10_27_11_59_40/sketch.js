@@ -303,6 +303,9 @@ function draw() {
     
     i++;
   }
-  //pop();
   
+	// Image loading test...
+//  if (imgArray.length>0){
+//		image(imgArray[0],width*0.5,42,101,101);
+//	}
 }
