@@ -10,6 +10,7 @@
 let butSave;
 let butLoad;
 let butInput;
+let butInputH;
 let butPlay;
 let butImgInput;
 
@@ -45,6 +46,7 @@ function manageProperties(){
 	if (plats[prevSel]){
 		// Width text input.
 		butInput.value(plats[prevSel].w);
+		butInputH.value(plats[prevSel].h);
 		butImgInput.value(plats[prevSel].imgName);
 	}
 }
@@ -108,11 +110,18 @@ function setupButtons(){
 					butImgInput.value();
 				plats[prevSel].useImg = true;
 			}
+			// Don't forget to update the DOM's
+			// field of name of this image...
+			// (this may become obsolete since used
+			// to develop functionality, before
+			// drop down menu used...)
+			manageProperties();
 		
 	}
 	butImgInput.position(width*0.5, height+pad);
 	butImgInput.size(bw,bh);
 	
+	// Change width of object.
   butInput = createInput('0','number');
   butInput.changed(valChange);
   butInput.position(pad,
@@ -128,6 +137,27 @@ function setupButtons(){
     // Should do this in a static method.
     let v = Math.round(this.value());
     Platform.changeWidth(prevSel, 
+                         v);
+    
+    //console.log(this.value());
+  }
+	
+	// Change height of object.
+	butInputH = createInput('0','number');
+  butInputH.changed(valChangeH);
+  butInputH.position(pad,
+                    height+bh*2.4+pad);
+  butInputH.size(bw,bh);
+  
+  function valChangeH(){
+    // Delimits to positive numbers.
+    if (this.value() < 0) this.value(0);
+    
+    // Let's see if we can change width
+    // of selected platform.
+    // Should do this in a static method.
+    let v = Math.round(this.value());
+    Platform.changeHeight(prevSel, 
                          v);
     
     //console.log(this.value());
@@ -176,7 +206,7 @@ function setupButtons(){
   //butLoad = createButton("Load");
   //butLoad.mousePressed(loadPlats);
   butLoad = createFileInput(loadPlats);
-  butLoad.position(pad,height + bh*3);
+  butLoad.position(pad,height + bh*5);
   butLoad.size(bw*3,bh);
 	
 	// Finding image from file...
@@ -185,11 +215,13 @@ function setupButtons(){
   butFindImage.size(bw*3,bh);
 	
 	imgArray.push('none');
+	imgArray.push('basicPlat.png');
 	imgArray.push('marioGround.png');
 	butSelect = createSelect();
 	butSelect.position(width*0.5, height+pad+bh*3);
 	butSelect.option(imgArray[0]);
 	butSelect.option(imgArray[1]);
+	butSelect.option(imgArray[2]);
 	butSelect.selected(imgArray[0]);
 	butSelect.changed(selectTexture);
 	butSelect.mousePressed(selectTexture);
@@ -246,11 +278,3 @@ function setupButtons(){
 	}
 	
 }
-
-
-
-
-
-
-
-

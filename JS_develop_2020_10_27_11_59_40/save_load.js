@@ -53,7 +53,11 @@ function loadIt(_json){
 			jojo.flip = jPlats.flip[i];	// Unique *.
 			jojo.op.x = jPlats.op_x[i];
 			jojo.op.y = jPlats.op_y[i];
-      //console.log('subject added');
+    }
+		if (jPlats.name[i] == 'decoration'){
+      jojo = new 
+      Decor(		jPlats.x[i],
+               	jPlats.y[i]);
     }
 		
 		// Boiler plate stuff common to
@@ -104,6 +108,14 @@ function savePlats(){
 	
 	// Here's the main json object.
   let jPlats = {};
+	
+	// Now each class of object needs to add
+	// its unique properties here, so that
+	// arrays are co-ordinated. Those objects
+	// without those properties will just have
+	// null values for those properties saved
+	// to the json.
+	
   // Platform properties in arrays.
   jPlats.x = [];
   jPlats.y = [];
@@ -111,7 +123,7 @@ function savePlats(){
   jPlats.h = [];
   jPlats.name = [];
 	//jPlats.img = [];	// Don't store image data!
-	jPlats.imgName = [];
+	jPlats.imgName = [];// Just the file name :)
 	jPlats.useImg = [];
 	// Subject properties in arrays.
 	jPlats.flip = [];
@@ -139,7 +151,7 @@ function savePlats(){
 			// That is, we are assuming user is
 			// saving level in edit mode.
 			// In fact, at some point I likely need
-			// to hid the DOM controls during playmode.
+			// to hide the DOM controls during playmode.
 			jPlats.op_x[i] = plats[i].p.x;
 			jPlats.op_y[i] = plats[i].p.y;
 		}
@@ -151,7 +163,6 @@ function savePlats(){
 
 function superSavePlats(){
 	let level = {};
-	
 	
 	// Let's see if we can remove all the
 	// image data first...

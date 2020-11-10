@@ -166,6 +166,10 @@ function previewPlat(){
 		pPlat = 
 				new Subject(prevX, prevY);
 		}
+		else if (whichPlatType===2){
+		pPlat = 
+				new Decor(prevX, prevY);
+		}
 		
 		// Using an image be default?
 		if (pPlat.useImg){
@@ -245,14 +249,9 @@ function draw() {
     stroke(0,200,0);
     rect(width*0.5, height*0.5,width,height);
 		
-		// Display a preview of plat type to be
-		// instantiated on mousePress().
-  	previewPlat();
   }else{
     // Nothing.
   }
-  
-	
   
   // Navigate level with arrow key
   // during edit mode.
@@ -303,6 +302,14 @@ function draw() {
     
     i++;
   }
+	
+	// We do this after other objects, so that
+	// it will always be in view (on top).
+	if (!playmode){
+		// Display a preview of plat type to be
+		// instantiated on mousePress().
+  	previewPlat();
+	}
   
 	// Image loading test...
 //  if (imgArray.length>0){

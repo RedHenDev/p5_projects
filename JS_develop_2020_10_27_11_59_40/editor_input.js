@@ -17,8 +17,10 @@ function placePlat(whereX,whereY){
   let jo;
   if (whichPlatType===0)
     jo = new Platform(whereX-x,whereY-y);
-  else
+  else if (whichPlatType===1)
     jo = new Subject(whereX-x,whereY-y);
+	else if (whichPlatType===2)
+    jo = new Decor(whereX-x,whereY-y);
   // Push onto plats array.
   plats.push(jo);
 	
@@ -54,7 +56,7 @@ function keyPressed(){
   if (key=="s" && mouseY < height){
     whichPlatType++;
 		haveBegunPreview = false;
-    if (whichPlatType>1) whichPlatType = 0;
+    if (whichPlatType>2) whichPlatType = 0;
   }
   
 	// Duplicate...
@@ -72,6 +74,11 @@ function keyPressed(){
 				Subject(plats[prevSel].p.x,
 							 	plats[prevSel].p.y);
 			clone.flip = plats[prevSel].flip;
+		}
+		else if (plats[prevSel].name==='decoration'){
+				clone = new 
+				Decor(plats[prevSel].p.x,
+							plats[prevSel].p.y);
 		}
 		// Common properties.
 		clone.w = plats[prevSel].w;

@@ -16,6 +16,16 @@ class Platform{
       plats[id].calcForCollisions();
     }
   }
+	static changeHeight(id, val){
+    //if (id===-1) return;
+    
+    // Only make change if this
+    // platform exists.
+    if (plats[id]){
+      plats[id].h = val;
+      plats[id].calcForCollisions();
+    }
+  }
 	static loadImage(id){
     //if (id===-1) return;
     
@@ -173,6 +183,9 @@ class Subject extends Platform{
     for (let i = 0; i < plats.length; i++){
       // Don't check against self...
       if (plats[i]===this) continue;
+			// Don't check against non-physical objects.
+			if (plats[i].name==='decoration')
+				continue;
 			// (i===selfIndex) // Faster, surely.
       // Could I use hoverCheck here?
       // Trying a 'four-corner' system.
@@ -303,56 +316,47 @@ class Subject extends Platform{
 		 } // End of is using image.
 	} // End of render.
 	
-	/*
-  render(){
-   if (!playmode){
-		 // Highlighted.
-      if (this.mouseOver &&
-         !this.selected) {
-        strokeWeight(3);
-        stroke(200,0,200);
-        fill(0,222,0,42);
-      } else if(this.selected){
-        strokeWeight(3);
-        stroke(0,200,0);
-        fill(0,222,0,42);
-      } else{
-        // Natural appearance.
-        strokeWeight(1);
-        stroke(42);
-        fill(0,222,0,42);
-      } 
-		// The rectangle - in editor.
-		push();
-		translate(this.p.x,this.p.y);
-		 rect(0,0,this.wh, 
-					 this.hh);
-		pop();
-	 }	// End of !playmode (i.e. edit mode).
-		// Image render.
-		if (this.useImg && this.img){
-		push();
-     	// Flip is right or left facing.
-			// Right = 1.
-			// Left = -1.
-			// This is used with translation and
-			// scale. Code for this found in
-			// subject's update().
-      translate(this.p.x-(this.wh*this.flip), 
-								this.p.y-this.hh);
-     
-			scale(this.flip,1);
-			//images[0].delay(200);	// Speed of gif.
-		
-   		image(this.img,
-						0,
-						0,
-						this.w,
-						this.h);
-				
-      pop();
-		} // End of 'are we using an image?'
+}
+
+// A non-physical platform, basically, but
+// must always have an image (.img).
+class Decor extends Platform{
+	constructor(_x,_y){
+			super(_x,_y);
+			
+			this.h = 64;
+			this.w = 64;
+			this.wh = 32;
+			this.hh = 32;
+			this.name = 'decoration';
+			// By default and the raison d'etre of
+			// decoration objects is that they
+			// display some image as light-weight
+			// as possible.
+			// NB in save_load.js, if an object has
+			// .useImg set to true, then that is
+			// when its image will be loaded (in 
+			// other words not in the object
+			// constructor or anything).
+			this.useImg = true;
+			// Default...image.
+			this.imgName = 'totoro.gif';
+	}
 	
-  } // End of render().
-	*/
+	//render(){
+	
+//		push();
+//		// Note that we render images from
+//		// top left corner -- and thus have to
+//		// adjust translation with .wh and .hh
+//		translate(this.p.x-(this.wh), 
+//							this.p.y-this.hh);
+//		image(this.img,
+//						0,
+//						0,
+//						this.w,
+//						this.h);
+//		pop();
+	//}
+	
 }
