@@ -9,10 +9,10 @@
 // platform.
 let butSave;
 let butLoad;
-let butInput;
+let butInputW;
 let butInputH;
 let butPlay;
-let butImgInput;
+//let butImgInput;
 
 // Array of textures/images.
 // This needs repopulating at start (so, in setup?).
@@ -45,9 +45,9 @@ let butFindImage;
 function manageProperties(){
 	if (plats[prevSel]){
 		// Width text input.
-		butInput.value(plats[prevSel].w);
+		butInputW.value(plats[prevSel].w);
 		butInputH.value(plats[prevSel].h);
-		butImgInput.value(plats[prevSel].imgName);
+		//butImgInput.value(plats[prevSel].imgName);
 	}
 }
 
@@ -90,45 +90,45 @@ function setupButtons(){
 	// files types and then load these into a simple
 	// drop down list for users to select from?
 	
-	butImgInput = createInput('none');
-	butImgInput.input(imgValChanged);
-	function imgValChanged(){
-		
-			// Attempt to load the image.
-			// NB plat objects have two image-related
-			// properties: one for the image itself
-			// called (.img) and one for the name of
-			// the file (.imgName), so that we can
-			// work with and display the name of the
-			// image file in the DOM input field, and
-			// not the image object itself!
-			// Need to refactor this as a promise.
-			if (plats[prevSel]){
-				plats[prevSel].img =
-					loadImage(butImgInput.value());
-				plats[prevSel].imgName =
-					butImgInput.value();
-				plats[prevSel].useImg = true;
-			}
-			// Don't forget to update the DOM's
-			// field of name of this image...
-			// (this may become obsolete since used
-			// to develop functionality, before
-			// drop down menu used...)
-			manageProperties();
-		
-	}
-	butImgInput.position(width*0.5, height+pad);
-	butImgInput.size(bw,bh);
+//	butImgInput = createInput('none');
+//	butImgInput.input(imgValChanged);
+//	function imgValChanged(){
+//		
+//			// Attempt to load the image.
+//			// NB plat objects have two image-related
+//			// properties: one for the image itself
+//			// called (.img) and one for the name of
+//			// the file (.imgName), so that we can
+//			// work with and display the name of the
+//			// image file in the DOM input field, and
+//			// not the image object itself!
+//			// Need to refactor this as a promise.
+//			if (plats[prevSel]){
+//				plats[prevSel].img =
+//					loadImage(butImgInput.value());
+//				plats[prevSel].imgName =
+//					butImgInput.value();
+//				plats[prevSel].useImg = true;
+//			}
+//			// Don't forget to update the DOM's
+//			// field of name of this image...
+//			// (this may become obsolete since used
+//			// to develop functionality, before
+//			// drop down menu used...)
+//			manageProperties();
+//		
+//	}
+//	butImgInput.position(width*0.5, height+pad);
+//	butImgInput.size(bw,bh);
 	
 	// Change width of object.
-  butInput = createInput('0','number');
-  butInput.changed(valChange);
-  butInput.position(pad,
+  butInputW = createInput('0','number');
+  butInputW.changed(valChangeW);
+  butInputW.position(pad,
                     height+bh*1+pad);
-  butInput.size(bw,bh);
+  butInputW.size(bw,bh);
   
-  function valChange(){
+  function valChangeW(){
     // Delimits to positive numbers.
     if (this.value() < 0) this.value(0);
     
@@ -206,7 +206,7 @@ function setupButtons(){
   //butLoad = createButton("Load");
   //butLoad.mousePressed(loadPlats);
   butLoad = createFileInput(loadPlats);
-  butLoad.position(pad,height + bh*5);
+  butLoad.position(pad+bw+pad,height + pad);
   butLoad.size(bw*3,bh);
 	
 	// Finding image from file...
@@ -243,7 +243,7 @@ function setupButtons(){
 		
 		// If no texture selected, then load some
 		// sort of null texture. For testing etc.
-		// I'm obviously using and animated
+		// I'm obviously using an animated
 		// totoro.gif.
 		if (butSelect.value()==='none'){
 			li = 'totoro.gif';
@@ -253,7 +253,7 @@ function setupButtons(){
 		domi = createImg(li,
 										 butSelect.value());
 		domi.size(64,64);
-		domi.position(222,height);
+		domi.position(width*0.5-bw-64, height+pad+bh*3);
 	}
 	
 	function findImage(_file){

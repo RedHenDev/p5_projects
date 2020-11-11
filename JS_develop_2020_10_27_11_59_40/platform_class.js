@@ -174,46 +174,139 @@ class Subject extends Platform{
     // But we could pass in an array parameter
     // in future?
     // This checks collisions.
-    // Four corners of subject.
-    // False means not inside plat.
+    // Four corners of subject/other obj.
+    // False means not inside object.
     let tr = false;
     let tl = false;
     let br = false; 
     let bl = false;
+		let otr = false;
+    let otl = false;
+    let obr = false; 
+    let obl = false;
+		let trx = false;
+    let tlx = false;
+    let brx = false; 
+    let blx = false;
+		let otrx = false;
+    let otlx = false;
+    let obrx = false; 
+    let oblx = false;
     for (let i = 0; i < plats.length; i++){
       // Don't check against self...
-      if (plats[i]===this) continue;
+			// (i===selfIndex) // Faster, surely.
+      if (plats[i]===this) 
+				continue;
 			// Don't check against non-physical objects.
 			if (plats[i].name==='decoration')
 				continue;
-			// (i===selfIndex) // Faster, surely.
+	
+			// ^^^ NEW COLLISION SYSTEM ^^^
+			
+			// Check that subject has shorter width.
+			if (this.w <= plats[i].w){
+				// So, now see whether one of subject's
+				// corners is in body of other obj.
+				// This is for vertical (y) collision.
+				tl = plats[i].hoverCheck(
+        this.p.x - this.wh,
+        this.p.y - this.hh, 1);
+      	tr = plats[i].hoverCheck(
+        this.p.x + this.wh,
+        this.p.y - this.hh, 1);
+      	bl = plats[i].hoverCheck(
+        this.p.x - this.wh,
+        this.p.y + this.hh, 1);
+      	br = plats[i].hoverCheck(
+        this.p.x + this.wh,
+        this.p.y + this.hh, 1);
+				// Break - no more checks, vertical
+				// collision takes precedence.
+				if (tl || tr || bl || br) break;
+			} else {
+				// Other object thinner.
+				otl = this.hoverCheck(
+        plats[i].p.x - plats[i].wh,
+        plats[i].p.y - plats[i].hh, 1);
+      	otr = this.hoverCheck(
+        plats[i].p.x + plats[i].wh,
+        plats[i].p.y - plats[i].hh, 1);
+      	obl = this.hoverCheck(
+        plats[i].p.x - plats[i].wh,
+        plats[i].p.y + plats[i].hh, 1);
+      	obr = this.hoverCheck(
+        plats[i].p.x + plats[i].wh,
+        plats[i].p.y + plats[i].hh, 1);
+				// Break - no more checks, vertical
+				// collision takes precedence.
+				if (otl || otr || obl || obr) break;
+			}
+			// Check that subject has shorter height.
+			if (this.h <= plats[i].h){
+				// So, now see whether one of subject's
+				// corners is in body of other obj.
+				// This is for horizontal (x) collision.
+				tlx = plats[i].hoverCheck(
+        this.p.x - this.wh,
+        this.p.y - this.hh, 1);
+      	trx = plats[i].hoverCheck(
+        this.p.x + this.wh,
+        this.p.y - this.hh, 1);
+      	blx = plats[i].hoverCheck(
+        this.p.x - this.wh,
+        this.p.y + this.hh, 1);
+      	brx = plats[i].hoverCheck(
+        this.p.x + this.wh,
+        this.p.y + this.hh, 1);
+			} else {
+				// Other object flatter.
+				otlx = this.hoverCheck(
+        plats[i].p.x - plats[i].wh,
+        plats[i].p.y - plats[i].hh, 1);
+      	otrx = this.hoverCheck(
+        plats[i].p.x + plats[i].wh,
+        plats[i].p.y - plats[i].hh, 1);
+      	oblx = this.hoverCheck(
+        plats[i].p.x - plats[i].wh,
+        plats[i].p.y + plats[i].hh, 1);
+      	obrx = this.hoverCheck(
+        plats[i].p.x + plats[i].wh,
+        plats[i].p.y + plats[i].hh, 1);
+			}
+			
+			// ^^^ NEW COLLISION SYSTEM ^^^
+			
+			// *** Legacy ***
       // Could I use hoverCheck here?
       // Trying a 'four-corner' system.
       // Each corner point of subject
       // queried as to being inside plat.
-      tl = plats[i].hoverCheck(
-        this.p.x - this.wh,
-        this.p.y - this.hh, 1);
-      tr = plats[i].hoverCheck(
-        this.p.x + this.wh,
-        this.p.y - this.hh, 1);
-      bl = plats[i].hoverCheck(
-        this.p.x - this.wh,
-        this.p.y + this.hh, 1);
-      br = plats[i].hoverCheck(
-        this.p.x + this.wh,
-        this.p.y + this.hh, 1);
+//      tl = plats[i].hoverCheck(
+//        this.p.x - this.wh,
+//        this.p.y - this.hh, 1);
+//      tr = plats[i].hoverCheck(
+//        this.p.x + this.wh,
+//        this.p.y - this.hh, 1);
+//      bl = plats[i].hoverCheck(
+//        this.p.x - this.wh,
+//        this.p.y + this.hh, 1);
+//      br = plats[i].hoverCheck(
+//        this.p.x + this.wh,
+//        this.p.y + this.hh, 1);
         
       // At least one point hit, so 
       // break out of loop.
-      if (tl || tr || bl || br) break;
+      if (tl || tr || bl || br ||
+				 tlx || trx || blx || brx ||
+				 otl || otr || obl || obr ||
+				 otlx || otrx || oblx || obrx) break;
     }
     
     // Bottom of subject in body of plat.
     // So, zero out velocity and add
     // upward force.
     let useGrav = true;
-    if (bl || br) {
+    if (bl || br || otl || otr) {
       // Bounce force is a third of current
       // velocity.y, and gravity off.
       let dir = createVector(0,
@@ -228,8 +321,21 @@ class Subject extends Platform{
     // Top of subject in plat.
     // So, zero out velocity and add
     // downward force.
-    if (tl || tr) {
+    if (tl || tr || obl || obr) {
       let dir = createVector(0,1);
+      this.vel.mult(0);
+      this.acc.add(dir);
+    }
+		
+		// Collide from left into object.
+		if (trx || brx || otlx || oblx) {
+      let dir = createVector(-1,0);
+      this.vel.mult(0);
+      this.acc.add(dir);
+    }
+		// Collide from right into object.
+		if (tlx || blx || otrx || obrx) {
+      let dir = createVector(1,0);
       this.vel.mult(0);
       this.acc.add(dir);
     }
@@ -343,20 +449,45 @@ class Decor extends Platform{
 			this.imgName = 'totoro.gif';
 	}
 	
-	//render(){
+	render(){
 	
-//		push();
-//		// Note that we render images from
-//		// top left corner -- and thus have to
-//		// adjust translation with .wh and .hh
-//		translate(this.p.x-(this.wh), 
-//							this.p.y-this.hh);
-//		image(this.img,
-//						0,
-//						0,
-//						this.w,
-//						this.h);
-//		pop();
-	//}
+		if (!playmode || !this.useImg){
+    push();
+			// Highlighted.
+      if (this.mouseOver &&
+         !this.selected) {
+        fill(0,222,0,42);
+        strokeWeight(3);
+        stroke(200,0,200);
+        
+      } else if(this.selected){
+        fill(0,222,0,42);
+        strokeWeight(3);
+        stroke(0,200,0);
+        
+      } else{
+        // Natural appearance.
+        fill(0,222,0,42);
+        strokeWeight(1);
+        stroke(42);
+        
+      }
+      translate(this.p.x, this.p.y);
+      rect(0,0, this.w, this.h);
+    pop();
+  	} // End of edit mode in render.
+		push();
+		// Note that we render images from
+		// top left corner -- and thus have to
+		// adjust translation with .wh and .hh
+		translate(this.p.x-(this.wh), 
+							this.p.y-this.hh);
+		image(this.img,
+						0,
+						0,
+						this.w,
+						this.h);
+		pop();
+	}
 	
 }

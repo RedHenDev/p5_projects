@@ -53,7 +53,7 @@ function keyPressed(){
   // I think I want this done via
   // the DOM -- and by all means 
   // incorportate a shortcut key.
-  if (key=="s" && mouseY < height){
+  if (key=="o" && mouseY < height){
     whichPlatType++;
 		haveBegunPreview = false;
     if (whichPlatType>2) whichPlatType = 0;
