@@ -241,7 +241,7 @@ function checkPlayInput(){
 
 function draw() {
   background(220);
-   
+	
   // If in editmode, green frame around screen.
   if (!playmode){
     noFill();
@@ -258,6 +258,7 @@ function draw() {
   // x and y are variables used for this
   // translation.
   if (!playmode) {
+		push();
   	translate(x,y);
     checkNavInput()
 	}
@@ -271,6 +272,13 @@ function draw() {
       width*0.5-plats[mainSubjectID].p.x,
       height*0.5-plats[mainSubjectID].p.y);
   
+	
+	// Render background decoration elements first.
+	for (let i = 0; i<plats.length;i++){
+		if (plats[i].name==='decoration')
+			plats[i].render();
+	}
+	
   // Update plats -- check to see if mouse
   // is hoving over (not needed in playmode)
   // and render plats.
@@ -285,13 +293,24 @@ function draw() {
       mouseY-y,1)
       ) { plats[i].mouseOver = true;
          // We are over something,
-         // so canPlace should be false.
+         // so we shouldn't be able to
+				 // place new objects.
          canPlace = false;
+				 // ...Unless we're just over a
+				 // background element, which could
+				 // be huuuuuge.
+//				 if (plats[i].name==='decoration'){
+//					 canPlace = true;
+//				 }
         }
     else plats[i].mouseOver = false;
     } // End of 'if in edit mode'.
     
     // Draw all objects to screen.
+		// But not decoration elements, which
+		// have already been rendered so as
+		// to appear behind subject etc.
+		if (plats[i].name!=='decoration')
     plats[i].render();
     
     // Subject update: physics and
@@ -302,6 +321,10 @@ function draw() {
     
     i++;
   }
+	
+	
+	pop();	// Reset matrix -- so that preview
+					// Plat is static, top left.
 	
 	// We do this after other objects, so that
 	// it will always be in view (on top).
