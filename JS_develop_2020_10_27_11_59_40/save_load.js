@@ -87,6 +87,10 @@ function loadIt(_json){
 		// 'jojo' via the plats array itself.
   }
   
+	// Grab background image info.
+	BGname = jPlats.bg;
+	loadBackground();
+	
   // Reset relative translation.
   x = 0;
   y = 0;
@@ -108,6 +112,8 @@ function savePlats(){
 	
 	// Here's the main json object.
   let jPlats = {};
+	
+	jPlats.bg = BGname;
 	
 	// Now each class of object needs to add
 	// its unique properties here, so that

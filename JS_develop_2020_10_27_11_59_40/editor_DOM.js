@@ -12,6 +12,7 @@ let butLoad;
 let butInputW;
 let butInputH;
 let butPlay;
+let butFindBG;
 //let butImgInput;
 
 // Array of textures/images.
@@ -27,7 +28,7 @@ let butPlay;
 // canvas?
 let imgArray = [];
 // Selector for images.
-// This needs populating form setup.
+// This needs populating from setup.
 let butSelect;
 let butFindImage;
 //let butSuperSave;
@@ -213,6 +214,17 @@ function setupButtons(){
 	butFindImage = createFileInput(findImage);
   butFindImage.position(width*0.5, height+pad+bh);
   butFindImage.size(bw*3,bh);
+	
+	// Finding background image from file..
+	butFindBG = createFileInput(makeBG);
+	butFindBG.position(width*0.5+120, height+pad+bh);
+  butFindBG.size(bw*3,bh);
+	
+	function makeBG(_file){
+		let tsa = loadImage(_file.data);
+		currentBG = tsa;
+		BGname = _file.name;
+	}
 	
 	imgArray.push('none');
 	imgArray.push('basicPlat.png');

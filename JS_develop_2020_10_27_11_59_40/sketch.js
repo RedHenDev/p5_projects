@@ -64,7 +64,17 @@ let inSPACE = false;
 // Our main subject/player index on plats.
 let mainSubjectID = -1;
 
+// Background image.
+let BGname;
+let currentBG;
+
 function preload(){
+	BGname = 'winterBG.jpg';
+	loadBackground();
+}
+
+function loadBackground(){
+	currentBG = loadImage(BGname);
 }
 
 function setup() {
@@ -240,7 +250,10 @@ function checkPlayInput(){
 
 
 function draw() {
-  background(220);
+	
+	
+	image(currentBG,0,0,width,height);
+	 
 	
   // If in editmode, green frame around screen.
   if (!playmode){
