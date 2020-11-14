@@ -211,7 +211,7 @@ function previewPlat(){
 	// Sin bob? Colour? Rotate? Something else?
 	pPlat.render();
 	strokeWeight(1);
-	stroke(255,101);
+	stroke(255);
 	fill(0);
 	textSize(18);
 	text(pPlat.name, 
@@ -231,9 +231,11 @@ function checkPlayInput(){
 	
     if (keyIsDown(RIGHT_ARROW)){
         inRIGHT = true;
+				plats[mainSubjectID].flip = 1;
         } else inRIGHT = false;
     if (keyIsDown(LEFT_ARROW)){
         inLEFT = true;
+				plats[mainSubjectID].flip = -1;
         } else inLEFT = false;
     if (keyIsDown(DOWN_ARROW)){
         inDOWN = true;
@@ -251,7 +253,13 @@ function checkPlayInput(){
 
 function draw() {
 	
-	
+	// Draw the background.
+	// NB - at time of writing, we always
+	// load in a BG image by default
+	// (see preload()).
+	// What we need is a more sophisticated
+	// system that at least allows us to
+	// choose between images and simple RGB.
 	image(currentBG,0,0,width,height);
 	 
 	
@@ -270,8 +278,9 @@ function draw() {
   // during edit mode.
   // x and y are variables used for this
   // translation.
+	push();
   if (!playmode) {
-		push();
+		
   	translate(x,y);
     checkNavInput()
 	}

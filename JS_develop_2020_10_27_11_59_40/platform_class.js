@@ -222,7 +222,7 @@ class Subject extends Platform{
         this.p.y + this.hh, 1);
 				// Break - no more checks, vertical
 				// collision takes precedence.
-				if (tl || tr || bl || br) break;
+				//if (tl || tr || bl || br) break;
 			} else {
 				// Other object thinner.
 				otl = this.hoverCheck(
@@ -239,7 +239,7 @@ class Subject extends Platform{
         plats[i].p.y + plats[i].hh, 1);
 				// Break - no more checks, vertical
 				// collision takes precedence.
-				if (otl || otr || obl || obr) break;
+				//if (otl || otr || obl || obr) break;
 			}
 			// Check that subject has shorter height.
 			if (this.h <= plats[i].h){
@@ -260,21 +260,23 @@ class Subject extends Platform{
         this.p.y + this.hh, 1);
 			} else {
 				// Other object flatter.
+				// So, see if one of obj's corners in
+				// subject's body.
 				otlx = this.hoverCheck(
         plats[i].p.x - plats[i].wh,
-        plats[i].p.y - plats[i].hh, 1);
+        plats[i].p.y - plats[i].hh*0.96, 1);
       	otrx = this.hoverCheck(
         plats[i].p.x + plats[i].wh,
-        plats[i].p.y - plats[i].hh, 1);
+        plats[i].p.y - plats[i].hh*0.96, 1);
       	oblx = this.hoverCheck(
         plats[i].p.x - plats[i].wh,
-        plats[i].p.y + plats[i].hh, 1);
+        plats[i].p.y + plats[i].hh*0.96, 1);
       	obrx = this.hoverCheck(
         plats[i].p.x + plats[i].wh,
-        plats[i].p.y + plats[i].hh, 1);
+        plats[i].p.y + plats[i].hh*0.96, 1);
 			}
 			
-			// ^^^ NEW COLLISION SYSTEM ^^^
+			// ^^^ EOF - NEW COLLISION SYSTEM ^^^
 			
 			// *** Legacy ***
       // Could I use hoverCheck here?
@@ -312,10 +314,11 @@ class Subject extends Platform{
       let dir = createVector(0,
                 -this.vel.y*
                 0.33);
-      this.p.y -= 0.5; // Extract upward.
-      this.vel.y = 0;
+      this.p.y -= this.vel.y; // Extract upward.
+      //this.vel.y = 0;
       this.acc.add(dir);
-      // Switch off gravity this update.
+      // Switch off gravity this update -
+			// cheap way to know we are grounded.
       useGrav = false;
     }
     // Top of subject in plat.
@@ -323,21 +326,31 @@ class Subject extends Platform{
     // downward force.
     if (tl || tr || obl || obr) {
       let dir = createVector(0,1);
-      this.vel.mult(0);
+      //this.vel.mult(0);
       this.acc.add(dir);
+			console.log("hit from under");
     }
 		
 		// Collide from left into object.
-		if (trx || brx || otlx || oblx) {
-      let dir = createVector(-1,0);
-      this.vel.mult(0);
-      this.acc.add(dir);
+		if (
+				(trx || brx || otlx || oblx)) {
+      let dir = createVector(-5,0);
+			this.p.x -= 42;	// Extract left.
+			//this.vel.x = 0;
+			//this.vel.x = -this.vel.x;
+			//this.vel.x = -5;
+      //this.acc.add(dir);
+			inRIGHT = false;
+			console.log("hit from left");
     }
 		// Collide from right into object.
 		if (tlx || blx || otrx || obrx) {
       let dir = createVector(1,0);
-      this.vel.mult(0);
+			this.p.x += this.vel.x;	// Extract right.
+			this.vel.x = 0;
       this.acc.add(dir);
+			inLEFT = false;
+			console.log("hit from right");
     }
     
     // Gravity.
@@ -349,12 +362,12 @@ class Subject extends Platform{
     // according to global inputs.
     if (playmode){
 			// Correct orientation of subject.
-			if (keyIsPressed && 
-					keyCode === LEFT_ARROW)
-				this.flip = -1;
-			if (keyIsPressed && 
-					keyCode === RIGHT_ARROW)
-				this.flip = 1;
+			//if (keyIsPressed && 
+				//	keyCode === LEFT_ARROW)
+				//this.flip = -1;
+			//if (keyIsPressed && 
+				//	keyCode === RIGHT_ARROW)
+				//this.flip = 1;
       let pDir = createVector(0,0);
       let upForce = 2.7 * !useGrav;
       let rightForce = 0.2;
