@@ -217,8 +217,10 @@ function setupButtons(){
 	
 	// Finding background image from file..
 	butFindBG = createFileInput(makeBG);
-	butFindBG.position(width*0.5+120, height+pad+bh);
+	butFindBG.position(width*0.5+300, height+pad+bh);
   butFindBG.size(bw*3,bh);
+	let labelBG = createP('background');
+	labelBG.position(width*0.5+300, height+pad+bh+14);
 	
 	function makeBG(_file){
 		let tsa = loadImage(_file.data);
@@ -269,10 +271,13 @@ function setupButtons(){
 	}
 	
 	function findImage(_file){
-		//let imgArray = [];
+		// Looks like not using tsa anymore...
+		// Used to be first parameter, see below.
 		let tsa = loadImage(_file.data);
+		
+		// Just wants a string as first parameter, huh?
 		let domi = 
-				createImg(tsa, _file.name);
+				createImg(_file.name, _file.name);
 		domi.size(64,64);
 		domi.position(222,height);
 		

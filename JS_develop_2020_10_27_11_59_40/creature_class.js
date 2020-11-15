@@ -1,135 +1,4 @@
-//**************************************
-// Tues 27th Oct 2020
-//**************************************
-
-// My platform object.
-class Platform{
-  
-  // Static variables and stuff.
-  static changeWidth(id, val){
-    //if (id===-1) return;
-    
-    // Only make change if this
-    // platform exists.
-    if (plats[id]){
-      plats[id].w = val;
-      plats[id].calcForCollisions();
-    }
-  }
-	static changeHeight(id, val){
-    //if (id===-1) return;
-    
-    // Only make change if this
-    // platform exists.
-    if (plats[id]){
-      plats[id].h = val;
-      plats[id].calcForCollisions();
-    }
-  }
-	static loadImage(id){
-    //if (id===-1) return;
-    
-    // Only make change if this
-    // platform exists.
-		let val = plats[id].imgName;
-    if (plats[id]){
-      plats[id].img = loadImage(val);
-    }
-  }
-  
-  constructor(_x, _y){
-    // Type.
-    this.name = 'platform';
-    // Position.
-    this.p = createVector(_x,_y);
-    // Width and height.
-    this.w = 42;
-    this.h = 42*0.618;  // Phi proportion.
-    // Calculations for collisions done
-    // now for optimizatinon.
-    // NB will need to be redone if
-    // platform's dimensions changed.
-    // In fact, let's make a function
-    // for that now.
-    this.wh;  // Half width.
-    this.hh;  // Half height.
-    this.calcForCollisions();
-    
-		// What image to use during render? 
-		this.useImg = false;
-		this.imgName = 'none';
-		this.img;
-    // Editor states.
-    this.mouseOver = false;
-    this.selected = false;
-  }
-  
-  calcForCollisions(){
-    this.wh = this.w*0.5;  // Half width.
-    this.hh = this.h*0.5;  // Half height.
-  }
-  
-  // Is a given point over me?
-  // NB r is radius of point,
-  // for use with larger objects.
-  // For mouse, r is 1.
-  hoverCheck(x,y,r){
-    if (x + r > this.p.x - this.wh &&
-        x - r < this.p.x + this.wh &&
-        y + r > this.p.y - this.hh &&
-        y - r < this.p.y + this.hh){
-      return true;
-    } else return false;
-        
-  }
-  
-  render(){
-		if (!playmode || !this.useImg){
-    push();
-      if (this.mouseOver &&
-         !this.selected) {
-        fill(246);
-        strokeWeight(3);
-        stroke(200,0,200);
-        
-      } else if(this.selected){
-        fill(246);
-        strokeWeight(3);
-        stroke(0,200,0);
-        
-      } else{
-        // Natural appearance.
-        fill(246);
-        strokeWeight(1);
-        stroke(42);
-        
-      }
-      translate(this.p.x, this.p.y);
-      rect(0,0, this.w, this.h);
-    pop();
-  	} // End of edit mode in render.
-		// Image render.
-		if (this.useImg){
-		push();
-     	//console.log('Trying to render img...');
-      translate(this.p.x-(this.wh), 
-								this.p.y-this.hh);
-     
-			//scale(this.flip,1);
-			//images[0].delay(200);	// Speed of gif.
-   		image(this.img,
-						0,
-						0,
-						this.w,
-						this.h);
-				
-     pop();
-		 } // End of is using image.
-	} // End of render.
-	
-} // End of Platform class.
-
-class Subject extends Platform{
+class Creature extends Subject{
    constructor(_x, _y){
      // Super used to call parent class's
      // constructor. Must be used before
@@ -137,27 +6,27 @@ class Subject extends Platform{
      super(_x, _y);
 		 // Original positions.
 		 // Logic for this found in resetLevel().
-		 this.op = createVector(_x,_y);
-     this.name = 'subject';
-     this.w = 89;
-     this.h = 146;
+		 //this.op = createVector(_x,_y);
+     this.name = 'creature';
+     this.w = 160;
+     this.h = 84;
      this.calcForCollisions();
      
 		 // For image flipping on y axis.
 		 // Right = 1. Left = -1.
 		 // Used in calculations when rendering.
 		 // Changed with controls in update().
-		 this.flip = 1;
+		 this.flip = -1;
 		 // Let's determine a default  
 		 // image for subjects.
-		 this.imgName = 'marioSUB.gif';
-		 this.useImg = true;
+		 this.imgName = 'unicorn.gif';
+		 //this.useImg = true;
 		 
      // Euler physics properties.
-     this.vel = createVector(0,0);
-     this.acc = createVector(0,0);
+     //this.vel = createVector(0,0);
+     //this.acc = createVector(0,0);
      // Gravity direction and force.
-     this.gDir = createVector(0,0.1);
+     //this.gDir = createVector(0,0.1);
    }
   
   // Gravity...and collisions?
@@ -328,7 +197,7 @@ class Subject extends Platform{
       let dir = createVector(0,1);
       //this.vel.mult(0);
       this.acc.add(dir);
-			console.log("hit from under");
+			//console.log("hit from under");
     }
 		
 		// Collide from left into object.
@@ -340,8 +209,8 @@ class Subject extends Platform{
 			//this.vel.x = -this.vel.x;
 			//this.vel.x = -5;
       //this.acc.add(dir);
-			inRIGHT = false;
-			console.log("hit from left");
+			//inRIGHT = false;
+			//console.log("hit from left");
     }
 		// Collide from right into object.
 		if (tlx || blx || otrx || obrx) {
@@ -349,8 +218,8 @@ class Subject extends Platform{
 			this.p.x += this.vel.x;	// Extract right.
 			this.vel.x = 0;
       this.acc.add(dir);
-			inLEFT = false;
-			console.log("hit from right");
+			//inLEFT = false;
+			//console.log("hit from right");
     }
     
     // Gravity.
@@ -358,27 +227,10 @@ class Subject extends Platform{
     if (useGrav)
       this.acc.add(this.gDir);
     
-    // Apply subject locomotion
-    // according to global inputs.
-    if (playmode){
-			// Correct orientation of subject.
-			//if (keyIsPressed && 
-				//	keyCode === LEFT_ARROW)
-				//this.flip = -1;
-			//if (keyIsPressed && 
-				//	keyCode === RIGHT_ARROW)
-				//this.flip = 1;
-      let pDir = createVector(0,0);
-      let upForce = 2.7 * !useGrav;
-      let rightForce = 0.2;
-      let leftForce = 0.2;
-      let downForce = 0;
-      pDir.x += inRIGHT  * rightForce;
-      pDir.x += -inLEFT  * leftForce;
-      pDir.y += -inUP    * upForce;
-      pDir.y += inDOWN   * downForce;
-      this.acc.add(pDir);
-    }
+    // Here's where we might place
+		// locomotion ai.
+		
+    
     
     // Here is the Euler physics system.
     this.vel.add(this.acc);
@@ -435,72 +287,4 @@ class Subject extends Platform{
 		 } // End of is using image.
 	} // End of render.
 	
-} // End of subject class.
-
-// A non-physical platform, basically, but
-// must always have an image (.img).
-class Decor extends Platform{
-	constructor(_x,_y){
-			super(_x,_y);
-			
-			this.h = 64;
-			this.w = 64;
-			this.wh = 32;
-			this.hh = 32;
-			this.name = 'decoration';
-			// By default and the raison d'etre of
-			// decoration objects is that they
-			// display some image as light-weight
-			// as possible.
-			// NB in save_load.js, if an object has
-			// .useImg set to true, then that is
-			// when its image will be loaded (in 
-			// other words not in the object
-			// constructor or anything).
-			this.useImg = true;
-			// Default...image.
-			this.imgName = 'totoro.gif';
-	}
-	
-	render(){
-	
-		if (!playmode || !this.useImg){
-    push();
-			// Highlighted.
-      if (this.mouseOver &&
-         !this.selected) {
-        fill(0,222,0,42);
-        strokeWeight(3);
-        stroke(200,0,200);
-        
-      } else if(this.selected){
-        fill(0,222,0,42);
-        strokeWeight(3);
-        stroke(0,200,0);
-        
-      } else{
-        // Natural appearance.
-        fill(0,222,0,42);
-        strokeWeight(1);
-        stroke(42);
-        
-      }
-      translate(this.p.x, this.p.y);
-      rect(0,0, this.w, this.h);
-    pop();
-  	} // End of edit mode in render.
-		push();
-		// Note that we render images from
-		// top left corner -- and thus have to
-		// adjust translation with .wh and .hh
-		translate(this.p.x-(this.wh), 
-							this.p.y-this.hh);
-		image(this.img,
-						0,
-						0,
-						this.w,
-						this.h);
-		pop();
-	}
-	
-}
+} // End of creature class.

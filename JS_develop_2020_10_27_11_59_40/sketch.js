@@ -117,9 +117,11 @@ function resetLevel(){
 	// start positions.
 	
 	// Going back into edit mode...
+	// Take position from stored original position.
 	if (!playmode){
 		for (let i = 0; i < plats.length; i++){
-			if (plats[i].name==='subject'){
+			if (plats[i].name==='subject'||
+				  plats[i].name==='creature'){
 				plats[i].p.x = plats[i].op.x;
 				plats[i].p.y = plats[i].op.y;
 			}
@@ -131,7 +133,8 @@ function resetLevel(){
 	// based on current position.
 	if (playmode){
 		for (let i = 0; i < plats.length; i++){
-			if (plats[i].name==='subject'){
+			if (plats[i].name==='subject'||
+				  plats[i].name==='creature'){
 				plats[i].op.x = plats[i].p.x;
 				plats[i].op.y = plats[i].p.y;
 			}
@@ -166,20 +169,28 @@ function previewPlat(){
 		// to generate their objects.
 		// Maybe use placePlat in load? Don't
 		// want to be doubling any code.
-		let prevX = 64;
-		let prevY = 42;
+		let prevX = 0;
+		let prevY = 0;
 		if (whichPlatType===0){
 		pPlat = 
 				new Platform(prevX, prevY);
 		}
 		else if (whichPlatType===1){
 		pPlat = 
-				new Subject(prevX, prevY);
+				new Creature(prevX, prevY);
 		}
 		else if (whichPlatType===2){
 		pPlat = 
 				new Decor(prevX, prevY);
 		}
+		else if (whichPlatType===3){
+		pPlat = 
+				new Subject(prevX, prevY);
+		}
+		
+		// Adjust position in top left corner.
+		pPlat.p.x = pPlat.wh + 12;
+		pPlat.p.y = pPlat.hh + 12;
 		
 		// Using an image be default?
 		if (pPlat.useImg){
@@ -210,13 +221,13 @@ function previewPlat(){
 	// Do we want this to stand out somehow?
 	// Sin bob? Colour? Rotate? Something else?
 	pPlat.render();
-	strokeWeight(1);
+	strokeWeight(2);
 	stroke(255);
 	fill(0);
-	textSize(18);
+	textSize(22);
 	text(pPlat.name, 
 			 pPlat.p.x-pPlat.wh,
-			 pPlat.p.y+pPlat.h+4);
+			 pPlat.p.y+pPlat.hh+16);
 	
 }
 
@@ -337,7 +348,8 @@ function draw() {
     
     // Subject update: physics and
 		// locomotion.
-    if (plats[i].name==='subject' &&
+    if ((plats[i].name==='subject'||
+				plats[i].name==='creature') &&
         playmode)
         plats[i].update(i);
     

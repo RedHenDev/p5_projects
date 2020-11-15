@@ -54,10 +54,18 @@ function loadIt(_json){
 			jojo.op.x = jPlats.op_x[i];
 			jojo.op.y = jPlats.op_y[i];
     }
-		if (jPlats.name[i] == 'decoration'){
+		else if (jPlats.name[i] == 'decoration'){
       jojo = new 
       Decor(		jPlats.x[i],
                	jPlats.y[i]);
+    }
+		else if (jPlats.name[i] == 'creature'){
+      jojo = new 
+      Creature(jPlats.x[i],
+               jPlats.y[i]);
+			jojo.flip = jPlats.flip[i];	// Unique *.
+			jojo.op.x = jPlats.op_x[i];
+			jojo.op.y = jPlats.op_y[i];
     }
 		
 		// Boiler plate stuff common to
@@ -96,7 +104,7 @@ function loadIt(_json){
   y = 0;
   // Begin in edit mode.
   playmode = false;
-  // Begin with default plat type.
+  // Begin with default plat type (for placing).
   whichPlatType = 0;
   // Done!
   console.log('level loaded!');
@@ -112,7 +120,7 @@ function savePlats(){
 	
 	// Here's the main json object.
   let jPlats = {};
-	
+	// And here's the background img name.
 	jPlats.bg = BGname;
 	
 	// Now each class of object needs to add
@@ -149,7 +157,8 @@ function savePlats(){
 		jPlats.imgName[i] = plats[i].imgName;
 		jPlats.useImg[i] = plats[i].useImg;
 		// If plat type is 'Subject'.
-		if (plats[i].name==='subject'){
+		if (plats[i].name==='subject'||
+			 	plats[i].name==='creature'){
 			jPlats.flip[i] = plats[i].flip;
 			// NB - we take the actual pos, since
 			// user needs to hit play toggle to 
@@ -165,16 +174,4 @@ function savePlats(){
   
 	// Aaaaand save this unholy mess to JSON.
   saveJSON(jPlats, 'plats.json');
-}
-
-function superSavePlats(){
-	let level = {};
-	
-	// Let's see if we can remove all the
-	// image data first...
-
-	// This time, let's just save one array
-	// for plats, but just copy all the 
-	// components according to type.
-	saveJSON(level, 'superPlats.json');
 }
