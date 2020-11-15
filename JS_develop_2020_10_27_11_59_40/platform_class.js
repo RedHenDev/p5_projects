@@ -192,6 +192,8 @@ class Subject extends Platform{
     let otlx = false;
     let obrx = false; 
     let oblx = false;
+		
+		let useGrav = true;
     for (let i = 0; i < plats.length; i++){
       // Don't check against self...
 			// (i===selfIndex) // Faster, surely.
@@ -246,34 +248,36 @@ class Subject extends Platform{
 				// So, now see whether one of subject's
 				// corners is in body of other obj.
 				// This is for horizontal (x) collision.
+				// Take 0.90 off height to avoid x friction
+				// when on top of an obj.
 				tlx = plats[i].hoverCheck(
         this.p.x - this.wh,
-        this.p.y - this.hh, 1);
+        this.p.y - this.hh*0.70, 1);
       	trx = plats[i].hoverCheck(
         this.p.x + this.wh,
-        this.p.y - this.hh, 1);
+        this.p.y - this.hh*0.70, 1);
       	blx = plats[i].hoverCheck(
         this.p.x - this.wh,
-        this.p.y + this.hh, 1);
+        this.p.y + this.hh*0.70, 1);
       	brx = plats[i].hoverCheck(
         this.p.x + this.wh,
-        this.p.y + this.hh, 1);
+        this.p.y + this.hh*0.70, 1);
 			} else {
 				// Other object flatter.
 				// So, see if one of obj's corners in
 				// subject's body.
 				otlx = this.hoverCheck(
         plats[i].p.x - plats[i].wh,
-        plats[i].p.y - plats[i].hh*0.96, 1);
+        plats[i].p.y - plats[i].hh*0.70, 1);
       	otrx = this.hoverCheck(
         plats[i].p.x + plats[i].wh,
-        plats[i].p.y - plats[i].hh*0.96, 1);
+        plats[i].p.y - plats[i].hh*0.70, 1);
       	oblx = this.hoverCheck(
         plats[i].p.x - plats[i].wh,
-        plats[i].p.y + plats[i].hh*0.96, 1);
+        plats[i].p.y + plats[i].hh*0.70, 1);
       	obrx = this.hoverCheck(
         plats[i].p.x + plats[i].wh,
-        plats[i].p.y + plats[i].hh*0.96, 1);
+        plats[i].p.y + plats[i].hh*0.70, 1);
 			}
 			
 			// ^^^ EOF - NEW COLLISION SYSTEM ^^^
@@ -297,23 +301,22 @@ class Subject extends Platform{
 //        this.p.y + this.hh, 1);
         
       // At least one point hit, so 
-      // break out of loop.
-      if (tl || tr || bl || br ||
-				 tlx || trx || blx || brx ||
-				 otl || otr || obl || obr ||
-				 otlx || otrx || oblx || obrx) break;
-    }
-    
-    // Bottom of subject in body of plat.
+      // break out of loop
+//      if (tl || tr || bl || br ||
+//				 tlx || trx || blx || brx ||
+//				 otl || otr || obl || obr ||
+//				 otlx || otrx || oblx || obrx) break;
+			
+			// Now collision consequences...
+			// Bottom of subject in body of plat.
     // So, zero out velocity and add
     // upward force.
-    let useGrav = true;
     if (bl || br || otl || otr) {
       // Bounce force is a third of current
       // velocity.y, and gravity off.
       let dir = createVector(0,
                 -this.vel.y*
-                0.33);
+                0.5);
       this.p.y -= this.vel.y; // Extract upward.
       //this.vel.y = 0;
       this.acc.add(dir);
@@ -328,30 +331,34 @@ class Subject extends Platform{
       let dir = createVector(0,1);
       //this.vel.mult(0);
       this.acc.add(dir);
-			console.log("hit from under");
+			//console.log("hit from under");
     }
 		
 		// Collide from left into object.
 		if (
 				(trx || brx || otlx || oblx)) {
-      let dir = createVector(-5,0);
-			this.p.x -= 42;	// Extract left.
-			//this.vel.x = 0;
-			//this.vel.x = -this.vel.x;
-			//this.vel.x = -5;
-      //this.acc.add(dir);
+      let dir = createVector(-1,0);
+			this.vel.x = -1;
+      this.acc.add(dir);
 			inRIGHT = false;
-			console.log("hit from left");
+			//console.log("hit from left");
     }
 		// Collide from right into object.
 		if (tlx || blx || otrx || obrx) {
       let dir = createVector(1,0);
-			this.p.x += this.vel.x;	// Extract right.
-			this.vel.x = 0;
+			this.vel.x = 1;
       this.acc.add(dir);
 			inLEFT = false;
-			console.log("hit from right");
+			//console.log("hit from right");
     }
+			
+			
+			
+			
+    }
+    
+    // Collision consequences used to be here...
+		
     
     // Gravity.
     // Switched off if grounded.
@@ -369,7 +376,7 @@ class Subject extends Platform{
 				//	keyCode === RIGHT_ARROW)
 				//this.flip = 1;
       let pDir = createVector(0,0);
-      let upForce = 2.7 * !useGrav;
+      let upForce = 3.7 * !useGrav;
       let rightForce = 0.2;
       let leftForce = 0.2;
       let downForce = 0;
@@ -388,6 +395,10 @@ class Subject extends Platform{
     let tempY = this.vel.y;
     this.vel.mult(0.96);
     this.vel.y = tempY;  // Do not affect y.
+		
+		// If really low velocity, zero out.
+		//if (Math.abs(this.vel.y)<0.2) this.vel.y = 0; 
+		//if (Math.abs(this.vel.x)<0.2) this.vel.x = 0;
   }
    
 	render(){
@@ -424,7 +435,12 @@ class Subject extends Platform{
 								this.p.y-this.hh);
      
 			scale(this.flip,1);
-			//images[0].delay(200);	// Speed of gif.
+		
+			// Stand still if low velocity.
+			if (Math.abs(this.vel.x) < 1)
+				this.img.setFrame(1);
+			
+			// Render image.
    		image(this.img,
 						0,
 						0,

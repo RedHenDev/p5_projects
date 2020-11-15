@@ -147,23 +147,6 @@ class Creature extends Subject{
 			
 			// ^^^ EOF - NEW COLLISION SYSTEM ^^^
 			
-			// *** Legacy ***
-      // Could I use hoverCheck here?
-      // Trying a 'four-corner' system.
-      // Each corner point of subject
-      // queried as to being inside plat.
-//      tl = plats[i].hoverCheck(
-//        this.p.x - this.wh,
-//        this.p.y - this.hh, 1);
-//      tr = plats[i].hoverCheck(
-//        this.p.x + this.wh,
-//        this.p.y - this.hh, 1);
-//      bl = plats[i].hoverCheck(
-//        this.p.x - this.wh,
-//        this.p.y + this.hh, 1);
-//      br = plats[i].hoverCheck(
-//        this.p.x + this.wh,
-//        this.p.y + this.hh, 1);
         
       // At least one point hit, so 
       // break out of loop.
@@ -205,12 +188,6 @@ class Creature extends Subject{
 				(trx || brx || otlx || oblx)) {
       let dir = createVector(-5,0);
 			this.p.x -= 42;	// Extract left.
-			//this.vel.x = 0;
-			//this.vel.x = -this.vel.x;
-			//this.vel.x = -5;
-      //this.acc.add(dir);
-			//inRIGHT = false;
-			//console.log("hit from left");
     }
 		// Collide from right into object.
 		if (tlx || blx || otrx || obrx) {
@@ -218,8 +195,6 @@ class Creature extends Subject{
 			this.p.x += this.vel.x;	// Extract right.
 			this.vel.x = 0;
       this.acc.add(dir);
-			//inLEFT = false;
-			//console.log("hit from right");
     }
     
     // Gravity.
@@ -230,6 +205,13 @@ class Creature extends Subject{
     // Here's where we might place
 		// locomotion ai.
 		
+		// Every 300 frames flip direction of
+		// creature and add force in that direction.
+		// OMG this works beautifully!
+		if (frameCount % 100 === 0){
+			this.flip *= -1;
+			this.acc.x += 5 * this.flip;
+		}
     
     
     // Here is the Euler physics system.

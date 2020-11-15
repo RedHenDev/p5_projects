@@ -84,16 +84,19 @@ function keyPressed(){
 		}
 		else if (plats[prevSel].name==='creature'){
 				clone = new 
-				Subject(plats[prevSel].p.x,
+				Creature(plats[prevSel].p.x,
 							 	plats[prevSel].p.y);
 			clone.flip = plats[prevSel].flip;
 		}
 		// Common properties.
 		clone.w = plats[prevSel].w;
 		clone.h = plats[prevSel].h;
-		clone.img = plats[prevSel].img;
 		clone.useImg = plats[prevSel].useImg;
 		clone.imgName = plats[prevSel].imgName;
+		// Load afresh to prevent .gif sharing bug.
+		// i.e. don't just clone straight across.
+		clone.img = 
+			loadImage(plats[prevSel].imgName);
 		// Move to new position.
 		clone.p.x += clone.w;
 		// Push to plats array.
