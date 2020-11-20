@@ -344,7 +344,7 @@ function draw() {
 		// have already been rendered so as
 		// to appear behind subject etc.
 		if (plats[i].name!=='decoration')
-    plats[i].render();
+    	plats[i].render();
     
     // Subject update: physics and
 		// locomotion.

@@ -61,10 +61,12 @@ class Creature extends Subject{
     let otlx = false;
     let obrx = false; 
     let oblx = false;
+		
+		let useGrav = true;
     for (let i = 0; i < plats.length; i++){
       // Don't check against self...
 			// (i===selfIndex) // Faster, surely.
-      if (plats[i]===this) 
+      if (i===selfIndex) 
 				continue;
 			// Don't check against non-physical objects.
 			if (plats[i].name==='decoration')
@@ -115,57 +117,50 @@ class Creature extends Subject{
 				// So, now see whether one of subject's
 				// corners is in body of other obj.
 				// This is for horizontal (x) collision.
+				// Take 0.90 off height to avoid x friction
+				// when on top of an obj.
 				tlx = plats[i].hoverCheck(
         this.p.x - this.wh,
-        this.p.y - this.hh, 1);
+        this.p.y - this.hh*0.70, 1);
       	trx = plats[i].hoverCheck(
         this.p.x + this.wh,
-        this.p.y - this.hh, 1);
+        this.p.y - this.hh*0.70, 1);
       	blx = plats[i].hoverCheck(
         this.p.x - this.wh,
-        this.p.y + this.hh, 1);
+        this.p.y + this.hh*0.70, 1);
       	brx = plats[i].hoverCheck(
         this.p.x + this.wh,
-        this.p.y + this.hh, 1);
+        this.p.y + this.hh*0.70, 1);
 			} else {
 				// Other object flatter.
 				// So, see if one of obj's corners in
 				// subject's body.
 				otlx = this.hoverCheck(
         plats[i].p.x - plats[i].wh,
-        plats[i].p.y - plats[i].hh*0.96, 1);
+        plats[i].p.y - plats[i].hh*0.70, 1);
       	otrx = this.hoverCheck(
         plats[i].p.x + plats[i].wh,
-        plats[i].p.y - plats[i].hh*0.96, 1);
+        plats[i].p.y - plats[i].hh*0.70, 1);
       	oblx = this.hoverCheck(
         plats[i].p.x - plats[i].wh,
-        plats[i].p.y + plats[i].hh*0.96, 1);
+        plats[i].p.y + plats[i].hh*0.70, 1);
       	obrx = this.hoverCheck(
         plats[i].p.x + plats[i].wh,
-        plats[i].p.y + plats[i].hh*0.96, 1);
+        plats[i].p.y + plats[i].hh*0.70, 1);
 			}
 			
 			// ^^^ EOF - NEW COLLISION SYSTEM ^^^
 			
-        
-      // At least one point hit, so 
-      // break out of loop.
-      if (tl || tr || bl || br ||
-				 tlx || trx || blx || brx ||
-				 otl || otr || obl || obr ||
-				 otlx || otrx || oblx || obrx) break;
-    }
-    
-    // Bottom of subject in body of plat.
+			// Now collision consequences...
+			// Bottom of subject in body of plat.
     // So, zero out velocity and add
     // upward force.
-    let useGrav = true;
     if (bl || br || otl || otr) {
       // Bounce force is a third of current
       // velocity.y, and gravity off.
       let dir = createVector(0,
-                -this.vel.y*
-                0.33);
+                this.vel.y*
+                -0.5);
       this.p.y -= this.vel.y; // Extract upward.
       //this.vel.y = 0;
       this.acc.add(dir);
@@ -186,16 +181,25 @@ class Creature extends Subject{
 		// Collide from left into object.
 		if (
 				(trx || brx || otlx || oblx)) {
-      let dir = createVector(-5,0);
-			this.p.x -= 42;	// Extract left.
+      let dir = createVector(-1,0);
+			this.vel.x = -1;
+      this.acc.add(dir);
+			//console.log("hit from left");
     }
 		// Collide from right into object.
 		if (tlx || blx || otrx || obrx) {
       let dir = createVector(1,0);
-			this.p.x += this.vel.x;	// Extract right.
-			this.vel.x = 0;
+			this.vel.x = 1;
       this.acc.add(dir);
+			//console.log("hit from right");
     }
+			
+			
+			
+			
+    }
+    
+    // Collision consequences used to be here...
     
     // Gravity.
     // Switched off if grounded.

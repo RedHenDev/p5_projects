@@ -197,7 +197,8 @@ class Subject extends Platform{
     for (let i = 0; i < plats.length; i++){
       // Don't check against self...
 			// (i===selfIndex) // Faster, surely.
-      if (plats[i]===this) 
+      //if (plats[i]===this) 
+			if (i===selfIndex)
 				continue;
 			// Don't check against non-physical objects.
 			if (plats[i].name==='decoration')
@@ -282,31 +283,6 @@ class Subject extends Platform{
 			
 			// ^^^ EOF - NEW COLLISION SYSTEM ^^^
 			
-			// *** Legacy ***
-      // Could I use hoverCheck here?
-      // Trying a 'four-corner' system.
-      // Each corner point of subject
-      // queried as to being inside plat.
-//      tl = plats[i].hoverCheck(
-//        this.p.x - this.wh,
-//        this.p.y - this.hh, 1);
-//      tr = plats[i].hoverCheck(
-//        this.p.x + this.wh,
-//        this.p.y - this.hh, 1);
-//      bl = plats[i].hoverCheck(
-//        this.p.x - this.wh,
-//        this.p.y + this.hh, 1);
-//      br = plats[i].hoverCheck(
-//        this.p.x + this.wh,
-//        this.p.y + this.hh, 1);
-        
-      // At least one point hit, so 
-      // break out of loop
-//      if (tl || tr || bl || br ||
-//				 tlx || trx || blx || brx ||
-//				 otl || otr || obl || obr ||
-//				 otlx || otrx || oblx || obrx) break;
-			
 			// Now collision consequences...
 			// Bottom of subject in body of plat.
     // So, zero out velocity and add
@@ -340,15 +316,13 @@ class Subject extends Platform{
       let dir = createVector(-1,0);
 			this.vel.x = -1;
       this.acc.add(dir);
-			inRIGHT = false;
 			//console.log("hit from left");
     }
 		// Collide from right into object.
 		if (tlx || blx || otrx || obrx) {
-      let dir = createVector(1,0);
+      let tdir = createVector(1,0);
 			this.vel.x = 1;
-      this.acc.add(dir);
-			inLEFT = false;
+      this.acc.add(tdir);
 			//console.log("hit from right");
     }
 			
@@ -393,7 +367,7 @@ class Subject extends Platform{
     this.acc.mult(0);
     // Friction.
     let tempY = this.vel.y;
-    this.vel.mult(0.96);
+    this.vel.mult(0.95);
     this.vel.y = tempY;  // Do not affect y.
 		
 		// If really low velocity, zero out.
