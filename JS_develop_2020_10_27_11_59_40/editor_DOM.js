@@ -277,7 +277,7 @@ function setupButtons(){
 		
 		// Just wants a string as first parameter, huh?
 		let domi = 
-				createImg(_file.name, _file.name);
+				createImg(tsa, _file.name);
 		domi.size(64,64);
 		domi.position(222,height);
 		
