@@ -29,23 +29,101 @@ function mouseMoved(){
   
 }
 
-function locomotion(){
+// Make sure we only move when supposed to.
+let moveReady = true;
+function keyReleased(){
   if (key=='w' ||
-       keyCode==UP_ARROW){
-     
-   
-      pos.x +=
-        Math.floor(Math.sin(radians(-myRot))*
-                   bs);
+      keyCode==UP_ARROW ||
+      key=='s' ||
+      key=='a' ||
+      key=='d' ||
+      keyCode==DOWN_ARROW ||
+      keyCode==LEFT_ARROW ||
+      keyCode==RIGHT_ARROW)
+  moveReady = false;
+}
+function keyPressed(){
+  if (key=='w' ||
+      keyCode==UP_ARROW ||
+      key=='s' ||
+      key=='a' ||
+      key=='d' ||
+      keyCode==DOWN_ARROW ||
+      keyCode==LEFT_ARROW ||
+      keyCode==RIGHT_ARROW)
+  moveReady = true;
+}
+
+function locomotion(){
+  if (moveReady==false) {
     
-      pos.z +=
-        Math.floor(Math.cos(radians(myRot)) *
-                   bs);
+    return;}
+  
+  // Set to true once a movement key
+  // is released.
+  //moveReady = false;
+  
+  // First, what direction does the user
+  // want, based on key pressed?
+  vDir.x = 0;
+  vDir.z = 0;
+  let theta = myRot;
+  if (key=='w' ||
+      keyCode==UP_ARROW){
+    vDir.z = 1;
+    // Lerp subject's model's rotation
+  // to mouse rotation.
+  stagRot=lerp(stagRot,myRot,0.42);
+  }
+  if (key=='s' ||
+      keyCode==DOWN_ARROW){
+    vDir.z = -1;
+    // Lerp subject's model's rotation
+  // to mouse rotation.
+  stagRot=lerp(stagRot,myRot,0.42);
+  }
+  if (key=='a' ||
+      keyCode==LEFT_ARROW){
+    vDir.z = -1;
+    theta += 90;
+  }
+  if (key=='d' ||
+      keyCode==RIGHT_ARROW){
+    vDir.z = 1;
+    theta += 90;
+  }
+  
+  
+  
+  // Now work out movement across grid,
+  // according to polar-coordinates.
+      let toMoveX = 
+          Math.sin(radians(-theta));
+  
+      let toMoveZ =
+          Math.cos(radians(-theta));
+        
+        // Round value so that we move
+        // according to grid size -- else
+        // strange fluctuations in Perlin.
+        // Eureka!!
+        pos.x += bs * Math.round(toMoveX)*
+          vDir.z;
+        pos.z += bs * Math.round(toMoveZ)*
+          vDir.z;
+        // if (vDir.z){
+        //   pos.x += vDir.z * 
+        //     bs * Math.round(toMoveX);
+        //   pos.z += vDir.z *
+        //     bs * Math.round(toMoveZ);
+        // }
+        // if (vDir.x){
+        //   pos.z += vDir.x * 
+        //     bs * Math.round(toMoveX);
+        //   pos.x += vDir.x *
+        //     bs * Math.round(toMoveZ);
+        // }
     
-      //pos.x = Math.floor(pos.x);
-      //pos.z = Math.floor(pos.z);
-    
-    }
 }
 
 function checkKeys(){
