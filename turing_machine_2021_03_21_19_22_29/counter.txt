@@ -1,0 +1,39 @@
+My first attempt: -
+INITIAL COMPLETE CONFIGURATION: 
+tape = …b00b…, q = Hi, S(r) = 2
+[FINDING PLACE TO PRINT A NEW 1, BUILDING]
+Ci-1 Cii
+Ci-b P1 Di
+Ci-0 Cii
+Cii- R Ci
+[FIND CURRENT ORIGIN LEFT, BUILDING]
+Di-1 Dii
+Di-0 Ei
+Dii- L Di
+[FOUND ORIGIN, BUILDING]
+Ei- L Fiii
+[READING LEFT, BUILDING]
+Fi-b P1, L, E Ci *** ERASES LEFT ORIGIN! ***
+  [CORRECTION?] Fi-b P1 L Fiv
+Fi-0 Hi
+Fi-1 Fii
+Fii- L Fi
+
+[### TWO PROBLEMS: NOT MAKING FIRST MARK;
+                   ERASING LEFT ORIGIN IN Fi-0?;]
+                   
+[READING LEFT FIRST TIME, BUILDING]
+Fiii-1 E() Fi
+[MARKING, READING LEFT]
+Fiv-0 Hi
+Fiv-1 E(), R() Ci
+
+[FINDING PLACE TO PRINT A NEW 1, BUILDING COMPLETE]
+Hi-1 Hii
+Hi-b P1 R() Ji
+Hi-0 Hii
+Hii- R Hi
+[FIND PLACE OF AND PRINT NEXT ORIGIN]
+Ji-b P0 Ei
+Ji-1 Jii
+Jii- R Ji
