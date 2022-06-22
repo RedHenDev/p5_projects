@@ -1,0 +1,66 @@
+JavaScript (p5) 
+
+API and promises
+
+fetch() 
+
+https://www.youtube.com/watch?v=QO4NXhWo_NM
+
+Using promises to replace the more convoluted callback system.
+
+So, we pass a URL (i.e. API request) into fetch() function, and store the
+'result' in a variable. This variable is our reference to the promise.
+
+e.g. 
+let p = fetch(wordNikAPI);
+
+p.then(gotData);	// If promise fulfilled! NB. gotData is a function call.
+p.catch(gotError);	// If promise rejected! NB. gotError is a function call.
+
+Before either of the two states of the promise, fulfilled or rejected, the promise occupise a 'pending' state.
+
+then() and catch() work like callbacks waiting for the promise return event.
+
+The above example does not use the more probable syntax we would meet with promises and fetch, i.e. chaining.
+
+e.g. 
+fetch(wordNikAPI).then(gotData).catch(gotError); // NB got... both function callbacks.
+
+And EVEN more likely, using anonymous functions:
+
+e.g.
+fetch(wordNikAPI)
+	.then(function(data){
+		console.log(data); // etc.
+	})
+	.catch(function(err){
+		console.log(err); // etc.
+	});
+
+Promises with chaining thus allows us to form readable cascades of .then()s.
+
+And EVEN better is the introduction of arrow syntax here to replace the 'function' keyword and braces.
+
+e.g.
+fetch(wordNikAPI)
+	.then(data => console.log(data))
+	.catch(err => console.log(err));
+
+Nice!
+	
+And here's a working example:
+e.g.
+let URLapi = setupAPI();
+  fetch(URLapi)
+    .then(response => response.json())
+    .then(json => {
+        textSize(32);
+        text(json.word,32,64);
+      })
+    .catch(err => console.log("Error:"+err));
+
+Note that the second then uses braces since there is more than one line of code in the arrow function. Also, note that before a new .then() we have to use a return. This is implicit in the arrow function, but would have to be included if we were using several steps (i.e. waiting for another api promise in this sequence). See the Dan Shiffman video above.
+
+JavaScript error syntax? 
+
+
